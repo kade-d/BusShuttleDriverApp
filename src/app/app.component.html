@@ -1,21 +1,139 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<div *ngIf="error" class="alert alert-danger">{{error}}</div>
+<div *ngIf="success" class="alert alert-success">{{success}}</div>
 
-<router-outlet></router-outlet>
+<div id="theList">
+    <h2>Entries</h2>
+    <ul>
+        <li *ngFor="let item of cars">{{item.loop}} | {{item.stop}} | {{item.boarded}} | {{item.timestamp}} | {{item.date}} | {{item.driver}}</li>
+      </ul>
+    <div>
+        <input type="button"
+        value="Green Loop"
+        class="btn btn-success btn-sm"
+        (click)="getGreen()">
+        <input type="button"
+        value="Red Loop"
+        class="btn btn-danger btn-sm"
+        (click)="getRed()">
+        <input type="button"
+        value="Total"
+        class="btn btn-info btn-sm"
+        (click)="getCars()">
+    </div>
+    <div>
+      <h2>Daily Total</h2>
+      <ul><h3>{{total}}</h3></ul>
+    </div>
+    
+    <!-- <div class="list-group">
+      <div *ngFor="let item of cars;let i = index;" class="list-group-item row">
+        <div>
+            
+        </div>
+        <div class="row" style="float:left">
+          <input type="text"
+                 [(ngModel)]="cars[i].boarded"
+                 class="form-control"
+                 required
+                 pattern="^[a-zA-Z]+$"
+                 #boarded="ngModel"
+                 [ngClass]="{ 'is-invalid': boarded.touched && boarded.invalid }">
+        </div>
+        <div class="row" style="float:left">
+          <input type="text"
+                 [(ngModel)]="cars[i].stop"
+                 class="form-control"
+                 required
+                 #stop="ngModel"
+                 [ngClass]="{ 'is-invalid': stop.touched && stop.invalid }">
+        </div>
+        <div class="row" style="float:left">
+            <input type="datetime"
+                   [(ngModel)]="cars[i].timestamp"
+                   class="form-control"
+                   required
+                   #timestamp="ngModel"
+                   [ngClass]="{ 'is-invalid': timestamp.touched && timestamp.invalid }">
+          </div>
+                  <div class="row" style="float:left">
+          <input type="date"
+                 [(ngModel)]="cars[i].date"
+                 class="form-control"
+                 required
+                 #date="ngModel"
+                 [ngClass]="{ 'is-invalid': date.touched && date.invalid }">
+        </div>
+        <div class="row" style="float:left">
+          <input type="text"
+                 [(ngModel)]="cars[i].loop"
+                 class="form-control"
+                 required
+                 #loop="ngModel"
+                 [ngClass]="{ 'is-invalid': loop.touched && loop.invalid }">
+        </div>
+        <div class="row" style="float:left">
+          <input type="text"
+                 [(ngModel)]="cars[i].driver"
+                 class="form-control"
+                 required
+                 #driver="ngModel"
+                 [ngClass]="{ 'is-invalid': driver.touched && driver.invalid }">
+        </div>
+
+
+        <div class="col" style="float:left">
+          <input type="button"
+                 value="Update"
+                 class="btn btn-success btn-sm"
+                 [disabled]="model.invalid || price.invalid"
+                 (click)="updateCar(model, price, item.id)">
+          &nbsp;
+          <input type="button"
+                 value="Delete"
+                 class="btn btn-danger btn-sm"
+                 (click)="deleteCar(item.id)">
+
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+<!-- <div id="theForm">
+  <h2>The form</h2>
+  <form #f="ngForm" name="theForm" (submit)="addCar(f)">
+    <div class="form-group">
+      <label>Model</label>
+      <input type="text"
+            class="form-control"
+            name="model"
+            [(ngModel)]="car.model"
+            #carModel="ngModel"
+            required
+            pattern="^[a-zA-Z]+$">
+      <span class="help-block danger" *ngIf="carModel.errors?.required && carModel.touched">
+        The model name is required
+      </span>
+      <span class="help-block danger" *ngIf="carModel.errors?.pattern && carModel.touched">
+        The model name can only contain the letters a-z or A-Z
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label>Price</label>
+      <input type="number"
+            class="form-control"
+            name="price"
+            required
+            [(ngModel)]="car.price"
+            #carPrice="ngModel">
+      <span class="help-block danger" *ngIf="carPrice.errors?.required && carPrice.touched">
+        The price is required
+      </span>
+    </div>
+
+    <button
+        class="btn btn-primary btn-sm"
+        [disabled]="f.invalid">Add</button>
+  </form>
+</div> -->
+

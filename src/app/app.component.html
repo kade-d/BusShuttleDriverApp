@@ -1,0 +1,134 @@
+<!-- <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+<div *ngIf="success" class="alert alert-success">{{success}}</div>
+
+<div id="theList">
+    <h2>Entries</h2>
+    <ul>
+        <li *ngFor="let item of logs">{{item.loop}} | {{item.stop}} | {{item.boarded}} | {{item.timestamp}} | {{item.date}} | {{item.driver}}</li>
+      </ul>
+    <div>
+        <input type="button"
+        value="Green Loop"
+        class="btn btn-success btn-sm"
+        (click)="getGreen()">
+        <input type="button"
+        value="Red Loop"
+        class="btn btn-danger btn-sm"
+        (click)="getRed()">
+        <input type="button"
+        value="Total"
+        class="btn btn-info btn-sm"
+        (click)="getlogs()">
+    </div>
+    <div>
+      <h2>Daily Total</h2>
+      <ul><h3>{{total}}</h3></ul>
+    </div> -->
+
+
+    <div id="theForm">
+      <h2>Bus Form</h2>
+      <form #f="ngForm" name="theForm" (submit)="addCar(f)">
+        <div class="form-group">
+          <label>Boarded</label>
+          <input type="number"
+                class="form-control"
+                name="boarded"
+                [(ngModel)]="log.boarded"
+                #logBoarded="ngModel"
+                required>
+          <span class="help-block danger" *ngIf="logBoarded.errors?.required && logBoarded.touched">
+            The # of boarded is required
+          </span>
+          <span class="help-block danger" *ngIf="logBoarded.errors?.pattern && logBoarded.touched">
+            The model name can only contain the letters a-z or A-Z
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label>Stop</label>
+          <input type="text"
+                class="form-control"
+                name="stop"
+                [(ngModel)]="log.stop"
+                #logStop="ngModel"
+                required>
+          <span class="help-block danger" *ngIf="logStop.errors?.required && logStop.touched">
+            The model name is required
+          </span>
+          <span class="help-block danger" *ngIf="logStop.errors?.pattern && logStop.touched">
+            The model name can only contain the letters a-z or A-Z
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label>timestap</label>
+          <input type="datetime-local"
+                class="form-control"
+                name="timestamp"
+                [(ngModel)]="log.timestamp"
+                #logTimestamp="ngModel"
+                required>
+          <span class="help-block danger" *ngIf="logTimestamp.errors?.required && logTimestamp.touched">
+            The model name is required
+          </span>
+          <span class="help-block danger" *ngIf="logTimestamp.errors?.pattern && logTimestamp.touched">
+            The model name can only contain the letters a-z or A-Z
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date"
+                class="form-control"
+                name="Date"
+                [(ngModel)]="log.date"
+                #logDate="ngModel"
+                required>
+          <span class="help-block danger" *ngIf="logDate.errors?.required && logDate.touched">
+            The model name is required
+          </span>
+          <span class="help-block danger" *ngIf="logDate.errors?.pattern && logDate.touched">
+            The model name can only contain the letters a-z or A-Z
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label>Loop</label>
+          <input type="text"
+                class="form-control"
+                name="loop"
+                [(ngModel)]="log.loop"
+                #logLoop="ngModel"
+                required
+                pattern="^[a-zA-Z]+$">
+          <span class="help-block danger" *ngIf="logLoop.errors?.required && logLoop.touched">
+            The model name is required
+          </span>
+          <span class="help-block danger" *ngIf="logLoop.errors?.pattern && logLoop.touched">
+            The model name can only contain the letters a-z or A-Z
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label>Driver</label>
+          <input type="text"
+                class="form-control"
+                name="driver"
+                [(ngModel)]="log.driver"
+                #logDriver="ngModel"
+                required
+                pattern="^[a-zA-Z]+$">
+          <span class="help-block danger" *ngIf="logDriver.errors?.required && logDriver.touched">
+            The model name is required
+          </span>
+          <span class="help-block danger" *ngIf="logDriver.errors?.pattern && logDriver.touched">
+            The model name can only contain the letters a-z or A-Z
+          </span>
+        </div>
+    
+        <button type="submit" 
+          class="btn btn-success btn-sm"
+            [disabled]="f.invalid">Add</button>
+      </form>
+    </div>

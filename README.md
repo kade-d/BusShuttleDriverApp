@@ -4,6 +4,12 @@
 
 1. Navigate inside of project folder and run `npm install`
 
+___
+
+To see a demo of what's currently in this branch visit https://buslog.info
+
+_I will be adding a page to show database for debugging_
+
 ## Development server
 
 Run `ng serve` inside of the cloned folder for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

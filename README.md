@@ -11,7 +11,7 @@ To see a demo of what's currently in this branch visit https://buslog.info
 _I will be adding a page to show database for debugging_
 
 Current versioning:
-* _npm version 6.4.1 _
+* _npm version 6.4.1_
 * _node version 10.9.0_
 ## Development server
 

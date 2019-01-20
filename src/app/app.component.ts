@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { FormsModule } from '@angular/forms';
 import { Log } from './log';
 import { LogService } from './log.service';
 

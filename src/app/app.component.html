@@ -7,14 +7,15 @@
           <input type="number"
                 class="form-control"
                 name="boarded"
-                [(ngModel)]="log.boarded"
+                [(ngModel)]="log.boarded" name="logBoarded"
                 #logBoarded="ngModel"
+                pattern="^[0-9]+$"
                 required>
           <span class="help-block danger" *ngIf="logBoarded.errors?.required && logBoarded.touched">
             The # of boarded is required
           </span>
           <span class="help-block danger" *ngIf="logBoarded.errors?.pattern && logBoarded.touched">
-            The # of boaurded can only contain the letters a-z or A-Z
+            The # of boaurded can only contain numbers
           </span>
         </div>
 
@@ -23,8 +24,9 @@
           <input type="text"
                 class="form-control"
                 name="stop"
-                [(ngModel)]="log.stop"
+                [(ngModel)]="log.stop" name = "logStop"
                 #logStop="ngModel"
+                pattern="^[a-zA-Z]+$"
                 required>
           <span class="help-block danger" *ngIf="logStop.errors?.required && logStop.touched">
             The stop name is required
@@ -71,7 +73,7 @@
           <input type="text"
                 class="form-control"
                 name="loop"
-                [(ngModel)]="log.loop"
+                [(ngModel)]="log.loop" name = "logLoop"
                 #logLoop="ngModel"
                 required
                 pattern="^[a-zA-Z]+$">
@@ -88,7 +90,7 @@
           <input type="text"
                 class="form-control"
                 name="driver"
-                [(ngModel)]="log.driver"
+                [(ngModel)]="log.driver" name = "logDriver"
                 #logDriver="ngModel"
                 required
                 pattern="^[a-zA-Z]+$">

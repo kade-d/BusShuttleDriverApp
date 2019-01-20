@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "testyo": {
+    "BusLog": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/testyo",
+            "outputPath": "dist/BusLog",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -90,18 +90,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "testyo:build"
+            "browserTarget": "BusLog:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "testyo:build:production"
+              "browserTarget": "BusLog:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "testyo:build"
+            "browserTarget": "BusLog:build"
           }
         },
         "test": {
@@ -135,7 +135,7 @@
         }
       }
     },
-    "testyo-e2e": {
+    "BusLog-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -144,11 +144,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "testyo:serve"
+            "devServerTarget": "BusLog:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "testyo:serve:production"
+              "devServerTarget": "BusLog:serve:production"
             }
           }
         },
@@ -164,5 +164,5 @@
       }
     }
   },
-  "defaultProject": "testyo"
+  "defaultProject": "BusLog"
 }

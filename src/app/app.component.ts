@@ -28,7 +28,7 @@ export class AppComponent {
         f.controls['stop'].reset();
         f.controls['loop'].reset();
       },
-      (error: any) => console.log("Could not add bitch")
+      (error: any) => console.log("Could not add.")
       
     );
   }

@@ -1,6 +1,9 @@
     <div id="theForm">
       <h2>Bus Form</h2>
       <form #f="ngForm" name="theForm" (ngSubmit)="addLog(f)">
+       
+        <app-board-counter></app-board-counter>
+       
         <div class="form-group">
           <label>Boarded</label>
           
@@ -18,6 +21,8 @@
             The # of boaurded can only contain numbers
           </span>
         </div>
+
+
 
         <div class="form-group">
           <label>Stop</label>

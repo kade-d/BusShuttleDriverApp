@@ -4,10 +4,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { HttpClient } from '@angular/common/http';
+import { BoardCounterComponent } from './board-counter/board-counter.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    BoardCounterComponent
   ],
   imports: [
     BrowserModule,

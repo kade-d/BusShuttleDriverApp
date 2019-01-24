@@ -22,10 +22,7 @@ export class AppComponent {
   addLog(f): void {
     
     var tempLog = new Log(0, '', '', '');
-    tempLog.boarded = this.log.boarded;
-    tempLog.driver = this.log.driver;
-    tempLog.loop = this.log.loop;
-    tempLog.stop = this.log.stop;
+    tempLog = this.log;
     
     console.log(tempLog);
     this.logService.store(tempLog).subscribe(

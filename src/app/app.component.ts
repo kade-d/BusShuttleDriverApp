@@ -20,37 +20,26 @@ export class AppComponent {
   }
 
   addLog(f): void {
-    this.logService.store(this.log).subscribe(
+    
+    var tempLog = new Log(0, '', '', '');
+    tempLog.boarded = this.log.boarded;
+    tempLog.driver = this.log.driver;
+    tempLog.loop = this.log.loop;
+    tempLog.stop = this.log.stop;
+    
+    console.log(tempLog);
+    this.logService.store(tempLog).subscribe(
       (data: Log) => {
         console.log(data);
-    
-        f.controls['boarded'].reset();
-        f.controls['stop'].reset();
-        f.controls['loop'].reset();
       },
       (error: any) => console.log("Could not add.")
       
     );
+    f.controls['boarded'].reset();
+    f.controls['stop'].reset();
+    f.controls['loop'].reset();
+    console.log(tempLog);
   }
-
-  // addCar(log: Log) {
-  //   this.resetErrors();
-
-  //   this.logService.store(this.log)
-  //     .subscribe(
-  //       (res: Log) => {
-  //         // Update the list of cars
-  //         this.logs = res;
-
-  //         // Inform the user
-  //         this.success = 'Created successfully';
-
-  //         // Reset the form
-  //         f.reset();
-  //       },
-  //       (err) => this.error = err
-  //     );
-  // }
 
   private resetErrors(){
     this.success = '';

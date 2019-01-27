@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Log } from './log';
 import { LogService } from './log.service';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +16,13 @@ export class AppComponent {
 
   log = new Log(0, '', '', '');
 
-  constructor(private logService: LogService) {
+  constructor(private logService: LogService, private titleService: Title ) {
+    console.log(this.getTitle());
+  }
+
+  getTitle(): string {
+    var value: string = this.titleService.getTitle()
+    return value;
   }
 
   addLog(f): void {

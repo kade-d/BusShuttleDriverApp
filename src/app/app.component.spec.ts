@@ -1,10 +1,8 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { LogService } from './log.service';
 import { FormsModule } from '@angular/forms';
 import { DebugElement } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpHandler } from '@angular/common/http';
-import { Log } from './log';
+import { HttpClient, HttpHandler } from '@angular/common/http';
 
 describe('AppComponent', () => {
 let component: AppComponent;

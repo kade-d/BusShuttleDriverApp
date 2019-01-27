@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { map, tap, retryWhen, delayWhen, catchError } from 'rxjs/operators';
+import { retryWhen, catchError } from 'rxjs/operators';
 import { Observable, throwError, timer } from 'rxjs';
 import { mergeMap, finalize } from 'rxjs/operators';
 import { Log } from './log';

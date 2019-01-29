@@ -5,19 +5,30 @@
         <div class="form-group">
           <label>Boarded</label>
           
+        <div class="row">
+          <div class="col">
           <input type="number"
                 class="form-control"
                 name="boarded"
                 [(ngModel)]="log.boarded"
                 #logBoarded="ngModel"
                 pattern="^[0-9]+$"
-                required>
+                required> 
+              </div>
+              <div class ="col">
+                
+                  <button type="button" class="btn btn-danger btn-number"
+                  (click)="increaseBoardedValueClicked()">+</button>
+                  
+                </div>   
+              </div>
           <span class="help-block danger" *ngIf="logBoarded.errors?.required && logBoarded.touched">
             The # of boarded is required
           </span>
           <span class="help-block danger" *ngIf="logBoarded.errors?.pattern && logBoarded.touched">
             The # of boaurded can only contain numbers
           </span>
+          
         </div>
 
         <div class="form-group">

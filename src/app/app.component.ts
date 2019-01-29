@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Log } from './log';
 import { LogService } from './log.service';
 import { Title }     from '@angular/platform-browser';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -13,15 +14,19 @@ export class AppComponent {
   error = '';
   success = '';
   total = 0;
-
   log = new Log(0, '', '', '');
 
   constructor(private logService: LogService, private titleService: Title ) {
     console.log(this.getTitle());
+    this.log.boarded = 0;
   }
-
+  
+  increaseBoardedValueClicked(): void{
+    this.log.boarded = this.log.boarded + 1;
+  }
   getTitle(): string {
     var value: string = this.titleService.getTitle()
+    
     return value;
   }
 
@@ -45,6 +50,7 @@ export class AppComponent {
     f.controls['stop'].reset();
     f.controls['loop'].reset();
     console.log(tempLog);
+    
   }
 
   private resetErrors(){

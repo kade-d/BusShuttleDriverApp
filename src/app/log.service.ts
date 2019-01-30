@@ -6,6 +6,7 @@ import { mergeMap, finalize } from 'rxjs/operators';
 import { Log } from './log';
 import { Stop } from './stop';
 import { Loop } from './loop';
+import { log } from 'util';
 
 
 @Injectable({
@@ -20,10 +21,8 @@ export class LogService {
 
 constructor(private http: HttpClient) { }
 
-
-
   store(log: Log): Observable<Log> {
-    return this.http.post<Log>('https://www.mildvariety.club/api/store', { data: log })
+    return this.http.post<Log>(this.baseUrl +'/store', { data: log })
     .pipe(
       retryWhen(this.generateRetryStrategy()({
         scalingDuration: 2000,
@@ -32,18 +31,13 @@ constructor(private http: HttpClient) { }
       catchError(this.handleError));
   }
 
-
   getAllStops() {
-    return this.http.get(`https://www.mildvariety.club/api/getStops.php`)
+    return this.http.get(this.baseUrl + '/getStops.php')
   }
 
   getAllLoops() {
-    return this.http.get(`https://www.mildvariety.club/api/getLoops.php`)
+    return this.http.get(this.baseUrl + '/getLoops.php')
   }
-
-
-
-
 
   private generateRetryStrategy() {
     var retryStrategy = ({
@@ -70,10 +64,9 @@ constructor(private http: HttpClient) { }
             `Attempt ${retryAttempt}: retrying in ${retryAttempt *
               scalingDuration}ms`
           );
-          // retry after 1s, 2s, etc...
           return timer(retryAttempt * scalingDuration);
         }),
-        finalize(() => console.log('We are done!'))
+        finalize(() => console.log(log, 'Entry has been successfully added!'))
       );
     };
     return retryStrategy;
@@ -82,7 +75,6 @@ constructor(private http: HttpClient) { }
   private handleError(error: HttpErrorResponse) {
     console.log("there was an error")
     console.log(error);
-
     // return an observable with a user friendly message
     return throwError('Error! something went wrong.');
   }

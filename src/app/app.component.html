@@ -27,6 +27,7 @@
 <div id="theForm">
   <h2 class="center-block">Bus Form</h2>
   <form #f="ngForm" name="theForm" (ngSubmit)="submitLog(f)" class="text-center border border-light p-5">
+    
     <!-- Boarded - Form-Group -->
     <div class="form-group">
       <label>Boarded</label>
@@ -100,6 +101,15 @@
       </div>
       <div class="col-md-3"></div>
     </div>
-    <div class="alert alert-danger" *ngIf="isHidden">{{error}}</div>
+    <div class="alert alert-danger" *ngIf="errorMessageState">
+      <h4>
+        {{error}}
+      </h4>
+    </div>
+    <div class="alert alert-success" *ngIf="successMessageState">
+      <h4>
+        {{success}}
+      </h4>
+    </div>
   </form>
 </div>

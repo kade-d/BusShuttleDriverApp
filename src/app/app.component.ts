@@ -1,10 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Log } from './log';
 import { LogService } from './log.service';
-import { Title } from '@angular/platform-browser';
 import { NgForm } from '@angular/forms';
 import { Stop } from './stop';
 import { Loop } from './loop';
+import { Subscription, timer } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -17,17 +17,20 @@ export class AppComponent {
   success = '';
   total = 0;
   log = new Log(0, '', '', '');
-  stops = new Stop("","");
+  stops = new Stop();
   loops = new Loop("", "");
   stopDropdown = [];
   loopDropdown = [];
-  isHidden = false;
+  errorMessageState = false;
+  successMessageState = false;
+  private subscription: Subscription;
 
-  constructor(private logService: LogService, private titleService: Title) {
+
+  constructor(private logService: LogService) {
     this.log.boarded = 0;
     this.log.stop = null;
-    this.getStops();
-    this.getLoops();
+    this.populateStopsDropdown();
+    this.populateLoopsDropdown();
   }
 
   decreaseBoardedValueClicked(): void {
@@ -39,61 +42,80 @@ export class AppComponent {
     this.log.boarded = this.log.boarded + 1;
   }
 
-  getStops() {
+  populateStopsDropdown() {
     console.log(this.logService.response);
-    this.logService.getAllStops().subscribe(
-      (data: Stop) => {
-        for (var x in data.data){
-          this.stopDropdown.push(data.data[x]);
-       }
-      },
-      (error: any) => console.log("Could not get stops")
-    )
+    this.logService.getAllStops()
+      .subscribe(
+        (data: Stop) => {
+          for (var x in data.data) {
+            this.stopDropdown.push(data.data[x]);
+          }
+        },
+        (error: any) => {
+          this.error = "Could not get Stops, please try refreshing the page.";
+          this.errorMessageState = true;
+        }
+      )
   }
 
-  getLoops() {
+  populateLoopsDropdown() {
     console.log(this.logService.response);
-    this.logService.getAllLoops().subscribe(
-      (data: Stop) => {
-        for (var x in data.data){
-          this.loopDropdown.push(data.data[x]);
-       }
-      },
-      (error: any) => console.log("Could not get Loops")
-    )
+    this.logService.getAllLoops()
+      .subscribe(
+        (data: Stop) => {
+          for (var x in data.data) {
+            this.loopDropdown.push(data.data[x]);
+          }
+        },
+        (error: any) => {
+          this.error = "Could not get Loops, please try refreshing the page.";
+          this.errorMessageState = true;
+        }
+      )
   }
 
   submitLog(f: NgForm): void {
     this.resetErrors();
-    if(this.log.loop == undefined || this.log.stop == undefined){
-      this.isHidden = true;
+    if (this.log.loop == undefined || this.log.stop == undefined) {
+      this.errorMessageState = true;
       this.error = "Oops! You didn't select all necessary fields."
       return;
     }
-    this.isHidden = false;
+    this.errorMessageState = false;
     var tempLog = new Log(0, '', '', '');
     tempLog.boarded = this.log.boarded;
     tempLog.driver = this.log.driver;
     tempLog.loop = this.log.loop;
     tempLog.stop = this.log.stop;
-
-    console.log(tempLog);
-    this.logService.store(tempLog).subscribe(
-      (data: Log) => {
-
-        console.log(data);
-        
-      },
-      (error: any) => this.error = "Something went wrong, please try adding again shortly."
-    );
+    this.logService.store(tempLog)
+      .subscribe(
+        (data: Log) => {
+          this.success = "Entry has been logged."
+          this.showSuccessMessage();
+          console.log(data);
+        },
+        (error: any) => this.error = "Something went wrong, please try adding again shortly."
+      );
     this.log.boarded = 0;
-    f.controls['stop'].reset();
+    this.resetFormControls(f);
     console.log(tempLog);
   }
 
   private resetErrors() {
     this.success = '';
     this.error = '';
+  }
+
+  private resetFormControls(f: NgForm) {
+    f.controls['stop'].reset();
+  }
+
+  public showSuccessMessage(){
+    this.successMessageState = true;
+    let successTimer = timer(5000); //
+    this.subscription = successTimer.subscribe(() => {
+        this.successMessageState = false;
+    });
   }
 
 }

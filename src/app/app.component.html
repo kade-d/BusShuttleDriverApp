@@ -1,49 +1,47 @@
-<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+<!-- Nav Bar -->
 <nav class="navbar navbar-dark bg-dark mb-5">
-    <a class="navbar-brand" href="/">Log Collection System</a>
-    <div class="navbar-expand mr-auto">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="#">Home</a>
-        <a class="nav-item nav-link" href="#">Login</a>
-        <a class="nav-item nav-link" href="#">Configure</a>
-      </div>
+  <a class="navbar-brand" href="/">Log Collection System</a>
+  <div class="navbar-expand mr-auto">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link active" href="#">Home</a>
+      <a class="nav-item nav-link" href="#">Login</a>
+      <a class="nav-item nav-link" href="#">Configure</a>
     </div>
-    <div class="navbar-expand ml-auto navbar-nav">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link" href="https://github.com/beeman" target="_blank">
-          <i class="fa fa-github"></i>
-        </a>
-        <a class="nav-item nav-link" href="https://twitter.com/beeman_nl" target="_blank">
-          <i class="fa fa-twitter"></i>
-        </a>
-        <a class="nav-item nav-link" href="https://medium.com/@beeman" target="_blank">
-          <i class="fa fa-medium"></i>
-        </a>
-      </div>
+  </div>
+  <div class="navbar-expand ml-auto navbar-nav">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link" href="https://github.com/beeman" target="_blank">
+        <i class="fa fa-github"></i>
+      </a>
+      <a class="nav-item nav-link" href="https://twitter.com/beeman_nl" target="_blank">
+        <i class="fa fa-twitter"></i>
+      </a>
+      <a class="nav-item nav-link" href="https://medium.com/@beeman" target="_blank">
+        <i class="fa fa-medium"></i>
+      </a>
     </div>
-  </nav>
+  </div>
+</nav>
 
-
-
+<!-- Form -->
 <div id="theForm">
-
   <h2 class="center-block">Bus Form</h2>
-
   <form #f="ngForm" name="theForm" (ngSubmit)="submitLog(f)" class="text-center border border-light p-5">
+    <!-- Boarded - Form-Group -->
     <div class="form-group">
       <label>Boarded</label>
       <div class="center-block">
-      <div class="md-form input-group">
-        <div class="input-group-prepend">
-          <button type="button" class="btn btn-primary btn-number btn-lg btn-block" (click)="decreaseBoardedValueClicked()">Decrease</button>
-        </div>
-        <input type="number" class="input-group-text md-addon" name="boarded" min="0" [(ngModel)]="log.boarded" #logBoarded="ngModel"
-          pattern="^[0-9]+$" required>
-        <div class="input-group-append">
-          <button type="button" class="btn btn-primary btn-number btn-lg btn-block" (click)="increaseBoardedValueClicked()">Increase</button>
+        <div class="md-form input-group">
+          <div class="input-group-prepend">
+            <button type="button" class="btn btn-primary btn-number btn-lg btn-block" (click)="decreaseBoardedValueClicked()">Decrease</button>
+          </div>
+          <input type="number" class="input-group-text md-addon" name="boarded" min="0" [(ngModel)]="log.boarded"
+            #logBoarded="ngModel" pattern="^[0-9]+$" required>
+          <div class="input-group-append">
+            <button type="button" class="btn btn-primary btn-number btn-lg btn-block" (click)="increaseBoardedValueClicked()">Increase</button>
+          </div>
         </div>
       </div>
-    </div>
       <span class="help-block danger" *ngIf="logBoarded.errors?.required && logBoarded.touched">
         The # of boarded is required
       </span>
@@ -52,7 +50,7 @@
       </span>
     </div>
 
-
+    <!-- Stop DropDown -->
     <div class="row">
       <div class="col-md-3"></div>
       <div class="col-md-6">
@@ -66,6 +64,7 @@
       <div class="col-md-3"></div>
     </div>
 
+    <!-- Loop DropDown -->
     <div class="row">
       <div class="col-md-3"></div>
       <div class="col-md-6">
@@ -79,62 +78,7 @@
       <div class="col-md-3"></div>
     </div>
 
-    <!-- <div class="form-group">
-      <label>Stop</label>
-      <input type="text" class="form-control" name="stop" [(ngModel)]="log.stop" #logStop="ngModel" pattern="^[a-zA-Z]+$"
-        required>
-      <span class="help-block danger" *ngIf="logStop.errors?.required && logStop.touched">
-        The stop name is required
-      </span>
-      <span class="help-block danger" *ngIf="logStop.errors?.pattern && logStop.touched">
-        The stop name can only contain the letters a-z or A-Z
-      </span>
-    </div> -->
-
-    <!-- <div class="form-group">
-          <label>timestap</label>
-          <input type="datetime-local"
-                class="form-control"
-                name="timestamp"
-                [(ngModel)]="log.timestamp"
-                #logTimestamp="ngModel"
-                required>
-          <span class="help-block danger" *ngIf="logTimestamp.errors?.required && logTimestamp.touched">
-            The model name is required
-          </span>
-          <span class="help-block danger" *ngIf="logTimestamp.errors?.pattern && logTimestamp.touched">
-            The model name can only contain the letters a-z or A-Z
-          </span>
-        </div>
-
-        <div class="form-group">
-          <label>Date</label>
-          <input type="date"
-                class="form-control"
-                name="Date"
-                [(ngModel)]="log.date"
-                #logDate="ngModel"
-                required>
-          <span class="help-block danger" *ngIf="logDate.errors?.required && logDate.touched">
-            The model name is required
-          </span>
-          <span class="help-block danger" *ngIf="logDate.errors?.pattern && logDate.touched">
-            The model name can only contain the letters a-z or A-Z
-          </span>
-        </div> -->
-
-    <!-- <div class="form-group">
-      <label>Loop</label>
-      <input type="text" class="form-control" name="loop" [(ngModel)]="log.loop" #logLoop="ngModel" required pattern="^[a-zA-Z]+$">
-      <span class="help-block danger" *ngIf="logLoop.errors?.required && logLoop.touched">
-        The loop name is required.
-      </span>
-      <span class="help-block danger" *ngIf="logLoop.errors?.pattern && logLoop.touched">
-        The loop name can only contain the letters a-z or A-Z
-      </span>
-    </div> -->
-
-    
+    <!-- Driver with Validation -->
     <div class="row">
       <div class="col-md-3"></div>
       <div class="col-md-6">
@@ -149,13 +93,13 @@
             The driver name can only contain the letters a-z or A-Z
           </span>
         </div>
+        <!-- Submit Form -->
         <p>
-        <button type="submit" class="btn btn-success btn-lg btn-block" [disabled]="f.invalid">Add</button>
-      </p>
+          <button type="submit" class="btn btn-success btn-lg btn-block" [disabled]="f.invalid">Add</button>
+        </p>
       </div>
       <div class="col-md-3"></div>
     </div>
-    <div class="alert alert-danger" *ngIf="isHidden" >{{error}}</div>
+    <div class="alert alert-danger" *ngIf="isHidden">{{error}}</div>
   </form>
-  
 </div>

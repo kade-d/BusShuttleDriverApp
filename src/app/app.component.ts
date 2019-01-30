@@ -4,7 +4,7 @@ import { LogService } from './log.service';
 import { NgForm } from '@angular/forms';
 import { Stop } from './stop';
 import { Loop } from './loop';
-import { Subscription, timer } from 'rxjs';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -18,13 +18,12 @@ export class AppComponent {
   total = 0;
   log = new Log(0, '', '', '');
   stops = new Stop();
-  loops = new Loop("", "");
+  loops = new Loop();
   stopDropdown = [];
   loopDropdown = [];
   errorMessageState = false;
   successMessageState = false;
-  private subscription: Subscription;
-
+  subscription: any;
 
   constructor(private logService: LogService) {
     this.log.boarded = 0;
@@ -78,7 +77,7 @@ export class AppComponent {
     this.resetErrors();
     if (this.log.loop == undefined || this.log.stop == undefined) {
       this.errorMessageState = true;
-      this.error = "Oops! You didn't select all necessary fields."
+      this.error = "Oops! Please select all necessary fields."
       return;
     }
     this.errorMessageState = false;
@@ -117,5 +116,4 @@ export class AppComponent {
         this.successMessageState = false;
     });
   }
-
 }

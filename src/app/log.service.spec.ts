@@ -3,10 +3,9 @@ import { LogService } from './log.service';
 import { HttpClientTestingModule,HttpTestingController } from '@angular/common/http/testing';
 import { Log } from './log';
 
-
 describe('LogService', () => {
-let service: LogService;
-let httpMock: HttpTestingController;
+    let service: LogService;
+    let httpMock: HttpTestingController;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -16,10 +15,10 @@ let httpMock: HttpTestingController;
         service = TestBed.get(LogService)
         httpMock = TestBed.get(HttpTestingController);
     });
-    
+
     it('should perform POST request and return dummyLog obj.', () => {
-        const dummyLog: Log = {boarded: 4, stop: 'MU', loop: 'Green', driver: 'steve'};
-        
+        const dummyLog: Log = { boarded: 4, stop: 'MU', loop: 'Green', driver: 'steve' };
+
         service.store(dummyLog).subscribe(returnObj => {
             expect(returnObj).toEqual(dummyLog);
         });
@@ -29,4 +28,4 @@ let httpMock: HttpTestingController;
         request.flush(dummyLog)
     });
 
-    });
+});

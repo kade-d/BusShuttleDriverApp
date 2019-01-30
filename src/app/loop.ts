@@ -3,7 +3,6 @@ export class Loop {
     loops: string;
     name: string;
     constructor(
-      name: string,
-      loops: string) {}
+) {}
   }
   

@@ -6,8 +6,6 @@ import { mergeMap, finalize } from 'rxjs/operators';
 import { Log } from './log';
 import { Stop } from './stop';
 import { Loop } from './loop';
-import { log } from 'util';
-
 
 @Injectable({
   providedIn: 'root'
@@ -60,22 +58,19 @@ constructor(private http: HttpClient) { }
           ) {
             return this.handleError(error);
           }
-          console.log(
-            `Attempt ${retryAttempt}: retrying in ${retryAttempt *
-              scalingDuration}ms`
-          );
+          // console.log( //uncomment for demonstration
+          //   `Attempt ${retryAttempt}: retrying in ${retryAttempt *
+          //     scalingDuration}ms`
+          // );
           return timer(retryAttempt * scalingDuration);
         }),
-        finalize(() => console.log(log, 'Entry has been successfully added!'))
+        finalize(() => console.log('Entry has been successfully added!'))
       );
     };
     return retryStrategy;
   }
 
   private handleError(error: HttpErrorResponse) {
-    console.log("there was an error")
-    console.log(error);
-    // return an observable with a user friendly message
     return throwError('Error! something went wrong.');
   }
 }

@@ -27,19 +27,19 @@
 <div id="theForm">
   <h2 class="center-block">Bus Form</h2>
   <form #f="ngForm" name="theForm" (ngSubmit)="submitLog(f)" class="text-center border border-light p-5">
-    
+
     <!-- Boarded - Form-Group -->
     <div class="form-group">
       <label>Boarded</label>
       <div class="center-block">
         <div class="md-form input-group">
           <div class="input-group-prepend">
-            <button type="button" class="btn btn-primary btn-number btn-lg btn-block" (click)="decreaseBoardedValueClicked()">Decrease</button>
+            <button type="button" class="btn btn-dark btn-number btn-lg btn-block" (click)="decreaseBoardedValueClicked()">Decrease</button>
           </div>
           <input type="number" class="input-group-text md-addon" name="boarded" min="0" [(ngModel)]="log.boarded"
             #logBoarded="ngModel" pattern="^[0-9]+$" required>
           <div class="input-group-append">
-            <button type="button" class="btn btn-primary btn-number btn-lg btn-block" (click)="increaseBoardedValueClicked()">Increase</button>
+            <button type="button" class="btn btn-dark btn-number btn-lg btn-block" (click)="increaseBoardedValueClicked()">Increase</button>
           </div>
         </div>
       </div>
@@ -96,11 +96,13 @@
         </div>
         <!-- Submit Form -->
         <p>
-          <button type="submit" class="btn btn-success btn-lg btn-block" [disabled]="f.invalid">Add</button>
+          <button type="submit" class="btn btn-dark btn-lg btn-block" [disabled]="f.invalid">Add</button>
         </p>
       </div>
       <div class="col-md-3"></div>
     </div>
+
+    <!-- Feedback Elements -->
     <div class="alert alert-danger" *ngIf="errorMessageState">
       <h4>
         {{error}}

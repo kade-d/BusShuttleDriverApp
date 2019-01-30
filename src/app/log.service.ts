@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { retryWhen, catchError } from 'rxjs/operators';
+import { retryWhen, catchError, map } from 'rxjs/operators';
 import { Observable, throwError, timer } from 'rxjs';
 import { mergeMap, finalize } from 'rxjs/operators';
 import { Log } from './log';
+import { Stop } from './stop';
 
 
 @Injectable({
@@ -11,9 +12,13 @@ import { Log } from './log';
 })
 export class LogService {
   baseUrl = 'https://www.mildvariety.club/api';
-  logs: Log[];
+  log: Log[];
+  stops: Stop[];
+  response: Object;
 
 constructor(private http: HttpClient) { }
+
+
 
   store(log: Log): Observable<Log> {
     return this.http.post<Log>('https://www.mildvariety.club/api/store', { data: log })
@@ -25,7 +30,15 @@ constructor(private http: HttpClient) { }
       catchError(this.handleError));
   }
 
-    
+
+  getAllStops() {
+    return this.http.get(`https://www.mildvariety.club/api/getStops.php`)
+  }
+
+
+
+
+
   private generateRetryStrategy() {
     var retryStrategy = ({
       maxRetryAttempts = 15,
@@ -59,8 +72,6 @@ constructor(private http: HttpClient) { }
     };
     return retryStrategy;
   }
-  
-
 
   private handleError(error: HttpErrorResponse) {
     console.log("there was an error")

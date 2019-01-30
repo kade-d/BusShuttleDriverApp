@@ -25,10 +25,10 @@
 
 
 <div id="theForm">
-  <h2>Bus Form</h2>
+
+  <h2 class="center-block">Bus Form</h2>
 
   <form #f="ngForm" name="theForm" (ngSubmit)="submitLog(f)" class="text-center border border-light p-5">
-
     <div class="form-group">
       <label>Boarded</label>
       <div class="center-block">
@@ -36,44 +36,34 @@
         <div class="input-group-prepend">
           <button type="button" class="btn btn-primary btn-number btn-lg btn-block" (click)="decreaseBoardedValueClicked()">Decrease</button>
         </div>
-
         <input type="number" class="input-group-text md-addon" name="boarded" min="0" [(ngModel)]="log.boarded" #logBoarded="ngModel"
           pattern="^[0-9]+$" required>
-
         <div class="input-group-append">
           <button type="button" class="btn btn-primary btn-number btn-lg btn-block" (click)="increaseBoardedValueClicked()">Increase</button>
         </div>
       </div>
     </div>
-
       <span class="help-block danger" *ngIf="logBoarded.errors?.required && logBoarded.touched">
         The # of boarded is required
       </span>
       <span class="help-block danger" *ngIf="logBoarded.errors?.pattern && logBoarded.touched">
         The # of boarded can only contain positive numbers.
       </span>
-
     </div>
 
 
-
-
-    <div class="form-group">
-        <label>Stop</label>
-        
-        <select [(ngModel)]="log.stop" name="stop" class="form-control">
-          <option *ngFor="let test of testDropdown;" [ngValue]="test">{{test}}</option>
-        </select>
-<!-- 
-        <span class="help-block danger" *ngIf="logStop.errors?.required && logStop.touched">
-          The stop name is required
-        </span>
-        <span class="help-block danger" *ngIf="logStop.errors?.pattern && logStop.touched">
-          The stop name can only contain the letters a-z or A-Z
-        </span> -->
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Stop</label>
+          <select [(ngModel)]="log.stop" name="stop" class="form-control">
+            <option *ngFor="let stop of testDropdown" [ngValue]="stop">{{stop}}</option>
+          </select>
+        </div>
       </div>
-
-
+      <div class="col-md-3"></div>
+    </div>
 
     <!-- <div class="form-group">
       <label>Stop</label>

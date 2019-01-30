@@ -3,6 +3,7 @@ import { Log } from './log';
 import { LogService } from './log.service';
 import { Title } from '@angular/platform-browser';
 import { NgForm } from '@angular/forms';
+import { Stop } from './stop';
 
 @Component({
   selector: 'app-root',
@@ -15,17 +16,16 @@ export class AppComponent {
   success = '';
   total = 0;
   log = new Log(0, '', '', '');
-  testDropdown = ['asdf', 'asdfasdf', 'asddsss', 'dfdf'];
+  stops = new Stop("","");
+  testDropdown = [];
 
   constructor(private logService: LogService, private titleService: Title) {
-    console.log(this.getTitle());
     this.log.boarded = 0;
+    this.getStops();
   }
 
   decreaseBoardedValueClicked(): void {
-    if (this.log.boarded == 0) {
-      return;
-    }
+    if (this.log.boarded == 0) { return; }
     this.log.boarded = this.log.boarded - 1;
   }
 
@@ -33,9 +33,16 @@ export class AppComponent {
     this.log.boarded = this.log.boarded + 1;
   }
 
-  getTitle(): string {
-    var value: string = this.titleService.getTitle()
-    return value;
+  getStops() {
+    console.log(this.logService.response);
+    this.logService.getAllStops().subscribe(
+      (data: Stop) => {
+        for (var x in data.data){
+          this.testDropdown.push(data.data[x]);
+       }
+      },
+      (error: any) => console.log("Could not get stops")
+    )
   }
 
   submitLog(f: NgForm): void {
@@ -51,13 +58,11 @@ export class AppComponent {
         console.log(data);
       },
       (error: any) => console.log("Could not add.")
-
     );
     this.log.boarded = 0;
     f.controls['stop'].reset();
     f.controls['loop'].reset();
     console.log(tempLog);
-
   }
 
   private resetErrors() {

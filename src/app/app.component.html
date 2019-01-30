@@ -1,10 +1,11 @@
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 <nav class="navbar navbar-dark bg-dark mb-5">
     <a class="navbar-brand" href="/">Log Collection System</a>
     <div class="navbar-expand mr-auto">
       <div class="navbar-nav">
         <a class="nav-item nav-link active" href="#">Home</a>
-        <a class="nav-item nav-link" href="#">About</a>
-        <a class="nav-item nav-link" href="#">Contact</a>
+        <a class="nav-item nav-link" href="#">Login</a>
+        <a class="nav-item nav-link" href="#">Configure</a>
       </div>
     </div>
     <div class="navbar-expand ml-auto navbar-nav">
@@ -58,7 +59,20 @@
         <div class="form-group">
           <label>Stop</label>
           <select [(ngModel)]="log.stop" name="stop" class="form-control">
-            <option *ngFor="let stop of testDropdown" [ngValue]="stop">{{stop}}</option>
+            <option *ngFor="let stop of stopDropdown" [ngValue]="stop">{{stop}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-3"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Loop</label>
+          <select [(ngModel)]="log.loop" name="loop" class="form-control">
+            <option *ngFor="let loop of loopDropdown" [ngValue]="loop">{{loop}}</option>
           </select>
         </div>
       </div>
@@ -109,7 +123,7 @@
           </span>
         </div> -->
 
-    <div class="form-group">
+    <!-- <div class="form-group">
       <label>Loop</label>
       <input type="text" class="form-control" name="loop" [(ngModel)]="log.loop" #logLoop="ngModel" required pattern="^[a-zA-Z]+$">
       <span class="help-block danger" *ngIf="logLoop.errors?.required && logLoop.touched">
@@ -118,20 +132,30 @@
       <span class="help-block danger" *ngIf="logLoop.errors?.pattern && logLoop.touched">
         The loop name can only contain the letters a-z or A-Z
       </span>
-    </div>
+    </div> -->
 
-    <div class="form-group">
-      <label>Driver</label>
-      <input type="text" class="form-control" name="driver" [(ngModel)]="log.driver" #logDriver="ngModel" required
-        pattern="^[a-zA-Z]+$">
-      <span class="help-block danger" *ngIf="logDriver.errors?.required && logDriver.touched">
-        The driver name is required
-      </span>
-      <span class="help-block danger" *ngIf="logDriver.errors?.pattern && logDriver.touched">
-        The driver name can only contain the letters a-z or A-Z
-      </span>
+    
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Driver</label>
+          <input type="text" class="form-control" name="driver" [(ngModel)]="log.driver" #logDriver="ngModel" required
+            pattern="^[a-zA-Z]+$">
+          <span class="help-block danger" *ngIf="logDriver.errors?.required && logDriver.touched">
+            The driver name is required
+          </span>
+          <span class="help-block danger" *ngIf="logDriver.errors?.pattern && logDriver.touched">
+            The driver name can only contain the letters a-z or A-Z
+          </span>
+        </div>
+        <p>
+        <button type="submit" class="btn btn-success btn-lg btn-block" [disabled]="f.invalid">Add</button>
+      </p>
+      </div>
+      <div class="col-md-3"></div>
     </div>
-
-    <button type="submit" class="btn btn-success btn-lg btn-block" [disabled]="f.invalid">Add</button>
+    <div class="alert alert-danger" *ngIf="isHidden" >{{error}}</div>
   </form>
+  
 </div>

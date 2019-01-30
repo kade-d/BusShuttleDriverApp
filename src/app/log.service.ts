@@ -5,6 +5,7 @@ import { Observable, throwError, timer } from 'rxjs';
 import { mergeMap, finalize } from 'rxjs/operators';
 import { Log } from './log';
 import { Stop } from './stop';
+import { Loop } from './loop';
 
 
 @Injectable({
@@ -14,6 +15,7 @@ export class LogService {
   baseUrl = 'https://www.mildvariety.club/api';
   log: Log[];
   stops: Stop[];
+  loops: Loop[];
   response: Object;
 
 constructor(private http: HttpClient) { }
@@ -33,6 +35,10 @@ constructor(private http: HttpClient) { }
 
   getAllStops() {
     return this.http.get(`https://www.mildvariety.club/api/getStops.php`)
+  }
+
+  getAllLoops() {
+    return this.http.get(`https://www.mildvariety.club/api/getLoops.php`)
   }
 
 

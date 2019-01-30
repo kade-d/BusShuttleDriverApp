@@ -31,16 +31,16 @@
     <!-- Boarded - Form-Group -->
     <div class="form-group">
       <label>Boarded</label>
-      <div class="center-block">
-        <div class="md-form input-group">
-          <div class="input-group-prepend">
-            <button type="button" class="btn btn-dark btn-number btn-lg btn-block" (click)="decreaseBoardedValueClicked()">Decrease</button>
-          </div>
-          <input type="number" class="input-group-text md-addon" name="boarded" min="0" [(ngModel)]="log.boarded"
+      <div class="form-row">
+        <div class="col-sm-5">
+          <button type="button" class="btn btn-dark btn-number btn-lg btn-block" (click)="decreaseBoardedValueClicked()">-</button>
+        </div>
+        <div class="col-sm-2">
+          <input type="number" class="form-control form-control-lg input-group-text" name="boarded" min="0" [(ngModel)]="log.boarded"
             #logBoarded="ngModel" pattern="^[0-9]+$" required>
-          <div class="input-group-append">
-            <button type="button" class="btn btn-dark btn-number btn-lg btn-block" (click)="increaseBoardedValueClicked()">Increase</button>
-          </div>
+        </div>
+        <div class="col-sm-5">
+          <button type="button" class="btn btn-success btn-number btn-lg btn-block" (click)="increaseBoardedValueClicked()">+</button>
         </div>
       </div>
       <span class="help-block danger" *ngIf="logBoarded.errors?.required && logBoarded.touched">
@@ -54,30 +54,29 @@
         <!-- Left at Stop - Form-Group -->
         <div class="form-group">
             <label>Left Behind</label>
-            <div class="center-block">
-              <div class="md-form input-group">
-                <div class="input-group-prepend">
-                  <button type="button" class="btn btn-dark btn-number btn-lg btn-block" (click)="decreaseLeftBehindValueClicked()">Decrease</button>
-                </div>
-                <input type="number" class="input-group-text md-addon" name="leftBehind" min="0" [(ngModel)]="log.leftBehind"
-                  #logBoarded="ngModel" pattern="^[0-9]+$" required>
-                <div class="input-group-append">
-                  <button type="button" class="btn btn-dark btn-number btn-lg btn-block" (click)="increaseLeftBehindValueClicked()">Increase</button>
-                </div>
+            <div class="form-row">
+              <div class="col-sm-5">
+                <button type="button" class="btn btn-dark btn-number btn-lg btn-block" (click)="decreaseLeftBehindValueClicked()">-</button>
+              </div>
+              <div class="col-sm-2">
+                <input type="number" class="form-control form-control-lg input-group-text" name="leftBehind" min="0" [(ngModel)]="log.leftBehind"
+                  #leftBehind="ngModel" pattern="^[0-9]+$" required>
+              </div>
+              <div class="col-sm-5">
+                <button type="button" class="btn btn-success btn-number btn-lg btn-block" (click)="increaseLeftBehindValueClicked()">+</button>
               </div>
             </div>
-            <span class="help-block danger" *ngIf="logBoarded.errors?.required && logBoarded.touched">
-              The # of people left behind is required
+            <span class="help-block danger" *ngIf="leftBehind.errors?.required && leftBehind.touched">
+              The # of boarded is required
             </span>
-            <span class="help-block danger" *ngIf="logBoarded.errors?.pattern && logBoarded.touched">
-              The # of people left behind can only contain positive numbers.
+            <span class="help-block danger" *ngIf="leftBehind.errors?.pattern && leftBehind.touched">
+              The # of boarded can only contain positive numbers.
             </span>
           </div>
 
     <!-- Stop DropDown -->
     <div class="row">
-      <div class="col-md-3"></div>
-      <div class="col-md-6">
+      <div class="col-md-12">
         <div class="form-group">
           <label>Stop</label>
           <select [(ngModel)]="log.stop" name="stop" class="form-control">
@@ -85,13 +84,11 @@
           </select>
         </div>
       </div>
-      <div class="col-md-3"></div>
     </div>
 
     <!-- Loop DropDown -->
     <div class="row">
-      <div class="col-md-3"></div>
-      <div class="col-md-6">
+      <div class="col-md-12">
         <div class="form-group">
           <label>Loop</label>
           <select [(ngModel)]="log.loop" name="loop" class="form-control">
@@ -99,13 +96,12 @@
           </select>
         </div>
       </div>
-      <div class="col-md-3"></div>
     </div>
 
     <!-- Driver with Validation -->
     <div class="row">
-      <div class="col-md-3"></div>
-      <div class="col-md-6">
+
+      <div class="col-md-12">
         <div class="form-group">
           <label>Driver</label>
           <input type="text" class="form-control" name="driver" [(ngModel)]="log.driver" #logDriver="ngModel" required
@@ -117,12 +113,16 @@
             The driver name can only contain the letters a-z or A-Z
           </span>
         </div>
-        <!-- Submit Form -->
+      </div>
+    </div>
+    
+    <!-- Submit Form -->
+    <div class="row">
+      <div class="col-md-12">
         <p>
-          <button type="submit" class="btn btn-dark btn-lg btn-block" [disabled]="f.invalid">Add</button>
+          <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="f.invalid">Add</button>
         </p>
       </div>
-      <div class="col-md-3"></div>
     </div>
 
     <!-- Feedback Elements -->

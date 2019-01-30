@@ -62,7 +62,7 @@ export class AppComponent {
           }
         },
         (error: any) => {
-          this.error = "Could not get Stops. Please try refreshing the page.";
+          this.error = "Could not get stops. Please try refreshing the page.";
           this.errorMessageState = true;
         }
       )
@@ -78,7 +78,7 @@ export class AppComponent {
           }
         },
         (error: any) => {
-          this.error = "Could not get Loops. Please try refreshing the page.";
+          this.error = "Could not get loops. Please try refreshing the page.";
           this.errorMessageState = true;
         }
       )

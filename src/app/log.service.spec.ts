@@ -17,7 +17,7 @@ describe('LogService', () => {
     });
 
     it('should perform POST request and return dummyLog obj.', () => {
-        const dummyLog: Log = { boarded: 4, stop: 'MU', loop: 'Green', driver: 'steve' };
+        const dummyLog: Log = { boarded: 4, stop: 'MU', loop: 'Green', driver: 'steve', leftBehind: 3 };
 
         service.store(dummyLog).subscribe(returnObj => {
             expect(returnObj).toEqual(dummyLog);

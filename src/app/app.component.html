@@ -51,6 +51,29 @@
       </span>
     </div>
 
+        <!-- Left at Stop - Form-Group -->
+        <div class="form-group">
+            <label>Left Behind</label>
+            <div class="center-block">
+              <div class="md-form input-group">
+                <div class="input-group-prepend">
+                  <button type="button" class="btn btn-dark btn-number btn-lg btn-block" (click)="decreaseLeftBehindValueClicked()">Decrease</button>
+                </div>
+                <input type="number" class="input-group-text md-addon" name="leftBehind" min="0" [(ngModel)]="log.leftBehind"
+                  #logBoarded="ngModel" pattern="^[0-9]+$" required>
+                <div class="input-group-append">
+                  <button type="button" class="btn btn-dark btn-number btn-lg btn-block" (click)="increaseLeftBehindValueClicked()">Increase</button>
+                </div>
+              </div>
+            </div>
+            <span class="help-block danger" *ngIf="logBoarded.errors?.required && logBoarded.touched">
+              The # of people left behind is required
+            </span>
+            <span class="help-block danger" *ngIf="logBoarded.errors?.pattern && logBoarded.touched">
+              The # of people left behind can only contain positive numbers.
+            </span>
+          </div>
+
     <!-- Stop DropDown -->
     <div class="row">
       <div class="col-md-3"></div>

@@ -16,7 +16,7 @@ export class AppComponent {
   error = '';
   success = '';
   total = 0;
-  log = new Log(0, '', '', '');
+  log = new Log(0, '', '', '', 0);
   stops = new Stop();
   loops = new Loop();
   stopDropdown = [];
@@ -27,6 +27,7 @@ export class AppComponent {
 
   constructor(private logService: LogService) {
     this.log.boarded = 0;
+    this.log.leftBehind = 0;
     this.log.stop = null;
     this.populateStopsDropdown();
     this.populateLoopsDropdown();
@@ -41,6 +42,16 @@ export class AppComponent {
     this.log.boarded = this.log.boarded + 1;
   }
 
+  decreaseLeftBehindValueClicked(): void {
+    if (this.log.leftBehind == 0) { return; }
+    this.log.leftBehind = this.log.leftBehind - 1;
+  }
+
+  increaseLeftBehindValueClicked(): void {
+    this.log.leftBehind = this.log.leftBehind + 1;
+  }
+
+
   populateStopsDropdown() {
     console.log(this.logService.response);
     this.logService.getAllStops()
@@ -51,7 +62,7 @@ export class AppComponent {
           }
         },
         (error: any) => {
-          this.error = "Could not get Stops, please try refreshing the page.";
+          this.error = "Could not get Stops. Please try refreshing the page.";
           this.errorMessageState = true;
         }
       )
@@ -67,7 +78,7 @@ export class AppComponent {
           }
         },
         (error: any) => {
-          this.error = "Could not get Loops, please try refreshing the page.";
+          this.error = "Could not get Loops. Please try refreshing the page.";
           this.errorMessageState = true;
         }
       )
@@ -81,11 +92,12 @@ export class AppComponent {
       return;
     }
     this.errorMessageState = false;
-    var tempLog = new Log(0, '', '', '');
+    var tempLog = new Log(0, '', '', '', 0);
     tempLog.boarded = this.log.boarded;
     tempLog.driver = this.log.driver;
     tempLog.loop = this.log.loop;
     tempLog.stop = this.log.stop;
+    tempLog.leftBehind = this.log.leftBehind;
     this.logService.store(tempLog)
       .subscribe(
         (data: Log) => {
@@ -96,6 +108,7 @@ export class AppComponent {
         (error: any) => this.error = "Something went wrong, please try adding again shortly."
       );
     this.log.boarded = 0;
+    this.log.leftBehind = 0;
     this.resetFormControls(f);
     console.log(tempLog);
   }

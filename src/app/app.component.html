@@ -1,110 +1,141 @@
-    <title>BusLog</title>
-    <div id="theForm">
-      <h2>Bus Form</h2>
-      <form #f="ngForm" name="theForm" (ngSubmit)="addLog(f)">
-        <div class="form-group">
-          <label>Boarded</label>
-          
-          <input type="number"
-                class="form-control"
-                name="boarded"
-                [(ngModel)]="log.boarded"
-                #logBoarded="ngModel"
-                pattern="^[0-9]+$"
-                required>
-          <span class="help-block danger" *ngIf="logBoarded.errors?.required && logBoarded.touched">
-            The # of boarded is required
-          </span>
-          <span class="help-block danger" *ngIf="logBoarded.errors?.pattern && logBoarded.touched">
-            The # of boaurded can only contain numbers
-          </span>
-        </div>
-
-        <div class="form-group">
-          <label>Stop</label>
-          <input type="text"
-                class="form-control"
-                name="stop"
-                [(ngModel)]="log.stop"
-                #logStop="ngModel"
-                pattern="^[a-zA-Z]+$"
-                required>
-          <span class="help-block danger" *ngIf="logStop.errors?.required && logStop.touched">
-            The stop name is required
-          </span>
-          <span class="help-block danger" *ngIf="logStop.errors?.pattern && logStop.touched">
-            The stop name can only contain the letters a-z or A-Z
-          </span>
-        </div>
-
-        <!-- <div class="form-group">
-          <label>timestap</label>
-          <input type="datetime-local"
-                class="form-control"
-                name="timestamp"
-                [(ngModel)]="log.timestamp"
-                #logTimestamp="ngModel"
-                required>
-          <span class="help-block danger" *ngIf="logTimestamp.errors?.required && logTimestamp.touched">
-            The model name is required
-          </span>
-          <span class="help-block danger" *ngIf="logTimestamp.errors?.pattern && logTimestamp.touched">
-            The model name can only contain the letters a-z or A-Z
-          </span>
-        </div>
-
-        <div class="form-group">
-          <label>Date</label>
-          <input type="date"
-                class="form-control"
-                name="Date"
-                [(ngModel)]="log.date"
-                #logDate="ngModel"
-                required>
-          <span class="help-block danger" *ngIf="logDate.errors?.required && logDate.touched">
-            The model name is required
-          </span>
-          <span class="help-block danger" *ngIf="logDate.errors?.pattern && logDate.touched">
-            The model name can only contain the letters a-z or A-Z
-          </span>
-        </div> -->
-
-        <div class="form-group">
-          <label>Loop</label>
-          <input type="text"
-                class="form-control"
-                name="loop"
-                [(ngModel)]="log.loop"
-                #logLoop="ngModel"
-                required
-                pattern="^[a-zA-Z]+$">
-          <span class="help-block danger" *ngIf="logLoop.errors?.required && logLoop.touched">
-            The loop name is required.
-          </span>
-          <span class="help-block danger" *ngIf="logLoop.errors?.pattern && logLoop.touched">
-            The loop name can only contain the letters a-z or A-Z
-          </span>
-        </div>
-
-        <div class="form-group">
-          <label>Driver</label>
-          <input type="text"
-                class="form-control"
-                name="driver"
-                [(ngModel)]="log.driver"
-                #logDriver="ngModel"
-                required
-                pattern="^[a-zA-Z]+$">
-          <span class="help-block danger" *ngIf="logDriver.errors?.required && logDriver.touched">
-            The driver name is required
-          </span>
-          <span class="help-block danger" *ngIf="logDriver.errors?.pattern && logDriver.touched">
-            The driver name can only contain the letters a-z or A-Z
-          </span>
-        </div>
-    
-        <button type="submit" 
-          class="btn btn-primary btn-lg btn-block"
-            [disabled]="f.invalid">Add</button>
-      </form>
+<!-- Nav Bar -->
+<nav class="navbar navbar-dark bg-dark mb-5">
+  <a class="navbar-brand" href="/">Log Collection System</a>
+  <div class="navbar-expand mr-auto">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link active" href="#">Home</a>
+      <a class="nav-item nav-link" href="#">Login</a>
+      <a class="nav-item nav-link" href="#">Configure</a>
     </div>
+  </div>
+  <div class="navbar-expand ml-auto navbar-nav">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link" href="https://github.com/beeman" target="_blank">
+        <i class="fa fa-github"></i>
+      </a>
+      <a class="nav-item nav-link" href="https://twitter.com/beeman_nl" target="_blank">
+        <i class="fa fa-twitter"></i>
+      </a>
+      <a class="nav-item nav-link" href="https://medium.com/@beeman" target="_blank">
+        <i class="fa fa-medium"></i>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Form -->
+<div id="theForm">
+  <h2 class="center-block">Shuttle Log Collection Form</h2>
+  <form #f="ngForm" name="theForm" (ngSubmit)="submitLog(f)" class="text-center border border-light">
+
+    <!-- Boarded - Form-Group -->
+    <div class="form-group">
+      <label class="col-form-label col-form-label-lg">Boarded</label>
+      <div class="form-row">
+        <div class="col-sm-5">
+          <button type="button" class="btn btn-dark btn-number btn-lg btn-block" (click)="decreaseBoardedValueClicked()">-</button>
+        </div>
+        <div class="col-sm-2">
+          <input type="number" class="form-control form-control-lg input-group-text" name="boarded" min="0" [(ngModel)]="log.boarded"
+            #logBoarded="ngModel" pattern="^[0-9]+$" required>
+        </div>
+        <div class="col-sm-5">
+          <button type="button" class="btn btn-success btn-number btn-lg btn-block" (click)="increaseBoardedValueClicked()">+</button>
+        </div>
+      </div>
+      <div class="alert alert-warning" *ngIf="logBoarded.errors?.required && logBoarded.touched">
+        The number of passengers boarded is required.
+      </div>
+      <div class="alert alert-warning" *ngIf="logBoarded.errors?.pattern && logBoarded.touched">
+        Invalid input. It can only contain counting numbers.
+      </div>
+    </div>
+
+    <!-- Left at Stop - Form-Group -->
+    <div class="form-group">
+      <label class="col-form-label col-form-label-lg">Left Behind</label>
+      <div class="form-row">
+        <div class="col-sm-5">
+          <button type="button" class="btn btn-dark btn-number btn-lg btn-block" (click)="decreaseLeftBehindValueClicked()">-</button>
+        </div>
+        <div class="col-sm-2">
+          <input type="number" class="form-control form-control-lg input-group-text" name="leftBehind" min="0"
+            [(ngModel)]="log.leftBehind" #leftBehind="ngModel" pattern="^[0-9]+$" required>
+        </div>
+        <div class="col-sm-5">
+          <button type="button" class="btn btn-success btn-number btn-lg btn-block" (click)="increaseLeftBehindValueClicked()">+</button>
+        </div>
+      </div>
+      <div class="alert alert-warning" *ngIf="leftBehind.errors?.required && leftBehind.touched">
+          The number of passengers left behind is required.
+      </div>
+      <div class="alert alert-warning" *ngIf="leftBehind.errors?.pattern && leftBehind.touched">
+        Invalid input. It can only contain counting numbers.
+      </div>
+    </div>
+
+    <!-- Stop DropDown -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="col-form-label col-form-label-lg">Stop</label>
+          <select [(ngModel)]="log.stop" name="stop" class="form-control">
+            <option *ngFor="let stop of stopDropdown" [ngValue]="stop">{{stop}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loop DropDown -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="col-form-label col-form-label-lg">Loop</label>
+          <select [(ngModel)]="log.loop" name="loop" class="form-control">
+            <option *ngFor="let loop of loopDropdown" [ngValue]="loop">{{loop}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Driver with Validation -->
+    <div class="row">
+
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="col-form-label col-form-label-lg">Driver</label>
+          <input type="text" class="form-control" name="driver" [(ngModel)]="log.driver" #logDriver="ngModel" required
+            pattern="^[a-zA-Z]+$">
+          <div class="alert alert-warning" *ngIf="logDriver.errors?.required && logDriver.touched">
+            Please include your name.
+          </div>
+          <div class="alert alert-warning" *ngIf="logDriver.errors?.pattern && logDriver.touched">
+            Invalid input. It can only contain letters a-z or A-Z and no spaces.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Form -->
+    <div class="row">
+      <div class="col-md-12">
+        <p>
+          <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="f.invalid">Add</button>
+        </p>
+      </div>
+    </div>
+
+    <!-- Feedback Elements -->
+    <div class="alert alert-danger" *ngIf="errorMessageState">
+      <h4>
+        {{error}}
+      </h4>
+    </div>
+    <div class="alert alert-success" *ngIf="successMessageState">
+      <h4>
+        {{success}}
+      </h4>
+    </div>
+
+  </form>
+</div>

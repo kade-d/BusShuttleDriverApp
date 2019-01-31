@@ -26,37 +26,50 @@ export class AppComponent {
   subscription: any;
 
   constructor(private logService: LogService) {
-    this.log.boarded = 0;
-    this.log.leftBehind = 0;
     this.log.stop = null;
     this.populateStopsDropdown();
     this.populateLoopsDropdown();
   }
 
   decreaseBoardedValueClicked(): void {
-    if (this.log.boarded == 0) { return; }
-    this.log.boarded = this.log.boarded - 1;
+    if (this.log.boarded == 0 || this.log.boarded == undefined) {
+      return;
+    }
+    else {
+      this.log.boarded = this.log.boarded - 1;
+    }
   }
 
   increaseBoardedValueClicked(): void {
-    this.log.boarded = this.log.boarded + 1;
+    if (this.log.boarded == undefined) {
+      this.log.boarded = 1;
+    } else {
+      this.log.boarded = this.log.boarded + 1;
+    }
   }
 
   decreaseLeftBehindValueClicked(): void {
-    if (this.log.leftBehind == 0) { return; }
-    this.log.leftBehind = this.log.leftBehind - 1;
+    if (this.log.leftBehind == 0 || this.log.leftBehind == undefined) {
+      return;
+    } else {
+      this.log.leftBehind = this.log.leftBehind - 1;
+    }
   }
 
   increaseLeftBehindValueClicked(): void {
-    this.log.leftBehind = this.log.leftBehind + 1;
+    if (this.log.leftBehind == undefined) {
+      this.log.leftBehind = 1;
+    } else {
+      this.log.leftBehind = this.log.leftBehind + 1;
+    }
   }
 
 
   populateStopsDropdown() {
-    console.log(this.logService.response);
     this.logService.getAllStops()
       .subscribe(
         (data: Stop) => {
+          this.stopDropdown.push("Select a stop")
           for (var x in data.data) {
             this.stopDropdown.push(data.data[x]);
           }
@@ -65,14 +78,14 @@ export class AppComponent {
           this.error = "Could not get stops. Please try refreshing the page.";
           this.errorMessageState = true;
         }
-      )
+      )  
   }
 
   populateLoopsDropdown() {
-    console.log(this.logService.response);
     this.logService.getAllLoops()
       .subscribe(
-        (data: Stop) => {
+        (data: Loop) => {
+          this.loopDropdown.push("Select a loop")
           for (var x in data.data) {
             this.loopDropdown.push(data.data[x]);
           }
@@ -86,7 +99,7 @@ export class AppComponent {
 
   submitLog(f: NgForm): void {
     this.resetErrors();
-    if (this.log.loop == undefined || this.log.stop == undefined) {
+    if (this.log.loop == undefined || this.log.stop == undefined || this.log.stop == "Select a stop" || this.log.loop == "Select a loop") {
       this.errorMessageState = true;
       this.error = "Oops! Please select all necessary fields."
       return;
@@ -107,8 +120,6 @@ export class AppComponent {
         },
         (error: any) => this.error = "Something went wrong, please try adding again shortly."
       );
-    this.log.boarded = 0;
-    this.log.leftBehind = 0;
     this.resetFormControls(f);
     console.log(tempLog);
   }
@@ -120,6 +131,8 @@ export class AppComponent {
 
   private resetFormControls(f: NgForm) {
     f.controls['stop'].reset();
+    f.controls['boarded'].reset();
+    f.controls['leftBehind'].reset();
   }
 
   public showSuccessMessage(){

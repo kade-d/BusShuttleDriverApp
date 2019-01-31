@@ -1,22 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { retryWhen, catchError } from 'rxjs/operators';
+import { retryWhen, catchError, map } from 'rxjs/operators';
 import { Observable, throwError, timer } from 'rxjs';
 import { mergeMap, finalize } from 'rxjs/operators';
 import { Log } from './log';
-
+import { Stop } from './stop';
+import { Loop } from './loop';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LogService {
   baseUrl = 'https://www.mildvariety.club/api';
-  logs: Log[];
+  log: Log[];
+  stops: Stop[];
+  loops: Loop[];
+  response: Object;
 
 constructor(private http: HttpClient) { }
 
   store(log: Log): Observable<Log> {
-    return this.http.post<Log>('https://www.mildvariety.club/api/store', { data: log })
+    return this.http.post<Log>(this.baseUrl +'/store', { data: log })
     .pipe(
       retryWhen(this.generateRetryStrategy()({
         scalingDuration: 2000,
@@ -25,7 +29,14 @@ constructor(private http: HttpClient) { }
       catchError(this.handleError));
   }
 
-    
+  getAllStops() {
+    return this.http.get(this.baseUrl + '/getStops.php')
+  }
+
+  getAllLoops() {
+    return this.http.get(this.baseUrl + '/getLoops.php')
+  }
+
   private generateRetryStrategy() {
     var retryStrategy = ({
       maxRetryAttempts = 15,
@@ -47,26 +58,19 @@ constructor(private http: HttpClient) { }
           ) {
             return this.handleError(error);
           }
-          console.log(
-            `Attempt ${retryAttempt}: retrying in ${retryAttempt *
-              scalingDuration}ms`
-          );
-          // retry after 1s, 2s, etc...
+          // console.log( //uncomment for demonstration
+          //   `Attempt ${retryAttempt}: retrying in ${retryAttempt *
+          //     scalingDuration}ms`
+          // );
           return timer(retryAttempt * scalingDuration);
         }),
-        finalize(() => console.log('We are done!'))
+        finalize(() => console.log('Entry has been successfully added!'))
       );
     };
     return retryStrategy;
   }
-  
-
 
   private handleError(error: HttpErrorResponse) {
-    console.log("there was an error")
-    console.log(error);
-
-    // return an observable with a user friendly message
     return throwError('Error! something went wrong.');
   }
 }

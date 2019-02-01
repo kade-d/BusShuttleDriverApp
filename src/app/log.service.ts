@@ -15,7 +15,7 @@ export class LogService {
   log: Log[];
   stops: Stop[];
   loops: Loop[];
-  response: Object;
+
 
 constructor(private http: HttpClient) { }
 

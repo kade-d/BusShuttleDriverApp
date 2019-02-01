@@ -73,6 +73,7 @@ export class AppComponent {
           for (var x in data.data) {
             this.stopDropdown.push(data.data[x]);
           }
+          console.log("Populated the Stops Dropdown");
         },
         (error: any) => {
           this.error = "Could not get stops. Please try refreshing the page.";
@@ -89,6 +90,7 @@ export class AppComponent {
           for (var x in data.data) {
             this.loopDropdown.push(data.data[x]);
           }
+          console.log("Populated the Stops Dropdown");
         },
         (error: any) => {
           this.error = "Could not get loops. Please try refreshing the page.";
@@ -103,6 +105,8 @@ export class AppComponent {
       this.errorMessageState = true;
       this.error = "Oops! Please select all necessary fields."
       return;
+    } else if (this.log.leftBehind == undefined) {
+      this.log.leftBehind = 0;
     }
     this.errorMessageState = false;
     var tempLog = new Log(0, '', '', '', 0);

@@ -25,6 +25,7 @@ export class AppComponent {
   successMessageState = false;
   subscription: any;
 
+
   constructor(private logService: LogService) {
     this.log.stop = null;
     this.populateStopsDropdown();

@@ -90,7 +90,7 @@ export class AppComponent {
           for (var x in data.data) {
             this.loopDropdown.push(data.data[x]);
           }
-          console.log("Populated the Stops Dropdown");
+          console.log("Populated the Loops Dropdown");
         },
         (error: any) => {
           this.error = "Could not get loops. Please try refreshing the page.";

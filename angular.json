@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ShuttleBusLogCollectionSystem": {
+    "BusLog": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,14 +13,16 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ShuttleBusLogCollectionSystem",
+            "outputPath": "dist/BusLog",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.json",
+              "src/images/"
             ],
             "styles": [
               "src/styles.css"
@@ -57,18 +59,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ShuttleBusLogCollectionSystem:build"
+            "browserTarget": "BusLog:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ShuttleBusLogCollectionSystem:build:production"
+              "browserTarget": "BusLog:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ShuttleBusLogCollectionSystem:build"
+            "browserTarget": "BusLog:build"
           }
         },
         "test": {
@@ -102,7 +104,7 @@
         }
       }
     },
-    "ShuttleBusLogCollectionSystem-e2e": {
+    "BusLog-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -111,11 +113,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "ShuttleBusLogCollectionSystem:serve"
+            "devServerTarget": "BusLog:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ShuttleBusLogCollectionSystem:serve:production"
+              "devServerTarget": "BusLog:serve:production"
             }
           }
         },
@@ -131,5 +133,5 @@
       }
     }
   },
-  "defaultProject": "ShuttleBusLogCollectionSystem"
+  "defaultProject": "BusLog"
 }

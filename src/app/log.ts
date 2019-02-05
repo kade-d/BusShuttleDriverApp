@@ -4,7 +4,7 @@ export class Log {
   loop: string;
   driver: string;
   leftBehind: number;
-  id?:   number;
+  id?: number;
   constructor(
     boarded: number,
     stop: string,

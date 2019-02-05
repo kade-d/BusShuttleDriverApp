@@ -23,5 +23,20 @@
         ]
       }
     }
+  ], 
+  "dataGroups": [
+    {
+      "name": "api-performance",
+      "urls": [
+        "/getStops",
+        "/getLoops"
+      ],
+      "cacheConfig": {
+        "cacheConfig": "performance",
+        "maxSize": 100,
+        "maxAge": "3d"
+      }
+    }
+    
   ]
 }

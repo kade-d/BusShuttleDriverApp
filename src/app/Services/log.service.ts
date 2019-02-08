@@ -3,9 +3,9 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { retryWhen, catchError, map } from 'rxjs/operators';
 import { Observable, throwError, timer } from 'rxjs';
 import { mergeMap, finalize } from 'rxjs/operators';
-import { Log } from './log';
-import { Stop } from './stop';
-import { Loop } from './loop';
+import { Log } from '../Models/log';
+import { Stop } from '../Models/stop';
+import { Loop } from '../Models/loop';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class LogService {
 constructor(private http: HttpClient) { }
 
   store(log: Log): Observable<Log> {
-    return this.http.post<Log>(this.baseUrl +'/store', { data: log })
+    return this.http.post<Log>(this.baseUrl + '/store', { data: log })
     .pipe(
       retryWhen(this.generateRetryStrategy()({
         scalingDuration: 2000,
@@ -30,15 +30,15 @@ constructor(private http: HttpClient) { }
   }
 
   getAllStops() {
-    return this.http.get(this.baseUrl + '/getStops.php')
+    return this.http.get(this.baseUrl + '/getStops.php');
   }
 
   getAllLoops() {
-    return this.http.get(this.baseUrl + '/getLoops.php')
+    return this.http.get(this.baseUrl + '/getLoops.php');
   }
 
   private generateRetryStrategy() {
-    var retryStrategy = ({
+    const retryStrategy = ({
       maxRetryAttempts = 15,
       scalingDuration = 1000,
       excludedStatusCodes = []
@@ -54,7 +54,7 @@ constructor(private http: HttpClient) { }
           // or response is a status code we don't wish to retry, throw error
           if (
             retryAttempt > maxRetryAttempts ||
-            excludedStatusCodes.find(e => e == error.status)
+            excludedStatusCodes.find(e => e === error.status)
           ) {
             return this.handleError(error);
           }

@@ -28,14 +28,12 @@ let de: DebugElement;
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
     de = fixture.debugElement;
-    fixture.detectChanges;
+    // fixture.detectChanges;
   });
 
   it('should create the component.', () => {
     expect(component).toBeTruthy();
   });
-  
-
 });
 
 

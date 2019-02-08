@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { LogService } from './log.service';
-import { HttpClientTestingModule,HttpTestingController } from '@angular/common/http/testing';
-import { Log } from './log';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { Log } from '../Models/log';
 
 describe('LogService', () => {
     let service: LogService;
@@ -12,7 +12,7 @@ describe('LogService', () => {
             imports: [HttpClientTestingModule],
             providers: [LogService]
         });
-        service = TestBed.get(LogService)
+        service = TestBed.get(LogService);
         httpMock = TestBed.get(HttpTestingController);
     });
 
@@ -25,7 +25,7 @@ describe('LogService', () => {
 
         const request = httpMock.expectOne(service.baseUrl + '/store');
         expect(request.request.method).toBe('POST');
-        request.flush(dummyLog)
+        request.flush(dummyLog);
     });
 
 });

@@ -5,7 +5,6 @@ import { NgForm } from '@angular/forms';
 import { Stop } from '../Models/stop';
 import { Loop } from '../Models/loop';
 import { timer } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   templateUrl: 'home.component.html',

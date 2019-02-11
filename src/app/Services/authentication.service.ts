@@ -20,6 +20,7 @@ export class AuthenticationService {
     }
 
     login(username: string, password: string) {
+        // REPLACE THIS URL WITH THE ACTUAL API ENDPOINT
         return this.http.post<any>(`https://localhost/users/authenticate`, { username, password })
             .pipe(map(user => {
                 // login successful if there's a jwt token in the response

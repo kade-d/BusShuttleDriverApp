@@ -13,12 +13,17 @@ export class LoginComponent implements OnInit {
     returnUrl: string;
     error = '';
 
+    cantLogin = false; // remove when database is live
+    credentials = 'Username:test Password:test'; // remove when database is live
+
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService
-    ) { }
+        private authenticationService: AuthenticationService,
+    ) {
+
+     }
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
@@ -55,5 +60,9 @@ export class LoginComponent implements OnInit {
                     this.error = error;
                     this.loading = false;
                 });
+    }
+
+    removeLater() {
+        this.cantLogin = true;
     }
 }

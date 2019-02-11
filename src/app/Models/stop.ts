@@ -4,4 +4,3 @@ export class Stop {
     name: string;
     constructor() {}
   }
-  

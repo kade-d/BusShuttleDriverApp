@@ -3,6 +3,7 @@ import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { DebugElement } from '@angular/core';
 import { HttpClient, HttpHandler } from '@angular/common/http';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AppComponent', () => {
 let component: AppComponent;
@@ -15,7 +16,8 @@ let de: DebugElement;
         AppComponent
       ],
       imports: [
-        FormsModule
+        FormsModule,
+        RouterTestingModule
       ],
       providers: [
         HttpClient,

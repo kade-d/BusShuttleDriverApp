@@ -34,7 +34,7 @@
       "cacheConfig": {
         "cacheConfig": "performance",
         "maxSize": 100,
-        "maxAge": "1h"
+        "maxAge": "1d"
       }
     }
     

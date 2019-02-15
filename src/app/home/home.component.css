@@ -3,3 +3,13 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+.disableZoom {
+    touch-action: manipulation;
+  }
+
+  .btn-xl {
+    padding: 10px 20px;
+    font-size: 40px;
+    border-radius: 10px;
+}

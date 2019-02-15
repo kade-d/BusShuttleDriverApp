@@ -101,8 +101,8 @@ export class HomeComponent {
 
   submitLog(f: NgForm): void {
     this.resetErrors();
-    if (this.log.loop === undefined || this.log.stop === undefined ||
-      this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop') {
+    if (this.log.loop === undefined || this.log.stop === undefined || this.log.loop === null
+       || this.log.stop === null || this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop') {
       this.errorMessageState = true;
       this.error = 'Oops! Please select all necessary fields.';
       return;

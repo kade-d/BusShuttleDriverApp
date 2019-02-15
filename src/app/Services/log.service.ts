@@ -23,7 +23,7 @@ constructor(private http: HttpClient) { }
     return this.http.post<Log>(this.baseUrl + '/store', { data: log })
     .pipe(
       retryWhen(this.generateRetryStrategy()({
-        scalingDuration: 2000,
+        scalingDuration: 1000,
         excludedStatusCodes: [500]
       })),
       catchError(this.handleError));
@@ -39,7 +39,7 @@ constructor(private http: HttpClient) { }
 
   private generateRetryStrategy() {
     const retryStrategy = ({
-      maxRetryAttempts = 15,
+      maxRetryAttempts = 50,
       scalingDuration = 1000,
       excludedStatusCodes = []
     }: {

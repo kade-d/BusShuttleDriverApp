@@ -1,4 +1,13 @@
-﻿<!-- Nav Bar
+﻿<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" name="viewport"
+        content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+</head>
+
+<body>
+    <!-- Nav Bar
 <nav class="navbar navbar-dark bg-dark mb-5">
     <a class="navbar-brand" href="/">Log Collection System</a>
     <div class="navbar-expand mr-auto">
@@ -22,142 +31,147 @@
       </div>
     </div>
   </nav> -->
-  
-<div class="jumbotron" style="background-color:transparent !important;">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
 
-                <!-- Form -->
-                <div id="theForm">
-                    <h2 class="center-block">Shuttle Log Collection Form</h2>
-                    <form #f="ngForm" name="theForm" (ngSubmit)="submitLog(f)" class="text-center border border-light">
+    <div class="jumbotron" style="background-color:transparent !important;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
 
-                        <!-- Boarded - Form-Group -->
-                        <div class="form-group">
-                            <label class="col-form-label col-form-label-lg">Boarded</label>
-                            <div class="form-row">
-                                <div class="col-sm-5">
-                                    <button type="button" class="btn btn-dark btn-number btn-lg btn-block"
-                                        (click)="decreaseBoardedValueClicked()">-</button>
-                                </div>
-                                <div class="col-sm-2">
-                                    <input type="number" pattern="[0-9]*" inputmode="numeric"
-                                        class="form-control form-control-lg input-group-text" name="boarded" min="0"
-                                        [(ngModel)]="log.boarded" #logBoarded="ngModel" required>
-                                </div>
-                                <div class="col-sm-5">
-                                    <button type="button" class="btn btn-success btn-number btn-lg btn-block"
-                                        (click)="increaseBoardedValueClicked()">+</button>
-                                </div>
-                            </div>
-                            <div class="alert alert-warning" *ngIf="logBoarded.errors?.required && logBoarded.touched">
-                                The number of passengers boarded is required.
-                            </div>
-                            <div class="alert alert-warning" *ngIf="logBoarded.errors?.pattern && logBoarded.touched">
-                                Invalid input. It can only contain counting numbers.
-                            </div>
-                        </div>
+                    <!-- Form -->
+                    <div id="theForm">
+                        <h2 class="center-block">Shuttle Log Collection Form</h2>
+                        <form #f="ngForm" name="theForm" (ngSubmit)="submitLog(f)"
+                            class="text-center border border-light disableZoom">
 
-                        <!-- Left at Stop - Form-Group -->
-                        <div class="form-group">
-                            <label class="col-form-label col-form-label-lg">Left Behind</label>
-                            <div class="form-row">
-                                <div class="col-sm-5">
-                                    <button type="button" class="btn btn-dark btn-number btn-lg btn-block"
-                                        (click)="decreaseLeftBehindValueClicked()">-</button>
-                                </div>
-                                <div class="col-sm-2">
-                                    <input type="number" pattern="[0-9]*" inputmode="numeric"
-                                        class="form-control form-control-lg input-group-text" name="leftBehind" min="0"
-                                        [(ngModel)]="log.leftBehind" #leftBehind="ngModel">
-                                </div>
-                                <div class="col-sm-5">
-                                    <button type="button" class="btn btn-success btn-number btn-lg btn-block"
-                                        (click)="increaseLeftBehindValueClicked()">+</button>
-                                </div>
-                            </div>
-                            <div class="alert alert-warning" *ngIf="leftBehind.errors?.required && leftBehind.touched">
-                                The number of passengers left behind is required.
-                            </div>
-                            <div class="alert alert-warning" *ngIf="leftBehind.errors?.pattern && leftBehind.touched">
-                                Invalid input. It can only contain counting numbers.
-                            </div>
-                        </div>
-
-                        <!-- Stop DropDown -->
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="col-form-label col-form-label-lg">Stop</label>
-                                    <select [(ngModel)]="log.stop" name="stop" class="form-control">
-                                        <option *ngFor="let stop of stopDropdown" [ngValue]="stop">{{stop}}</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Loop DropDown -->
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="col-form-label col-form-label-lg">Loop</label>
-                                    <select [(ngModel)]="log.loop" name="loop" class="form-control">
-                                        <option *ngFor="let loop of loopDropdown" [ngValue]="loop">{{loop}}</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Driver with Validation -->
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="col-form-label col-form-label-lg">Driver</label>
-                                    <input type="text" class="form-control" name="driver" [(ngModel)]="log.driver"
-                                        #logDriver="ngModel" required pattern="^[a-zA-Z]+$">
-                                    <div class="alert alert-warning"
-                                        *ngIf="logDriver.errors?.required && logDriver.touched">
-                                        Please include your name.
+                            <!-- Boarded - Form-Group -->
+                            <div class="form-group">
+                                <label class="col-form-label col-form-label-lg">Boarded</label>
+                                <div class="form-row">
+                                    <div class="col-sm-5">
+                                        <button type="button" class="btn btn-dark btn-number btn-xl btn-block disableZoom"
+                                            (click)="decreaseBoardedValueClicked()">-</button>
                                     </div>
-                                    <div class="alert alert-warning"
-                                        *ngIf="logDriver.errors?.pattern && logDriver.touched">
-                                        Invalid input. It can only contain letters a-z or A-Z and no spaces.
+                                    <div class="col-sm-2">
+                                        <input type="number" pattern="[0-9]*" inputmode="numeric"
+                                            class="form-control form-control-lg input-group-text" style="height:80px" name="boarded" min="0"
+                                            [(ngModel)]="log.boarded" #logBoarded="ngModel" required>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <button type="button" class="btn btn-success btn-number btn-xl btn-block disableZoom"
+                                            (click)="increaseBoardedValueClicked()">+</button>
+                                    </div>
+                                </div>
+                                <div class="alert alert-warning"
+                                    *ngIf="logBoarded.errors?.required && logBoarded.touched">
+                                    The number of passengers boarded is required.
+                                </div>
+                                <div class="alert alert-warning"
+                                    *ngIf="logBoarded.errors?.pattern && logBoarded.touched">
+                                    Invalid input. It can only contain counting numbers.
+                                </div>
+                            </div>
+
+                            <!-- Left at Stop - Form-Group -->
+                            <div class="form-group">
+                                <label class="col-form-label col-form-label-lg">Left Behind</label>
+                                <div class="form-row">
+                                    <div class="col-sm-5">
+                                        <button type="button" class="btn btn-dark btn-number btn-xl btn-block"
+                                            (click)="decreaseLeftBehindValueClicked()">-</button>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="number" pattern="[0-9]*" inputmode="numeric"
+                                            class="form-control form-control-lg input-group-text" style="height:80px" name="leftBehind"
+                                            min="0" [(ngModel)]="log.leftBehind" #leftBehind="ngModel">
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <button type="button" class="btn btn-success btn-number btn-xl btn-block"
+                                            (click)="increaseLeftBehindValueClicked()">+</button>
+                                    </div>
+                                </div>
+                                <div class="alert alert-warning"
+                                    *ngIf="leftBehind.errors?.required && leftBehind.touched">
+                                    The number of passengers left behind is required.
+                                </div>
+                                <div class="alert alert-warning"
+                                    *ngIf="leftBehind.errors?.pattern && leftBehind.touched">
+                                    Invalid input. It can only contain counting numbers.
+                                </div>
+                            </div>
+
+                            <!-- Stop DropDown -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label col-form-label-lg">Stop</label>
+                                        <select [(ngModel)]="log.stop" name="stop" class="form-control">
+                                            <option *ngFor="let stop of stopDropdown" [ngValue]="stop">{{stop}}</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Submit Form -->
-                        <div class="row">
-                            <div class="col-md-12">
-                                <p>
-                                    <button type="submit" class="btn btn-primary btn-lg btn-block"
-                                        [disabled]="f.invalid">Add</button>
-                                </p>
+                            <!-- Loop DropDown -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label col-form-label-lg">Loop</label>
+                                        <select [(ngModel)]="log.loop" name="loop" class="form-control">
+                                            <option *ngFor="let loop of loopDropdown" [ngValue]="loop">{{loop}}</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Feedback Elements -->
-                        <div class="alert alert-danger" *ngIf="errorMessageState">
-                            <h4>
-                                {{error}}
-                            </h4>
-                        </div>
-                        <div class="alert alert-success" *ngIf="successMessageState">
-                            <h4>
-                                {{success}}
-                            </h4>
-                        </div>
+                            <!-- Driver with Validation -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label col-form-label-lg">Driver</label>
+                                        <input type="text" class="form-control" name="driver" [(ngModel)]="log.driver"
+                                            #logDriver="ngModel" required pattern="^[a-zA-Z]+$">
+                                        <div class="alert alert-warning"
+                                            *ngIf="logDriver.errors?.required && logDriver.touched">
+                                            Please include your name.
+                                        </div>
+                                        <div class="alert alert-warning"
+                                            *ngIf="logDriver.errors?.pattern && logDriver.touched">
+                                            Invalid input. It can only contain letters a-z or A-Z and no spaces.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                    </form>
+                            <!-- Submit Form -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block"
+                                            [disabled]="f.invalid">Add</button>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Feedback Elements -->
+                            <div class="alert alert-danger" *ngIf="errorMessageState">
+                                <h4>
+                                    {{error}}
+                                </h4>
+                            </div>
+                            <div class="alert alert-success" *ngIf="successMessageState">
+                                <h4>
+                                    {{success}}
+                                </h4>
+                            </div>
+
+                        </form>
+                    </div>
+
+
                 </div>
-
-
             </div>
         </div>
     </div>
-</div>
+</body>
 
-
-  
+</html>

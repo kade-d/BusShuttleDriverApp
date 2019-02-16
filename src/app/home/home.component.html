@@ -40,7 +40,7 @@
                     <!-- Form -->
                     <div id="theForm">
                         <h2 class="center-block">Shuttle Log Collection Form</h2>
-                        <form #f="ngForm" name="theForm" (ngSubmit)="submitLog(f)"
+                        <form #form="ngForm" name="theForm" (ngSubmit)="submitLog(form)"
                             class="text-center border border-light disableZoom">
 
                             <!-- Boarded - Form-Group -->
@@ -62,11 +62,11 @@
                                     </div>
                                 </div>
                                 <div class="alert alert-warning"
-                                    *ngIf="logBoarded.errors?.required && logBoarded.touched">
+                                    *ngIf="logBoarded?.errors?.required && logBoarded.touched">
                                     The number of passengers boarded is required.
                                 </div>
                                 <div class="alert alert-warning"
-                                    *ngIf="logBoarded.errors?.pattern && logBoarded.touched">
+                                    *ngIf="logBoarded?.errors?.pattern && logBoarded.touched">
                                     Invalid input. It can only contain counting numbers.
                                 </div>
                             </div>
@@ -88,14 +88,6 @@
                                         <button type="button" class="btn btn-success btn-number btn-xl btn-block"
                                             (click)="increaseLeftBehindValueClicked()">+</button>
                                     </div>
-                                </div>
-                                <div class="alert alert-warning"
-                                    *ngIf="leftBehind.errors?.required && leftBehind.touched">
-                                    The number of passengers left behind is required.
-                                </div>
-                                <div class="alert alert-warning"
-                                    *ngIf="leftBehind.errors?.pattern && leftBehind.touched">
-                                    Invalid input. It can only contain counting numbers.
                                 </div>
                             </div>
 

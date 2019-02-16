@@ -12,8 +12,8 @@ import { timer } from 'rxjs';
 })
 export class HomeComponent {
   logs: Log;
-  error = '';
-  success = '';
+  errorMessage = '';
+  successMessage = '';
   total = 0;
   log = new Log(0, '', '', '', 0);
   stops = new Stop();
@@ -75,7 +75,7 @@ export class HomeComponent {
           console.log('Populated the Stops Dropdown');
         },
         (error: any) => {
-          this.error = 'Could not get stops. Please try refreshing the page.';
+          this.errorMessage = 'Could not get stops. Please try refreshing the page.';
           this.errorMessageState = true;
         }
       );
@@ -93,51 +93,45 @@ export class HomeComponent {
           console.log('Populated the Loops Dropdown');
         },
         (error: any) => {
-          this.error = 'Could not get loops. Please try refreshing the page.';
+          this.errorMessage = 'Could not get loops. Please try refreshing the page.';
           this.errorMessageState = true;
         }
       );
   }
 
-  submitLog(f: NgForm): void {
+  submitLog(form: NgForm): void {
     this.resetErrors();
     if (this.log.loop === undefined || this.log.stop === undefined || this.log.loop === null
        || this.log.stop === null || this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop') {
       this.errorMessageState = true;
-      this.error = 'Oops! Please select all necessary fields.';
+      this.errorMessage = 'Oops! Please select all necessary fields.';
       return;
-    } else if (this.log.leftBehind === undefined) {
+    } else if (this.log.leftBehind === undefined || this.log.leftBehind === null) {
       this.log.leftBehind = 0;
     }
     this.errorMessageState = false;
-    const tempLog = new Log(0, '', '', '', 0);
-    tempLog.boarded = this.log.boarded;
-    tempLog.driver = this.log.driver;
-    tempLog.loop = this.log.loop;
-    tempLog.stop = this.log.stop;
-    tempLog.leftBehind = this.log.leftBehind;
-    this.logService.store(tempLog)
+    this.logService.store(this.log)
       .subscribe(
         (data: Log) => {
-          this.success = 'Entry has been logged.';
+          this.successMessage = 'Entry has been logged.';
           this.showSuccessMessage();
           console.log(data);
+          this.resetFormControls(form);
         },
-        (error: any) => this.error = 'Something went wrong, please try adding again shortly.'
+        (error: any) => this.errorMessage = 'Something went wrong, please try adding again shortly.'
       );
-    this.resetFormControls(f);
-    console.log(tempLog);
+      console.log(this.log);
   }
 
   private resetErrors() {
-    this.success = '';
-    this.error = '';
+    this.successMessage = '';
+    this.errorMessage = '';
   }
 
-  private resetFormControls(f: NgForm) {
-    f.controls['stop'].reset();
-    f.controls['boarded'].reset();
-    f.controls['leftBehind'].reset();
+  private resetFormControls(form: NgForm) {
+    form.controls['stop'].reset();
+    form.controls['boarded'].reset();
+    form.controls['leftBehind'].reset();
   }
 
   public showSuccessMessage() {

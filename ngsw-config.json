@@ -29,7 +29,8 @@
       "name": "api-performance",
       "urls": [
         "/getStops",
-        "/getLoops"
+        "/getLoops",
+        "/getUsers"
       ],
       "cacheConfig": {
         "cacheConfig": "performance",

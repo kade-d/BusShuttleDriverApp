@@ -37,6 +37,10 @@ constructor(private http: HttpClient) { }
     return this.http.get(this.baseUrl + '/getLoops.php');
   }
 
+  getDrivers() {
+    return this.http.get(this.baseUrl + '/getUsers.php');
+  }
+
   private generateRetryStrategy() {
     const retryStrategy = ({
       maxRetryAttempts = 50,

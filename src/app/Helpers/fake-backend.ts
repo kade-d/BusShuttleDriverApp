@@ -12,11 +12,20 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             { id: 1, username: 'test', password: 'test', firstName: 'Test', lastName: 'User' }
         ];
 
-        const loops = {"data":["Green Loop","Red Loop","Blue Loop","Orange Loop","Demand Response","Sunday Orange"]};
-        const stops = {"data":["North Shelter - N","Anthony - N","Alumni","Stadium","Scheidler 1","Scheidler 2","Scheidler 3","Baseball Field","Anthony - South","North Shelter - South","LaFollette - South","Shafer Tower - South","AJ","Burkhardt","South Shelter","Ashland","MU","Shafer Tower - North","LaFollette - North"]};
+        const loops = {'data': ['Green Loop', 'Red Loop', 'Blue Loop', 'Orange Loop', 'Demand Response', 'Sunday Orange']};
+        const stops = {'data': ['North Shelter - N', 'Anthony - N', 'Alumni', 'Stadium', 'Scheidler 1', 'Scheidler 2', 'Scheidler 3',
+        'Baseball Field', 'Anthony - South', 'North Shelter - South', 'LaFollette - South', 'Shafer Tower - South', 'AJ', 'Burkhardt',
+        'South Shelter', 'Ashland', 'MU', 'Shafer Tower - North', 'LaFollette - North']};
+
+        const drivers = {'data': [{'firstname': 'Ron', 'lastname': 'Swanson'}, {'firstname': 'Steven', 'lastname': 'Meyers'},
+        {'firstname': 'Sarah', 'lastname': 'Thompson'}, {'firstname': 'Jeff', 'lastname': 'Bezos'}]};
+
+        const log = {stop: 'Burkhardt', loop: 'Red Loop', driver: 'Steven Meyers', boarded: 1, leftBehind: 0};
 
         const authHeader = request.headers.get('Authorization');
         const isLoggedIn = authHeader && authHeader.startsWith('Bearer fake-jwt-token');
+
+        console.log('BACKEND-LESS BUILD - FOR PRODUCTION, DISABLE THE BACKEND INTERCEPTOR');
 
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {
@@ -39,17 +48,29 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 if (!isLoggedIn) { return unauthorised(); }
                 return ok(users);
             }
-            
+
             // get all loops
             if (request.url.endsWith('/getLoops.php') && request.method === 'GET') {
                 if (!isLoggedIn) { return unauthorised(); }
                 return ok(loops);
             }
-            
+
             // get all stops
             if (request.url.endsWith('/getStops.php') && request.method === 'GET') {
                 if (!isLoggedIn) { return unauthorised(); }
                 return ok(stops);
+            }
+
+            // get all drivers
+            if (request.url.endsWith('/getUsers.php') && request.method === 'GET') {
+                if (!isLoggedIn) { return unauthorised(); }
+                return ok(drivers);
+            }
+
+            // Store Log
+            if (request.url.endsWith('/store') && request.method === 'POST') {
+                if (!isLoggedIn) { return unauthorised(); }
+                return ok(log);
             }
 
             // pass through any requests not handled above

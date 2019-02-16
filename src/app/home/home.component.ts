@@ -5,6 +5,7 @@ import { NgForm } from '@angular/forms';
 import { Stop } from '../Models/stop';
 import { Loop } from '../Models/loop';
 import { timer } from 'rxjs';
+import { User } from '../Models/user';
 
 @Component({
   templateUrl: 'home.component.html',
@@ -20,14 +21,17 @@ export class HomeComponent {
   loops = new Loop();
   stopDropdown = [];
   loopDropdown = [];
+  driverDropdown = [];
   errorMessageState = false;
   successMessageState = false;
   subscription: any;
+  stopDropdownPosition: number;
 
   constructor(private logService: LogService) {
     this.log.stop = null;
     this.populateStopsDropdown();
     this.populateLoopsDropdown();
+    this.populateDriversDropdown();
   }
 
   decreaseBoardedValueClicked(): void {
@@ -84,11 +88,11 @@ export class HomeComponent {
   populateLoopsDropdown() {
     this.logService.getAllLoops()
       .subscribe(
-        (data: Loop) => {
+        (jsonData: Loop) => {
           this.loopDropdown.push('Select a loop');
           // tslint:disable-next-line:forin We know this already works.
-          for (const x in data.data) {
-            this.loopDropdown.push(data.data[x]);
+          for (const x in jsonData.data) {
+            this.loopDropdown.push(jsonData.data[x]);
           }
           console.log('Populated the Loops Dropdown');
         },
@@ -99,16 +103,36 @@ export class HomeComponent {
       );
   }
 
+  populateDriversDropdown() {
+    this.logService.getDrivers()
+      .subscribe(
+        (jsonData: User) => {
+          this.driverDropdown.push('Select your name');
+          // tslint:disable-next-line:forin We know this already works.
+          for (const x in jsonData.data) {
+            this.driverDropdown.push((jsonData.data[x].firstname) + ' ' + (jsonData.data[x].lastname) );
+          }
+          console.log('Populated the Drivers Dropdown');
+        },
+        (error: any) => {
+          this.errorMessage = 'Could not get driver names. Please try refreshing the page.';
+          this.errorMessageState = true;
+        }
+      );
+  }
+
   submitLog(form: NgForm): void {
     this.resetErrors();
     if (this.log.loop === undefined || this.log.stop === undefined || this.log.loop === null
-       || this.log.stop === null || this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop') {
+          || this.log.stop === null || this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop'
+          || this.log.driver === 'Select your name') {
       this.errorMessageState = true;
       this.errorMessage = 'Oops! Please select all necessary fields.';
       return;
     } else if (this.log.leftBehind === undefined || this.log.leftBehind === null) {
       this.log.leftBehind = 0;
     }
+
     this.errorMessageState = false;
     this.logService.store(this.log)
       .subscribe(
@@ -129,14 +153,22 @@ export class HomeComponent {
   }
 
   private resetFormControls(form: NgForm) {
-    form.controls['stop'].reset();
+    console.log(this.stopDropdown.length);
+    if (this.stopDropdownPosition === this.stopDropdown.length - 2) {
+      this.stopDropdownPosition = 1;
+      form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition]);
+    } else {
+      this.stopDropdownPosition = this.stopDropdown.indexOf(this.log.stop);
+      form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition + 1]);
+    }
+    console.log(this.stopDropdownPosition);
     form.controls['boarded'].reset();
     form.controls['leftBehind'].reset();
   }
 
   public showSuccessMessage() {
     this.successMessageState = true;
-    const successTimer = timer(5000); //
+    const successTimer = timer(5000);
     this.subscription = successTimer.subscribe(() => {
         this.successMessageState = false;
     });

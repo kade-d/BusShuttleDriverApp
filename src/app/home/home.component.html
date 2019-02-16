@@ -32,11 +32,11 @@
     </div>
   </nav> -->
 
-    <div class="jumbotron" style="background-color:transparent !important;">
+    <div class="" style="background-color:transparent !important;">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-
+                    <p></p>
                     <!-- Form -->
                     <div id="theForm">
                         <h2 class="center-block">Shuttle Log Collection Form</h2>
@@ -48,16 +48,19 @@
                                 <label class="col-form-label col-form-label-lg">Boarded</label>
                                 <div class="form-row">
                                     <div class="col-sm-5">
-                                        <button type="button" class="btn btn-dark btn-number btn-xl btn-block disableZoom"
+                                        <button type="button"
+                                            class="btn btn-dark btn-number btn-xl btn-block disableZoom"
                                             (click)="decreaseBoardedValueClicked()">-</button>
                                     </div>
                                     <div class="col-sm-2">
                                         <input type="number" pattern="[0-9]*" inputmode="numeric"
-                                            class="form-control form-control-lg input-group-text" style="height:80px" name="boarded" min="0"
-                                            [(ngModel)]="log.boarded" #logBoarded="ngModel" required>
+                                            class="form-control form-control-lg input-group-text" style="height:80px"
+                                            name="boarded" min="0" [(ngModel)]="log.boarded" #logBoarded="ngModel"
+                                            required>
                                     </div>
                                     <div class="col-sm-5">
-                                        <button type="button" class="btn btn-success btn-number btn-xl btn-block disableZoom"
+                                        <button type="button"
+                                            class="btn btn-info btn-number btn-xl btn-block disableZoom"
                                             (click)="increaseBoardedValueClicked()">+</button>
                                     </div>
                                 </div>
@@ -81,24 +84,13 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <input type="number" pattern="[0-9]*" inputmode="numeric"
-                                            class="form-control form-control-lg input-group-text" style="height:80px" name="leftBehind"
-                                            min="0" [(ngModel)]="log.leftBehind" #leftBehind="ngModel">
+                                            class="form-control form-control-lg input-group-text" style="height:80px"
+                                            name="leftBehind" min="0" [(ngModel)]="log.leftBehind"
+                                            #leftBehind="ngModel">
                                     </div>
                                     <div class="col-sm-5">
-                                        <button type="button" class="btn btn-success btn-number btn-xl btn-block"
+                                        <button type="button" class="btn btn-info btn-number btn-xl btn-block"
                                             (click)="increaseLeftBehindValueClicked()">+</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Stop DropDown -->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="col-form-label col-form-label-lg">Stop</label>
-                                        <select [(ngModel)]="log.stop" name="stop" class="form-control">
-                                            <option *ngFor="let stop of stopDropdown" [ngValue]="stop">{{stop}}</option>
-                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -115,21 +107,47 @@
                                 </div>
                             </div>
 
-                            <!-- Driver with Validation -->
+                            <!-- Stop DropDown -->
                             <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label col-form-label-lg">Stop</label>
+                                        <select [(ngModel)]="log.stop" name="stop" class="form-control">
+                                            <option *ngFor="let stop of stopDropdown" [ngValue]="stop">{{stop}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <!-- Driver with Validation -->
+                            <!-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-form-label col-form-label-lg">Driver</label>
                                         <input type="text" class="form-control" name="driver" [(ngModel)]="log.driver"
                                             #logDriver="ngModel" required pattern="^[a-zA-Z]+$">
                                         <div class="alert alert-warning"
-                                            *ngIf="logDriver.errors?.required && logDriver.touched">
+                                            *ngIf="logDriver?.errors?.required && logDriver.touched">
                                             Please include your name.
                                         </div>
                                         <div class="alert alert-warning"
-                                            *ngIf="logDriver.errors?.pattern && logDriver.touched">
+                                            *ngIf="logDriver?.errors?.pattern && logDriver.touched">
                                             Invalid input. It can only contain letters a-z or A-Z and no spaces.
                                         </div>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <!-- Driver DropDown -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label col-form-label-lg">Driver</label>
+                                        <select [(ngModel)]="log.driver" name="driver" class="form-control" required>
+                                            <option *ngFor="let driver of driverDropdown" [ngValue]="driver">{{driver}}</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -138,8 +156,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <p>
-                                        <button type="submit" class="btn btn-primary btn-lg btn-block"
-                                            [disabled]="f.invalid">Add</button>
+                                        <button type="submit" class="btn btn-primary btn-xl btn-block"
+                                            [disabled]="form.invalid">Add</button>
                                     </p>
                                 </div>
                             </div>
@@ -147,12 +165,12 @@
                             <!-- Feedback Elements -->
                             <div class="alert alert-danger" *ngIf="errorMessageState">
                                 <h4>
-                                    {{error}}
+                                    {{errorMessage}}
                                 </h4>
                             </div>
                             <div class="alert alert-success" *ngIf="successMessageState">
                                 <h4>
-                                    {{success}}
+                                    {{successMessage}}
                                 </h4>
                             </div>
 

@@ -26,10 +26,10 @@ export class HomeComponent {
   successMessageState = false;
   subscription: any;
   stopDropdownPosition: number;
+  stopDropdownState: boolean;
 
   constructor(private logService: LogService) {
     this.log.stop = null;
-    this.populateStopsDropdown();
     this.populateLoopsDropdown();
     this.populateDriversDropdown();
   }
@@ -68,22 +68,27 @@ export class HomeComponent {
 
 
   populateStopsDropdown() {
-    this.logService.getAllStops()
+    this.stopDropdownState = true;
+    this.stopDropdown = [];
+    this.logService.getAllStops(this.log.loop)
       .subscribe(
         (data: Stop) => {
+          console.log(data);
           this.stopDropdown.push('Select a stop');
           // tslint:disable-next-line:forin We know this already works.
           for (const x in data.data) {
             this.stopDropdown.push(data.data[x]);
           }
           console.log('Populated the Stops Dropdown');
+          this.errorMessageState = false;
         },
         (error: any) => {
-          this.errorMessage = 'Could not get stops. Please try refreshing the page.';
+          this.errorMessage = 'Could not get stops. Enter a loop or try refreshing the page.';
           this.errorMessageState = true;
         }
       );
   }
+  
 
   populateLoopsDropdown() {
     this.logService.getAllLoops()
@@ -101,6 +106,7 @@ export class HomeComponent {
           this.errorMessageState = true;
         }
       );
+      
   }
 
   populateDriversDropdown() {

@@ -29,8 +29,8 @@ constructor(private http: HttpClient) { }
       catchError(this.handleError));
   }
 
-  getAllStops() {
-    return this.http.get(this.baseUrl + '/getStops.php');
+  getAllStops(selectedLoop: string) {
+    return this.http.get(this.baseUrl + '/getStops.php?searchTerm=' + selectedLoop);
   }
 
   getAllLoops() {

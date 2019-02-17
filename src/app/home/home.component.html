@@ -100,7 +100,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-form-label col-form-label-lg">Loop</label>
-                                        <select [(ngModel)]="log.loop" name="loop" class="form-control">
+                                        <select [(ngModel)]="log.loop" (change)="populateStopsDropdown()" name="loop" class="form-control">
                                             <option *ngFor="let loop of loopDropdown" [ngValue]="loop">{{loop}}</option>
                                         </select>
                                     </div>
@@ -108,7 +108,7 @@
                             </div>
 
                             <!-- Stop DropDown -->
-                            <div class="row">
+                            <div class="row" *ngIf="stopDropdownState">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-form-label col-form-label-lg">Stop</label>

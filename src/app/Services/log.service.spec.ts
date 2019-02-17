@@ -45,11 +45,11 @@ describe('LogService', () => {
     it('should perform GET request and return dummyStop obj.', () => {
         const dummyStop: Stop = { name: 'Anthony',stops: '' };
 
-        service.getAllStops().subscribe(returnObj => {
+        service.getAllStops("Green Loop").subscribe(returnObj => {
             expect(returnObj).toEqual(dummyStop);
         });
 
-        const request = httpMock.expectOne(service.baseUrl + '/getStops.php');
+        const request = httpMock.expectOne(service.baseUrl + '/getStops.php?searchTerm=Green Loop');
         expect(request.request.method).toBe('GET');
         request.flush(dummyStop);
     });

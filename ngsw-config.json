@@ -29,12 +29,15 @@
       "name": "api-performance",
       "urls": [
         "/getStops",
+        "/getStops.php?searchTerm=",
         "/getLoops",
-        "/getUsers"
+        "/getLoops.php",
+        "/getUsers",
+        "/getUsers.php"
       ],
       "cacheConfig": {
         "cacheConfig": "performance",
-        "maxSize": 100,
+        "maxSize": 500,
         "maxAge": "1d"
       }
     }

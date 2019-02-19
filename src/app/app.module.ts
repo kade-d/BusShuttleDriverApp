@@ -16,6 +16,7 @@ import { ErrorInterceptor } from './Helpers/error.interceptor';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { ConfigureComponent } from './configure/configure.component';
+import { ConfirmationComponent } from './confirmation/confirmation.component';
 
 
 
@@ -24,7 +25,8 @@ import { ConfigureComponent } from './configure/configure.component';
     AppComponent,
     HomeComponent,
     LoginComponent,
-    ConfigureComponent
+    ConfigureComponent,
+    ConfirmationComponent
   ],
   imports: [
     BrowserModule,

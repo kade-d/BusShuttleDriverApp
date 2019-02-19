@@ -1,3 +1,10 @@
 <p>
-  configure works!
+  <button (click)="displayConfirmation()" class="btn btn-primary btn-xl btn-block">Sync</button>
 </p>
+
+<!-- <div class="alert alert-success" *ngIf="this.logService.getIsSyncing()"> -->
+  <div class="alert alert-success center-block" *ngIf="didStartSync">
+  <h4>
+      {{syncingMessage}}
+  </h4>
+</div>

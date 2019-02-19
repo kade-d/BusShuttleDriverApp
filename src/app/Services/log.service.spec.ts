@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { Log } from '../Models/log';
 import { Loop } from '../Models/loop';
 import { Stop } from '../Models/stop';
+import { DropdownsService } from './dropdowns.service';
 
 describe('LogService', () => {
     let service: LogService;
     let httpMock: HttpTestingController;
+    let dropdownService: DropdownsService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -19,7 +21,7 @@ describe('LogService', () => {
     });
 
     it('should perform POST request and return dummyLog obj.', () => {
-        const dummyLog: Log = { boarded: 4, stop: 'MU',timestamp:'2019/02/19 05:09:36', loop: 'Green', driver: 'steve', leftBehind: 3 };
+        const dummyLog: Log = { boarded: 4, stop: 'MU', timestamp: '2019/02/19 05:09:36', loop: 'Green', driver: 'steve', leftBehind: 3 };
 
         service.store(dummyLog).subscribe(returnObj => {
             expect(returnObj).toEqual(dummyLog);
@@ -31,9 +33,9 @@ describe('LogService', () => {
     });
 
     it('should perform GET request and return dummyLoop obj.', () => {
-        const dummyLoop: Loop = { name: 'Red',loops: '' };
+        const dummyLoop: Loop = { name: 'Red', loops: '' };
 
-        service.getAllLoops().subscribe(returnObj => {
+        dropdownService.getAllLoops().subscribe(returnObj => {
             expect(returnObj).toEqual(dummyLoop);
         });
 
@@ -43,9 +45,9 @@ describe('LogService', () => {
     });
 
     it('should perform GET request and return dummyStop obj.', () => {
-        const dummyStop: Stop = { name: 'Anthony',stops: '' };
+        const dummyStop: Stop = { name: 'Anthony', stops: '' };
 
-        service.getAllStops("Green Loop").subscribe(returnObj => {
+        dropdownService.getAllStops('Green Loop').subscribe(returnObj => {
             expect(returnObj).toEqual(dummyStop);
         });
 

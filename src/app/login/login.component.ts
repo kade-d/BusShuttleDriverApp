@@ -7,7 +7,8 @@ import { AuthenticationService } from '../Services/authentication.service';
 
 @Component({
     templateUrl: 'login.component.html',
-    styleUrls: ['login.component.css'] })
+    styleUrls: ['login.component.css']
+})
 
 export class LoginComponent implements OnInit {
     loginForm: FormGroup;
@@ -24,9 +25,7 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService,
-    ) {
-
-     }
+    ) { }
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({

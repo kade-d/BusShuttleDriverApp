@@ -6,6 +6,7 @@ import { Stop } from '../Models/stop';
 import { Loop } from '../Models/loop';
 import { timer } from 'rxjs';
 import { User } from '../Models/user';
+import { DropdownsService } from '../Services/dropdowns.service';
 
 @Component({
   templateUrl: 'home.component.html',
@@ -28,7 +29,7 @@ export class HomeComponent {
   stopDropdownPosition: number;
   stopDropdownState: boolean;
 
-  constructor(private logService: LogService) {
+  constructor(private logService: LogService, private dropdownsService: DropdownsService) {
     this.log.stop = null;
     this.populateLoopsDropdown();
     this.populateDriversDropdown();
@@ -73,7 +74,7 @@ export class HomeComponent {
 
   populateStopsDropdown(): void {
     this.stopDropdown = [];
-    this.logService.getAllStops(this.log.loop)
+    this.dropdownsService.getAllStops(this.log.loop)
       .subscribe(
         (data: Stop) => {
           console.log(data);
@@ -93,7 +94,7 @@ export class HomeComponent {
   }
 
   private populateLoopsDropdown(): void {
-    this.logService.getAllLoops()
+    this.dropdownsService.getAllLoops()
       .subscribe(
         (jsonData: Loop) => {
           this.loopDropdown.push('Select a loop');
@@ -110,13 +111,13 @@ export class HomeComponent {
   }
 
   private populateDriversDropdown(): void {
-    this.logService.getDrivers()
+    this.dropdownsService.getDrivers()
       .subscribe(
         (jsonData: User) => {
           this.driverDropdown.push('Select your name');
           // tslint:disable-next-line:forin We know this already works.
           for (const x in jsonData.data) {
-            this.driverDropdown.push((jsonData.data[x].firstname) + ' ' + (jsonData.data[x].lastname) );
+            this.driverDropdown.push((jsonData.data[x].firstname) + ' ' + (jsonData.data[x].lastname));
           }
           console.log('Populated the Drivers Dropdown');
         },
@@ -133,19 +134,21 @@ export class HomeComponent {
     const copy = { ...this.log }; // Creating a copy of the member 'log'.
     console.log(copy);
     this.logService.storeLogsLocally(copy);
-    this.showSuccessMessage();
+    this.showSuccessMessage(this.log.stop);
     this.resetFormControls(form);
   }
 
-  private validateForm (form: NgForm): boolean {
+  private validateForm(form: NgForm): boolean {
     this.resetErrors();
     if (this.log.loop === undefined || this.log.stop === undefined || this.log.loop === null
       || this.log.stop === null || this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop'
       || this.log.driver === 'Select your name') {
       this.showErrorMessage('Oops! Please select all necessary fields.');
       return false;
-    } else if (this.log.leftBehind === undefined || this.log.leftBehind === null) {
+    } if (this.log.leftBehind === undefined || this.log.leftBehind === null) {
       this.log.leftBehind = 0;
+    } if (this.log.boarded === undefined || this.log.boarded === null) {
+      this.log.boarded = 0;
     }
     return true;
   }
@@ -171,12 +174,12 @@ export class HomeComponent {
     form.controls['leftBehind'].reset();
   }
 
-  private showSuccessMessage(): void {
-    this.successMessage = 'Success! Your entry has been added to the queue.';
+  private showSuccessMessage(stop?: string): void {
+    this.successMessage = 'Success! Your entry for ' + stop + ' has been added to the queue.';
     this.successMessageState = true;
     const successTimer = timer(5000);
     this.subscription = successTimer.subscribe(() => {
-        this.successMessageState = false;
+      this.successMessageState = false;
     });
   }
 
@@ -187,16 +190,16 @@ export class HomeComponent {
 
   pad(n) { // function for adding leading zeros to dates/times
     return n < 10 ? '0' + n : n;
-}
+  }
 
-getTimeStamp(): string {
-  const date = new Date();
-  const timestamp = (date.getFullYear() + '/'
-  + this.pad((date.getMonth()) + 1) + '/'
-  + this.pad(date.getUTCDate()) + ' '
-  + this.pad(date.getHours()) + ':'
-  + this.pad(date.getMinutes()) + ':'
-  + this.pad(date.getSeconds()));
-  return timestamp;
-}
+  getTimeStamp(): string {
+    const date = new Date();
+    const timestamp = (date.getFullYear() + '/'
+      + this.pad((date.getMonth()) + 1) + '/'
+      + this.pad(date.getUTCDate()) + ' '
+      + this.pad(date.getHours()) + ':'
+      + this.pad(date.getMinutes()) + ':'
+      + this.pad(date.getSeconds()));
+    return timestamp;
+  }
 }

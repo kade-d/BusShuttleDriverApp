@@ -19,20 +19,33 @@ export class LogService {
   private syncMessageSource = new BehaviorSubject<string>('Syncing, please do not close this page.');
   currentSyncMessage = this.syncMessageSource.asObservable();
 
+  private syncCountSource = new BehaviorSubject<number>(0);
+  currentSyncCount = this.syncCountSource.asObservable();
+
   constructor(private http: HttpClient) { }
 
   changeSyncMessage(message: string) {
     this.syncMessageSource.next(message);
   }
 
+  changeSyncCount(count: number) {
+    this.syncCountSource.next(count);
+  }
+
   storeLogsLocally(log: Log) {
     this.logsToSend.push(log);
     localStorage.setItem('logs', JSON.stringify(this.logsToSend));
+    if(this.logsToSend === null) {
+      return;
+    } else {
+      this.changeSyncCount(this.logsToSend.length);
+    }
   }
 
   syncLogs() {
     const test: Log[] = JSON.parse(localStorage.getItem('logs'));
-    if (test === null || test.length === 0 ) {
+    
+    if (test === null || test.length === 0 || test === undefined) {
       this.changeSyncMessage('All caught up. Nothing to sync!');
       return;
     }
@@ -44,10 +57,14 @@ export class LogService {
         .subscribe((success) => {
           console.log(success);
           test.pop();
+          this.changeSyncCount(test.length);
+          console.log("length is " + test.length);
+
           console.log(test.length);
           if (test.length === 0) {
             this.changeSyncMessage('All done! Have a wonderful day!');
             localStorage.clear();
+            this.logsToSend = [];
           }
         },
         (err: any) => {
@@ -64,18 +81,6 @@ export class LogService {
           excludedStatusCodes: [500]
         })),
         catchError(this.handleError));
-  }
-
-  getAllStops(selectedLoop: string) {
-    return this.http.get(this.baseUrl + '/getStops.php?searchTerm=' + selectedLoop);
-  }
-
-  getAllLoops() {
-    return this.http.get(this.baseUrl + '/getLoops.php');
-  }
-
-  getDrivers() {
-    return this.http.get(this.baseUrl + '/getUsers.php');
   }
 
   private generateRetryStrategy() {

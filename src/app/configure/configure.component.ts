@@ -8,12 +8,15 @@ import { LogService } from '../Services/log.service';
 })
 export class ConfigureComponent implements OnInit {
   syncingMessage: string;
+  syncingCount: number;
   didStartSync: boolean;
 
-  constructor(public logService: LogService) { }
+  constructor(public logService: LogService) {
+   }
 
   ngOnInit() {
     this.logService.currentSyncMessage.subscribe(passedMessage => this.syncingMessage = passedMessage);
+    this.logService.currentSyncCount.subscribe(passedCount => this.syncingCount = passedCount);
   }
 
 displayConfirmation() {

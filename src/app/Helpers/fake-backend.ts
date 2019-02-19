@@ -56,7 +56,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             // }
 
             // // get all stops
-            // if (request.url.endsWith('/getStops.php') && request.method === 'GET') {
+            // if (request.url.endsWith('/getStops.php?searchTerm=Green Loop') && request.method === 'GET') {
             //     if (!isLoggedIn) { return unauthorised(); }
             //     return ok(stops);
             // }

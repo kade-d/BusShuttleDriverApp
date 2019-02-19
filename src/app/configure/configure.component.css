@@ -1,0 +1,10 @@
+.btn-xl {
+    padding: 10px 20px;
+    font-size: 60px;
+    border-radius: 0px;
+}
+
+.center-block {
+  /* Instead of display:block */
+    text-align: center;
+}

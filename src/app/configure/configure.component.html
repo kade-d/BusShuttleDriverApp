@@ -1,11 +1,9 @@
-<p>
-  <button (click)="displayConfirmation()" class="btn btn-primary btn-xl btn-block">Sync</button>
-</p>
 
-  <div class="alert alert-success center-block" *ngIf="didStartSync">
-  <h4>
+<button id='syncButton' (click)="displayConfirmation()" [@simpleFadeAnimation]="'in'" class="btn btn-primary btn-xl btn-block">Sync</button>
+
+  <div id="box" class="alert alert-success center-block" *ngIf="didStartSync" [@simpleFadeAnimation]="'in'">
+  <h1>
       {{syncingMessage}}
-  </h4>
-  
+    </h1>
 </div>
-<p>There are {{syncingCount}} item(s) left to sync.</p>
+<p [@simpleFadeAnimation]="'in'">There are {{syncingCount}} item(s) left to sync.</p>

@@ -7,10 +7,29 @@ import { Loop } from '../Models/loop';
 import { timer } from 'rxjs';
 import { User } from '../Models/user';
 import { DropdownsService } from '../Services/dropdowns.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   templateUrl: 'home.component.html',
-  styleUrls: ['home.component.css']
+  styleUrls: ['home.component.css'],
+  animations: [
+    // the fade-in/fade-out animation.
+    trigger('simpleFadeAnimation', [
+
+      // the "in" style determines the "resting" state of the element when it is visible.
+      state('in', style({opacity: 1})),
+
+      // fade in when created. this could also be written as transition('void => *')
+      transition(':enter', [
+        style({opacity: 0}),
+        animate(600 )
+      ]),
+
+      // fade out when destroyed. this could also be written as transition('void => *')
+      transition(':leave',
+        animate(600, style({opacity: 0})))
+    ])
+  ]
 })
 export class HomeComponent {
   logs: Log;
@@ -177,7 +196,7 @@ export class HomeComponent {
   private showSuccessMessage(stop?: string): void {
     this.successMessage = 'Success! Your entry for ' + stop + ' has been added to the queue.';
     this.successMessageState = true;
-    const successTimer = timer(5000);
+    let successTimer = timer(5000);
     this.subscription = successTimer.subscribe(() => {
       this.successMessageState = false;
     });

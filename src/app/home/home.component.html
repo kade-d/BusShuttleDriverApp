@@ -6,7 +6,7 @@
         content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 </head>
 
-<body>
+<body [@simpleFadeAnimation]="'in'">
     <div class="" style="background-color:transparent !important;">
         <div class="container">
             <div class="row">
@@ -83,7 +83,7 @@
                             </div>
 
                             <!-- Stop DropDown -->
-                            <div class="row" *ngIf="stopDropdownState">
+                            <div class="row" [@simpleFadeAnimation]="'in'" *ngIf="stopDropdownState">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-form-label col-form-label-lg">Stop</label>
@@ -117,13 +117,13 @@
                             </div>
 
                             <!-- Feedback Elements -->
-                            <div class="alert alert-danger" *ngIf="errorMessageState">
+                            <div class="alert alert-danger" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState" >
                                 <h4>
                                     {{errorMessage}}
                                 </h4>
                             </div>
-                            <div class="alert alert-success" *ngIf="successMessageState">
-                                <h4>
+                            <div class="alert alert-success" [@simpleFadeAnimation]="'in'" *ngIf="successMessageState" >
+                                <h4  >
                                     {{successMessage}}
                                 </h4>
                             </div>

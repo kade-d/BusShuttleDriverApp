@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { routing } from './app.routing';
-
+import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 // used to create fake backend
 import { fakeBackendProvider } from './Helpers/fake-backend';
 
@@ -34,7 +34,8 @@ import { ConfirmationComponent } from './confirmation/confirmation.component';
     ReactiveFormsModule,
     HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    routing
+    routing,
+    BrowserAnimationsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

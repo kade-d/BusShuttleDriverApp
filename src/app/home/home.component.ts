@@ -16,7 +16,7 @@ export class HomeComponent {
   errorMessage = '';
   successMessage = '';
   total = 0;
-  log = new Log(0, '', '', '', 0);
+  log = new Log(0, '', '', '', '', 0);
   stops = new Stop();
   loops = new Loop();
   stopDropdown = [];
@@ -34,9 +34,12 @@ export class HomeComponent {
     this.populateDriversDropdown();
   }
 
+
   decreaseBoardedValueClicked(): void {
     if (this.log.boarded === 0 || this.log.boarded === undefined) {
       return;
+    } else if (this.log.boarded <= 0) {
+      this.log.boarded = 0;
     } else {
       this.log.boarded = this.log.boarded - 1;
     }
@@ -53,6 +56,8 @@ export class HomeComponent {
   decreaseLeftBehindValueClicked(): void {
     if (this.log.leftBehind === 0 || this.log.leftBehind === undefined) {
       return;
+    } else if (this.log.leftBehind <= 0) {
+      this.log.leftBehind = 0;
     } else {
       this.log.leftBehind = this.log.leftBehind - 1;
     }
@@ -66,9 +71,7 @@ export class HomeComponent {
     }
   }
 
-
-  populateStopsDropdown() {
-    this.stopDropdownState = true;
+  populateStopsDropdown(): void {
     this.stopDropdown = [];
     this.logService.getAllStops(this.log.loop)
       .subscribe(
@@ -80,17 +83,16 @@ export class HomeComponent {
             this.stopDropdown.push(data.data[x]);
           }
           console.log('Populated the Stops Dropdown');
+          this.stopDropdownState = true;
           this.errorMessageState = false;
         },
         (error: any) => {
-          this.errorMessage = 'Could not get stops. Enter a loop or try refreshing the page.';
-          this.errorMessageState = true;
+          this.showErrorMessage('Could not get stops. Select a loop or try refreshing the page.');
         }
       );
   }
-  
 
-  populateLoopsDropdown() {
+  private populateLoopsDropdown(): void {
     this.logService.getAllLoops()
       .subscribe(
         (jsonData: Loop) => {
@@ -102,14 +104,12 @@ export class HomeComponent {
           console.log('Populated the Loops Dropdown');
         },
         (error: any) => {
-          this.errorMessage = 'Could not get loops. Please try refreshing the page.';
-          this.errorMessageState = true;
+          this.showErrorMessage('Could not get loops. Please try refreshing the page.');
         }
       );
-      
   }
 
-  populateDriversDropdown() {
+  private populateDriversDropdown(): void {
     this.logService.getDrivers()
       .subscribe(
         (jsonData: User) => {
@@ -121,41 +121,40 @@ export class HomeComponent {
           console.log('Populated the Drivers Dropdown');
         },
         (error: any) => {
-          this.errorMessage = 'Could not get driver names. Please try refreshing the page.';
-          this.errorMessageState = true;
+          this.showErrorMessage('Could not get driver names. Please try refreshing the page.');
         }
       );
   }
 
   submitLog(form: NgForm): void {
+    if (this.validateForm(form) === false) { return; }
+    this.log.timestamp = this.getTimeStamp();
+    this.errorMessageState = false;
+    const copy = { ...this.log }; // Creating a copy of the member 'log'.
+    console.log(copy);
+    this.logService.storeLogsLocally(copy);
+    this.showSuccessMessage();
+    this.resetFormControls(form);
+  }
+
+  private validateForm (form: NgForm): boolean {
     this.resetErrors();
     if (this.log.loop === undefined || this.log.stop === undefined || this.log.loop === null
-          || this.log.stop === null || this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop'
-          || this.log.driver === 'Select your name') {
-      this.errorMessageState = true;
-      this.errorMessage = 'Oops! Please select all necessary fields.';
-      return;
+      || this.log.stop === null || this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop'
+      || this.log.driver === 'Select your name') {
+      this.showErrorMessage('Oops! Please select all necessary fields.');
+      return false;
     } else if (this.log.leftBehind === undefined || this.log.leftBehind === null) {
       this.log.leftBehind = 0;
     }
-
-    this.errorMessageState = false;
-    this.logService.store(this.log)
-      .subscribe(
-        (data: Log) => {
-          this.successMessage = 'Entry has been logged.';
-          this.showSuccessMessage();
-          console.log(data);
-          this.resetFormControls(form);
-        },
-        (error: any) => this.errorMessage = 'Something went wrong, please try adding again shortly.'
-      );
-      console.log(this.log);
+    return true;
   }
 
-  private resetErrors() {
+  private resetErrors(): void {
     this.successMessage = '';
     this.errorMessage = '';
+    this.successMessageState = false;
+    this.errorMessageState = false;
   }
 
   private resetFormControls(form: NgForm) {
@@ -172,11 +171,32 @@ export class HomeComponent {
     form.controls['leftBehind'].reset();
   }
 
-  public showSuccessMessage() {
+  private showSuccessMessage(): void {
+    this.successMessage = 'Success! Your entry has been added to the queue.';
     this.successMessageState = true;
     const successTimer = timer(5000);
     this.subscription = successTimer.subscribe(() => {
         this.successMessageState = false;
     });
   }
+
+  private showErrorMessage(message: string): void {
+    this.errorMessageState = true;
+    this.errorMessage = message;
+  }
+
+  pad(n) { // function for adding leading zeros to dates/times
+    return n < 10 ? '0' + n : n;
+}
+
+getTimeStamp(): string {
+  const date = new Date();
+  const timestamp = (date.getFullYear() + '/'
+  + this.pad((date.getMonth()) + 1) + '/'
+  + this.pad(date.getUTCDate()) + ' '
+  + this.pad(date.getHours()) + ':'
+  + this.pad(date.getMinutes()) + ':'
+  + this.pad(date.getSeconds()));
+  return timestamp;
+}
 }

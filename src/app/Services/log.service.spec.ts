@@ -9,12 +9,13 @@ import { DropdownsService } from './dropdowns.service';
 describe('LogService', () => {
     let service: LogService;
     let httpMock: HttpTestingController;
-    let dropdownService: DropdownsService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
-            providers: [LogService]
+            providers: [
+                LogService
+            ]
         });
         service = TestBed.get(LogService);
         httpMock = TestBed.get(HttpTestingController);
@@ -32,28 +33,6 @@ describe('LogService', () => {
         request.flush(dummyLog);
     });
 
-    it('should perform GET request and return dummyLoop obj.', () => {
-        const dummyLoop: Loop = { name: 'Red', loops: '' };
 
-        dropdownService.getAllLoops().subscribe(returnObj => {
-            expect(returnObj).toEqual(dummyLoop);
-        });
-
-        const request = httpMock.expectOne(service.baseUrl + '/getLoops.php');
-        expect(request.request.method).toBe('GET');
-        request.flush(dummyLoop);
-    });
-
-    it('should perform GET request and return dummyStop obj.', () => {
-        const dummyStop: Stop = { name: 'Anthony', stops: '' };
-
-        dropdownService.getAllStops('Green Loop').subscribe(returnObj => {
-            expect(returnObj).toEqual(dummyStop);
-        });
-
-        const request = httpMock.expectOne(service.baseUrl + '/getStops.php?searchTerm=Green Loop');
-        expect(request.request.method).toBe('GET');
-        request.flush(dummyStop);
-    });
 
 });

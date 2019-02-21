@@ -1,4 +1,6 @@
 
+[![Build Status](https://travis-ci.com/kdesimini/ShuttleLogCollectionSystemSourceCode.svg?branch=master)](https://travis-ci.com/kdesimini/ShuttleLogCollectionSystemSourceCode)
+
 # Front-End
 1. Install Node.js and npm from https://nodejs.org/en/
 

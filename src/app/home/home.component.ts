@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { Log } from '../Models/log';
 import { LogService } from '../Services/log.service';
 import { NgForm } from '@angular/forms';
@@ -8,6 +8,7 @@ import { timer } from 'rxjs';
 import { User } from '../Models/user';
 import { DropdownsService } from '../Services/dropdowns.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { SwUpdate } from '@angular/service-worker';
 
 @Component({
   templateUrl: 'home.component.html',
@@ -31,7 +32,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
     ])
   ]
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   logs: Log;
   errorMessage = '';
   successMessage = '';
@@ -48,13 +49,27 @@ export class HomeComponent {
   stopDropdownPosition: number;
   stopDropdownState: boolean;
 
-  constructor(private logService: LogService, private dropdownsService: DropdownsService) {
+  constructor(private logService: LogService, private swUpdate: SwUpdate, private dropdownsService: DropdownsService) {
     this.log.stop = null;
     this.populateLoopsDropdown();
     this.populateDriversDropdown();
   }
 
+  ngOnInit() {
+    if (this.swUpdate.isEnabled) {
 
+      this.swUpdate.available.subscribe(() => {
+  
+          if (confirm('There is a new version available. Load New Version?')) {
+  
+              window.location.reload();
+          }
+      });
+  } else {
+      console.log('swUpdate is not available.');
+  }
+  }
+  
   decreaseBoardedValueClicked(): void {
     if (this.log.boarded === 0 || this.log.boarded === undefined) {
       return;

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { DebugElement } from '@angular/core';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SwUpdate, ServiceWorkerModule } from '@angular/service-worker';
+
 
 
 describe('AppComponent', () => {
@@ -19,14 +19,11 @@ let de: DebugElement;
       ],
       imports: [
         FormsModule,
-        RouterTestingModule,
-        ServiceWorkerModule.register('', {enabled: false})
+        RouterTestingModule
       ],
       providers: [
         HttpClient,
-        HttpHandler,
-        SwUpdate,
-        ServiceWorkerModule
+        HttpHandler
       ]
     }).compileComponents();
   }));

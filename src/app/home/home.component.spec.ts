@@ -3,6 +3,7 @@ import { HomeComponent } from './home.component';
 import { FormsModule } from '@angular/forms';
 import { DebugElement } from '@angular/core';
 import { HttpClient, HttpHandler } from '@angular/common/http';
+import { SwUpdate, ServiceWorkerModule } from '@angular/service-worker';
 
 describe('HomeComponent', () => {
 let component: HomeComponent;
@@ -15,11 +16,14 @@ let de: DebugElement;
         HomeComponent
       ],
       imports: [
-        FormsModule
+        FormsModule,
+        ServiceWorkerModule.register('', {enabled: false})
       ],
       providers: [
         HttpClient,
-        HttpHandler
+        HttpHandler,
+        SwUpdate,
+        ServiceWorkerModule
       ]
     }).compileComponents();
   }));

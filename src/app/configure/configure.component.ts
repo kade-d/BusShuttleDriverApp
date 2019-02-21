@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LogService } from '../Services/log.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { versionEnvironment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-configure',
@@ -29,6 +30,7 @@ export class ConfigureComponent implements OnInit {
   syncingMessage: string;
   syncingCount: number;
   didStartSync: boolean;
+  version: string = versionEnvironment.version;
 
   constructor(public logService: LogService) {
    }

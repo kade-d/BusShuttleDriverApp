@@ -26,12 +26,14 @@ export class AppComponent {
 
             this.swUpdate.available.subscribe(() => {
 
-                if(confirm("New version available. Load New Version?")) {
+                if (confirm('New version available. Load New Version?')) {
 
                     window.location.reload();
                 }
             });
-        }        
+        } else {
+            console.log('swUpdate is not enabled. Service worker auto-updates will not work.');
+        }
     }
 
     logout() {

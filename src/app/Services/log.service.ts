@@ -22,7 +22,13 @@ export class LogService {
   private syncCountSource = new BehaviorSubject<number>(0);
   currentSyncCount = this.syncCountSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    const logs: Log[] = JSON.parse(localStorage.getItem('logs'));
+    if (logs !== null) {
+      this.changeSyncCount(logs.length);
+    }
+
+  }
 
   changeSyncMessage(message: string) {
     this.syncMessageSource.next(message);
@@ -43,25 +49,25 @@ export class LogService {
   }
 
   syncLogs() {
-    const test: Log[] = JSON.parse(localStorage.getItem('logs'));
+    const logs: Log[] = JSON.parse(localStorage.getItem('logs'));
     
-    if (test === null || test.length === 0 || test === undefined) {
+    if (logs === null || logs.length === 0 || logs === undefined) {
       this.changeSyncMessage('All caught up. Nothing to sync!');
       return;
     }
     this.changeSyncMessage('Syncing, please do not close this page.');
 
-    for (let i = test.length - 1; i >= 0; i--) {
-      const log = test[i];
+    for (let i = logs.length - 1; i >= 0; i--) {
+      const log = logs[i];
       this.store(log)
         .subscribe((success) => {
           console.log(success);
-          test.pop();
-          this.changeSyncCount(test.length);
-          console.log("length is " + test.length);
+          logs.pop();
+          this.changeSyncCount(logs.length);
+          console.log("length is " + logs.length);
 
-          console.log(test.length);
-          if (test.length === 0) {
+          console.log(logs.length);
+          if (logs.length === 0) {
             this.changeSyncMessage('All done! Have a wonderful day!');
             localStorage.clear();
             this.logsToSend = [];

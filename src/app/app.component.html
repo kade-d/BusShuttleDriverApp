@@ -1,11 +1,24 @@
 <!-- nav -->
-<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
-  <div class="navbar-nav">
-      <a class="nav-item nav-link" routerLink="/">Home</a>
-      <a class="nav-item nav-link" routerLink="/configure">Configure</a>
-      <a href="/login" class="nav-item nav-link" (click)="logout()">Logout</a>
+
+
+
+<div class="pos-f-t" *ngIf="currentUser">
+  <div class="collapse" id="navbarToggleExternalContent">
+    <div class="bg-dark p-4">
+        <div class="d-flex justify-content-between">
+          <div><a class="btn btn-lg btn-dark btn-block" routerLink="/">Home</a></div>
+          <div><a class="btn btn-lg btn-dark btn-block" routerLink="/configure">Configure</a></div>
+          <div><a class="btn btn-lg btn-dark btn-block" href="/login" (click)="logout()">Logout</a></div>
+        </div>
+    </div>
   </div>
-</nav>
+  <nav class="navbar navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+</div>
+
 
 <!-- main app container
 <div class="jumbotron">

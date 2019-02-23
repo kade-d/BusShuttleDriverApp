@@ -29,3 +29,32 @@ select {
 	height: 50px; 
 	padding: 5px;
 }
+
+.overlay {
+  background-color: #5cb85c;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+
+}
+
+.successMessage {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  color: white;
+  font-size: 50px;
+  /* font-display: justify; */
+  padding: 25px;
+}
+
+.stopName {
+  font-size: 70px;
+}

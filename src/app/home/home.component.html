@@ -6,7 +6,7 @@
         content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 </head>
 
-<body [@simpleFadeAnimation]="'in'">
+<body>
     <div class="" style="background-color:transparent !important;">
         <div class="container">
             <div class="row">
@@ -15,8 +15,8 @@
                     <!-- Form -->
                     <div id="theForm">
                         <h2 class="center-block">Shuttle Log Collection Form</h2>
-                        <form #form="ngForm" name="theForm" (ngSubmit)="submitLog(form)"
-                            class="text-center border border-light disableZoom">
+                        <form #form="ngForm" [@simpleFadeAnimation]="'in'" name="theForm" *ngIf="!successMessageState"
+                            (ngSubmit)="submitLog(form)" class="text-center border border-light disableZoom">
 
                             <!-- Boarded - Form-Group -->
                             <div class="form-group">
@@ -70,12 +70,26 @@
                                 </div>
                             </div>
 
+                            <!-- Driver DropDown -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label col-form-label-lg">Driver</label>
+                                        <select [(ngModel)]="log.driver" name="driver" class="form-control" required>
+                                            <option *ngFor="let driver of driverDropdown" [ngValue]="driver">{{driver}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Loop DropDown -->
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-form-label col-form-label-lg">Loop</label>
-                                        <select [(ngModel)]="log.loop" (change)="populateStopsDropdown()" name="loop" class="form-control">
+                                        <select [(ngModel)]="log.loop" (change)="populateStopsDropdown()" name="loop"
+                                            class="form-control">
                                             <option *ngFor="let loop of loopDropdown" [ngValue]="loop">{{loop}}</option>
                                         </select>
                                     </div>
@@ -87,20 +101,9 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-form-label col-form-label-lg">Stop</label>
-                                        <select [(ngModel)]="log.stop" name="stop" class="form-control">
+                                        <select [(ngModel)]="log.stop" [disabled]="dropdownDisabled" name="stop"
+                                            class="form-control">
                                             <option *ngFor="let stop of stopDropdown" [ngValue]="stop">{{stop}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Driver DropDown -->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="col-form-label col-form-label-lg">Driver</label>
-                                        <select [(ngModel)]="log.driver" name="driver" class="form-control" required>
-                                            <option *ngFor="let driver of driverDropdown" [ngValue]="driver">{{driver}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -110,28 +113,43 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <p>
-                                        <button type="submit" class="btn btn-primary btn-xl btn-block"
-                                            >Add</button>
+                                        <button type="submit" [disabled]="dropdownDisabled" class="btn btn-primary btn-xl btn-block">Add</button>
                                     </p>
                                 </div>
                             </div>
-
-                            <!-- Feedback Elements -->
-                            <div class="alert alert-danger" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState" >
-                                <h4>
-                                    {{errorMessage}}
-                                </h4>
-                            </div>
-                            <div class="alert alert-success" [@simpleFadeAnimation]="'in'" *ngIf="successMessageState" >
-                                <h4  >
-                                    {{successMessage}}
-                                </h4>
-                            </div>
                         </form>
+                        <!-- Feedback Elements -->
+                        <div class="alert alert-danger" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState">
+                            <h4>
+                                {{errorMessage}}
+                            </h4>
+                        </div>
+                        <div class="overlay" [@simpleFadeAnimation]="'in'" *ngIf="successMessageState">
+                            <div class="successMessage">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div>Your entry for</div>
+                                <div class="stopName">
+                                    {{successMessage}}
+                                </div>
+                                <div>
+                                    has been added to the queue.
+                                </div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </body>
+
 </html>

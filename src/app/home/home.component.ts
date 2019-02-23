@@ -28,7 +28,7 @@ import { SwUpdate } from '@angular/service-worker';
 
       // fade out when destroyed. this could also be written as transition('void => *')
       transition(':leave',
-        animate(600, style({opacity: 0})))
+        animate(0, style({opacity: 0})))
     ])
   ]
 })
@@ -48,6 +48,7 @@ export class HomeComponent implements OnInit {
   subscription: any;
   stopDropdownPosition: number;
   stopDropdownState: boolean;
+  dropdownDisabled: boolean;
 
   constructor(private logService: LogService, private swUpdate: SwUpdate, private dropdownsService: DropdownsService) {
     this.log.stop = null;
@@ -107,6 +108,8 @@ export class HomeComponent implements OnInit {
   }
 
   populateStopsDropdown(): void {
+    this.dropdownDisabled = true;
+    this.log.stop = 'Select a stop';
     this.stopDropdown = [];
     this.dropdownsService.getAllStops(this.log.loop)
       .subscribe(
@@ -119,6 +122,7 @@ export class HomeComponent implements OnInit {
           }
           console.log('Populated the Stops Dropdown');
           this.stopDropdownState = true;
+          this.dropdownDisabled = false;
           this.errorMessageState = false;
         },
         (error: any) => {
@@ -209,9 +213,9 @@ export class HomeComponent implements OnInit {
   }
 
   private showSuccessMessage(stop?: string): void {
-    this.successMessage = 'Success! Your entry for ' + stop + ' has been added to the queue.';
+    this.successMessage = stop;
     this.successMessageState = true;
-    let successTimer = timer(5000);
+    const successTimer = timer(8000);
     this.subscription = successTimer.subscribe(() => {
       this.successMessageState = false;
     });

@@ -16,10 +16,7 @@ export class LoginComponent implements OnInit {
     submitted = false;
     returnUrl: string;
     error = '';
-
-    cantLogin = false; // remove when database is live
-    credentials = 'Username:test Password:test'; // remove when database is live
-
+    
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -64,7 +61,4 @@ export class LoginComponent implements OnInit {
                 });
     }
 
-    removeLater() {
-        this.cantLogin = true;
-    }
 }

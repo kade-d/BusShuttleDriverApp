@@ -9,7 +9,7 @@ import { User } from '../Models/user';
 export class FakeBackendInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const users: User[] = [
-            { id: 1, username: 'test', password: 'test', firstName: 'Test', lastName: 'User' }
+            { id: 1, username: 'shuttle', password: 'bus', firstName: 'Test', lastName: 'User' }
         ];
 
         const loops = {'data': ['Green Loop', 'Red Loop', 'Blue Loop', 'Orange Loop', 'Demand Response', 'Sunday Orange']};

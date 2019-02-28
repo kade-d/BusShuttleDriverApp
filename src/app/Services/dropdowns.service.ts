@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LogService } from './log.service';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 
 @Injectable({
@@ -8,6 +9,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DropdownsService {
   baseUrl: string;
+
+  private busNumberSource = new BehaviorSubject<string>('Select a Bus');
+  currentBusNumber = this.busNumberSource.asObservable();
 
   constructor(private logService: LogService, private http: HttpClient) {
     this.baseUrl = this.logService.baseUrl;
@@ -23,6 +27,14 @@ export class DropdownsService {
 
   getDrivers() {
     return this.http.get(this.baseUrl + '/getUsers.php');
+  }
+
+  getBusNumbers() {
+    return this.http.get(this.baseUrl + '/getBusNumbers.php');
+  }
+
+  changeBus(message: string) {
+    this.busNumberSource.next(message);
   }
 
 

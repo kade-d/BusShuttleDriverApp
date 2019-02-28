@@ -49,9 +49,11 @@ export class HomeComponent implements OnInit {
   stopDropdownPosition: number;
   stopDropdownState: boolean;
   dropdownDisabled: boolean;
+  selectedBus: string;
 
   constructor(private logService: LogService, private swUpdate: SwUpdate, private dropdownsService: DropdownsService) {
     this.log.stop = null;
+    this.dropdownsService.currentBusNumber.subscribe(passedValue => this.selectedBus = passedValue);
     this.populateLoopsDropdown();
     this.populateDriversDropdown();
   }
@@ -180,11 +182,14 @@ export class HomeComponent implements OnInit {
     this.resetErrors();
     if (this.log.loop === undefined || this.log.stop === undefined || this.log.loop === null
       || this.log.stop === null || this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop'
-      || this.log.driver === 'Select your name') {
+      || this.log.driver === 'Select your name' || this.log.driver === '' ) {
       this.showErrorMessage('Oops! Please select all necessary fields.');
       return false;
+    } if (this.selectedBus === 'Select a Bus' || this.selectedBus === undefined || this.selectedBus === null) {
+        this.showErrorMessage('Oops! Please select your bus number.');
+        return false;
     } if (this.log.leftBehind === undefined || this.log.leftBehind === null) {
-      this.log.leftBehind = 0;
+        this.log.leftBehind = 0;
     } if (this.log.boarded === undefined || this.log.boarded === null) {
       this.log.boarded = 0;
     }

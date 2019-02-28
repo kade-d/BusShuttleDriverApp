@@ -16,8 +16,8 @@ select {
 	appearance: none;
     /* and then whatever styles you want*/
   text-align: center;
-  font-size: 30px;
-	height: 40px; 
+  font-size: 25px;
+	height: 50px; 
 	padding: 5px;
 }
 

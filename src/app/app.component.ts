@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from './Services/authentication.service';
@@ -16,6 +16,9 @@ export class AppComponent {
         private authenticationService: AuthenticationService
     ) {
         this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+        document.ontouchmove = function (e) {
+            e.preventDefault();
+          }
     }
     currentUser: User;
 

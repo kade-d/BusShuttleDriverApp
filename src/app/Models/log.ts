@@ -5,7 +5,7 @@ export class Log {
   loop: string;
   driver: string;
   leftBehind: number;
-  busNumber:   number;
+  busNumber:   string;
   id?:   number;
   constructor(
     boarded: number,
@@ -14,6 +14,6 @@ export class Log {
     loop: string,
     driver: string,
     leftBehind: number,
-    busNumber?:   number,
+    busNumber?:   string,
     id?:   number) {}
 }

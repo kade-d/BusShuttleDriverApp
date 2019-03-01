@@ -1,44 +1,19 @@
 <!-- nav -->
-
-
-
 <div class="pos-f-t" *ngIf="currentUser">
-  <div class="collapse" id="navbarToggleExternalContent">
+  <div class="collapse navbar-collapse" id="navbarToggleExternalContent">
     <div class="bg-dark p-4">
         <div class="d-flex justify-content-between">
-          <div><a class="btn btn-lg btn-dark btn-block" routerLink="/">Home</a></div>
-          <div><a class="btn btn-lg btn-dark btn-block" routerLink="/configure">Configure</a></div>
-          <div><a class="btn btn-lg btn-dark btn-block" href="/login" (click)="logout()">Logout</a></div>
+          <div><a class="btn btn-lg btn-dark btn-block" routerLink="/form">Form</a></div>
+          <div><a class="btn btn-lg btn-dark btn-block" data-toggle="collapse" routerLink="/configure">Setup</a></div>
+          <div><a class="btn btn-lg btn-dark btn-block" data-toggle="collapse" href="/login" (click)="logout()">Logout</a></div>
         </div>
     </div>
   </div>
   <nav class="navbar navbar-dark bg-dark">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent"  aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
   </nav>
 </div>
 
-
-<!-- main app container
-<div class="jumbotron">
-  <div class="container">
-      <div class="row">
-          <div class="col-md-12">
-
-          </div>
-      </div>
-  </div>
-</div> -->
-
 <router-outlet></router-outlet>
-
-<!-- credits -->
-<!-- <div class="text-center">
-  <p>
-      <a href="http://jasonwatmore.com/post/2018/11/16/angular-7-jwt-authentication-example-tutorial" target="_top">Angular 7 - JWT Authentication Example & Tutorial</a>
-  </p>
-  <p>
-      <a href="http://jasonwatmore.com" target="_top">JasonWatmore.com</a>
-  </p>
-</div> -->

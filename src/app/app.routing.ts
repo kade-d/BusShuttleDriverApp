@@ -9,7 +9,7 @@ import { ConfirmationComponent } from './confirmation/confirmation.component';
 const appRoutes: Routes = [
     {
         path: '',
-        component: HomeComponent,
+        component: ConfigureComponent,
         canActivate: [AuthGuard]
     },
     {
@@ -17,6 +17,12 @@ const appRoutes: Routes = [
         component: ConfigureComponent,
         canActivate: [AuthGuard]
     },
+    {
+        path: 'form',
+        component: HomeComponent,
+        canActivate: [AuthGuard]
+    },
+    
     {
         path: 'login',
         component: LoginComponent

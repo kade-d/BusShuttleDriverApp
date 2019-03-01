@@ -5,33 +5,27 @@ import { NgForm } from '@angular/forms';
 import { Stop } from '../Models/stop';
 import { Loop } from '../Models/loop';
 import { timer } from 'rxjs';
-import { User } from '../Models/user';
 import { DropdownsService } from '../Services/dropdowns.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SwUpdate } from '@angular/service-worker';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: 'home.component.html',
   styleUrls: ['home.component.css'],
   animations: [
-    // the fade-in/fade-out animation.
     trigger('simpleFadeAnimation', [
-
-      // the "in" style determines the "resting" state of the element when it is visible.
-      state('in', style({opacity: 1})),
-
-      // fade in when created. this could also be written as transition('void => *')
+      state('in', style({ opacity: 1 })),
       transition(':enter', [
-        style({opacity: 0}),
-        animate(600 )
+        style({ opacity: 0 }),
+        animate(600)
       ]),
-
-      // fade out when destroyed. this could also be written as transition('void => *')
       transition(':leave',
-        animate(0, style({opacity: 0})))
+        animate(0, style({ opacity: 0 })))
     ])
   ]
 })
+
 export class HomeComponent implements OnInit {
   logs: Log;
   errorMessage = '';
@@ -48,31 +42,36 @@ export class HomeComponent implements OnInit {
   subscription: any;
   stopDropdownPosition: number;
   stopDropdownState: boolean;
+  loopDropdownState: boolean;
   dropdownDisabled: boolean;
   selectedBus: string;
+  selectedDriver: string;
+  selectedLoop: string;
 
-  constructor(private logService: LogService, private swUpdate: SwUpdate, private dropdownsService: DropdownsService) {
+  constructor(private logService: LogService, private swUpdate: SwUpdate,
+    public dropdownsService: DropdownsService, private router: Router) {
+
     this.log.stop = null;
     this.dropdownsService.currentBusNumber.subscribe(passedValue => this.selectedBus = passedValue);
+    this.dropdownsService.currentDriver.subscribe(passedValue => this.selectedDriver = passedValue);
+    this.dropdownsService.currentLoop.subscribe(passedValue => this.selectedLoop = passedValue);
     this.populateLoopsDropdown();
-    this.populateDriversDropdown();
+    this.populateStopsDropdown();
   }
 
   ngOnInit() {
     if (this.swUpdate.isEnabled) {
 
       this.swUpdate.available.subscribe(() => {
-  
-          if (confirm('There is a new version available. Load New Version?')) {
-  
-              window.location.reload();
-          }
+        if (confirm('There is a new version available. Load New Version?')) {
+          window.location.reload();
+        }
       });
-  } else {
+    } else {
       console.log('swUpdate is not available.');
+    }
   }
-  }
-  
+
   decreaseBoardedValueClicked(): void {
     if (this.log.boarded === 0 || this.log.boarded === undefined) {
       return;
@@ -113,7 +112,7 @@ export class HomeComponent implements OnInit {
     this.dropdownDisabled = true;
     this.log.stop = 'Select a stop';
     this.stopDropdown = [];
-    this.dropdownsService.getAllStops(this.log.loop)
+    this.dropdownsService.getAllStops(this.selectedLoop)
       .subscribe(
         (data: Stop) => {
           console.log(data);
@@ -128,6 +127,7 @@ export class HomeComponent implements OnInit {
           this.errorMessageState = false;
         },
         (error: any) => {
+          this.router.navigateByUrl('/configure');
           this.showErrorMessage('Could not get stops. Select a loop or try refreshing the page.');
         }
       );
@@ -145,24 +145,8 @@ export class HomeComponent implements OnInit {
           console.log('Populated the Loops Dropdown');
         },
         (error: any) => {
+          this.router.navigateByUrl('/configure');
           this.showErrorMessage('Could not get loops. Please try refreshing the page.');
-        }
-      );
-  }
-
-  private populateDriversDropdown(): void {
-    this.dropdownsService.getDrivers()
-      .subscribe(
-        (jsonData: User) => {
-          this.driverDropdown.push('Select your name');
-          // tslint:disable-next-line:forin We know this already works.
-          for (const x in jsonData.data) {
-            this.driverDropdown.push((jsonData.data[x].firstname) + ' ' + (jsonData.data[x].lastname));
-          }
-          console.log('Populated the Drivers Dropdown');
-        },
-        (error: any) => {
-          this.showErrorMessage('Could not get driver names. Please try refreshing the page.');
         }
       );
   }
@@ -170,6 +154,9 @@ export class HomeComponent implements OnInit {
   submitLog(form: NgForm): void {
     if (this.validateForm(form) === false) { return; }
     this.log.timestamp = this.getTimeStamp();
+    this.log.driver = this.selectedDriver;
+    this.log.busNumber = this.selectedBus;
+    this.log.loop = this.selectedLoop;
     this.errorMessageState = false;
     const copy = { ...this.log }; // Creating a copy of the member 'log'.
     console.log(copy);
@@ -180,19 +167,44 @@ export class HomeComponent implements OnInit {
 
   private validateForm(form: NgForm): boolean {
     this.resetErrors();
-    if (this.log.loop === undefined || this.log.stop === undefined || this.log.loop === null
-      || this.log.stop === null || this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop'
-      || this.log.driver === 'Select your name' || this.log.driver === '' ) {
-      this.showErrorMessage('Oops! Please select all necessary fields.');
+    if (this.log.stop === null || this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop') {
+      this.showErrorMessage('Oops! Please select a stop.');
       return false;
-    } if (this.selectedBus === 'Select a Bus' || this.selectedBus === undefined || this.selectedBus === null) {
-        this.showErrorMessage('Oops! Please select your bus number.');
-        return false;
-    } if (this.log.leftBehind === undefined || this.log.leftBehind === null) {
-        this.log.leftBehind = 0;
-    } if (this.log.boarded === undefined || this.log.boarded === null) {
+    }
+
+    if (this.selectedDriver === 'Select Your Name' || this.selectedDriver === '' || this.selectedDriver === undefined) {
+      this.showErrorMessage('Oops! Please select your name.');
+      return false;
+    }
+
+    if (this.selectedBus === 'Select a Bus' || this.selectedBus === undefined || this.selectedBus === null) {
+      this.showErrorMessage('Oops! Please select your bus number.');
+      return false;
+    }
+
+    if (this.selectedLoop === 'Select a Loop' || this.selectedLoop === undefined || this.selectedLoop === null) {
+      this.showErrorMessage('Oops! Please select your loop');
+      return false;
+    }
+
+    if (this.log.boarded >= 40) {
+      this.showErrorMessage('Oops! The number for "Boarded" is too large.');
+      return false;
+    }
+
+    if (this.log.leftBehind >= 40) {
+      this.showErrorMessage('Oops! The number for "Left Behind" is too large.');
+      return false;
+    }
+
+    if (this.log.leftBehind === undefined || this.log.leftBehind === null) {
+      this.log.leftBehind = 0;
+    }
+
+    if (this.log.boarded === undefined || this.log.boarded === null) {
       this.log.boarded = 0;
     }
+
     return true;
   }
 

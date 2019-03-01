@@ -13,6 +13,11 @@
     font-size: 40px;
     border-radius: 10px;
 }
+.btn-xl-square {
+  padding: 10px 20px;
+  font-size: 60px;
+  border-radius: 0px;
+}
 
 label {
     font-size: 22px;
@@ -57,4 +62,18 @@ select {
 
 .stopName {
   font-size: 70px;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 20px;
+}
+
+
+.largerSize {
+  font-size: 55px;
 }

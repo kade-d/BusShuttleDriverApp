@@ -44,41 +44,41 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 });
             }
 
-            // get all users
-            if (request.url.endsWith('/users') && request.method === 'GET') {
-                if (!isLoggedIn) { return unauthorised(); }
-                return ok(users);
-            }
+            // // get all users
+            // if (request.url.endsWith('/users') && request.method === 'GET') {
+            //     if (!isLoggedIn) { return unauthorised(); }
+            //     return ok(users);
+            // }
 
-            // get all loops
-            if (request.url.endsWith('/getLoops.php') && request.method === 'GET') {
-                if (!isLoggedIn) { return unauthorised(); }
-                return ok(loops);
-            }
+            // // get all loops
+            // if (request.url.endsWith('/getLoops.php') && request.method === 'GET') {
+            //     if (!isLoggedIn) { return unauthorised(); }
+            //     return ok(loops);
+            // }
 
-            // get all stops
-            if (request.url.endsWith('/getStops.php?searchTerm=Green Loop') && request.method === 'GET') {
-                if (!isLoggedIn) { return unauthorised(); }
-                return ok(stops);
-            }
+            // // get all stops
+            // if (request.url.endsWith('/getStops.php?searchTerm=Green Loop') && request.method === 'GET') {
+            //     if (!isLoggedIn) { return unauthorised(); }
+            //     return ok(stops);
+            // }
 
-            // get all drivers
-            if (request.url.endsWith('/getUsers.php') && request.method === 'GET') {
-                if (!isLoggedIn) { return unauthorised(); }
-                return ok(drivers);
-            }
+            // // get all drivers
+            // if (request.url.endsWith('/getUsers.php') && request.method === 'GET') {
+            //     if (!isLoggedIn) { return unauthorised(); }
+            //     return ok(drivers);
+            // }
 
-            // get all buses
-            if (request.url.endsWith('/getBusNumbers.php') && request.method === 'GET') {
-                if (!isLoggedIn) { return unauthorised(); }
-                return ok(buses);
-            }
+            // // get all buses
+            // if (request.url.endsWith('/getBusNumbers.php') && request.method === 'GET') {
+            //     if (!isLoggedIn) { return unauthorised(); }
+            //     return ok(buses);
+            // }
 
-            // Store Log
-            if (request.url.endsWith('/store') && request.method === 'POST') {
-                if (!isLoggedIn) { return unauthorised(); }
-                return ok(log);
-            }
+            // // Store Log
+            // if (request.url.endsWith('/store') && request.method === 'POST') {
+            //     if (!isLoggedIn) { return unauthorised(); }
+            //     return ok(log);
+            // }
 
             // pass through any requests not handled above
             return next.handle(request);

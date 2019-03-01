@@ -13,6 +13,12 @@ export class DropdownsService {
   private busNumberSource = new BehaviorSubject<string>('Select a Bus');
   currentBusNumber = this.busNumberSource.asObservable();
 
+  private driverNameSource = new BehaviorSubject<string>('Select Your Name');
+  currentDriver = this.driverNameSource.asObservable();
+
+  private loopNameSource = new BehaviorSubject<string>('Select a Loop');
+  currentLoop = this.loopNameSource.asObservable();
+
   constructor(private logService: LogService, private http: HttpClient) {
     this.baseUrl = this.logService.baseUrl;
    }
@@ -37,9 +43,11 @@ export class DropdownsService {
     this.busNumberSource.next(message);
   }
 
+  changeDriver(message: string) {
+    this.driverNameSource.next(message);
+  }
 
-
-
-
-
+  changeLoop(message: string) {
+    this.loopNameSource.next(message);
+  }
 }

@@ -14,13 +14,40 @@
                     <p></p>
                     <!-- Form -->
                     <div id="theForm">
-                        <h2 class="center-block">Shuttle Log Collection Form</h2>
                         <form #form="ngForm" [@simpleFadeAnimation]="'in'" name="theForm" *ngIf="!successMessageState"
                             (ngSubmit)="submitLog(form)" class="text-center border border-light disableZoom">
 
+                            <!-- Loop DropDown -->
+                            <!-- Right now this is being hidden by dropdownState -->
+                            <!-- <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label col-form-label-lg"
+                                            *ngIf="loopDropdownState">Loop</label>
+                                        <select [(ngModel)]="this.selectedLoop" (change)="populateStopsDropdown()"
+                                            *ngIf="loopDropdownState" name="loop" class="form-control">
+                                            <option *ngFor="let loop of loopDropdown" [ngValue]="loop">{{loop}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <!-- Stop DropDown -->
+                            <div class="row" [@simpleFadeAnimation]="'in'">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-form-label col-form-label-lg">Stop</label>
+                                        <select [(ngModel)]="log.stop" [disabled]="dropdownDisabled" name="stop"
+                                            class="form-control">
+                                            <option *ngFor="let stop of stopDropdown" [ngValue]="stop">{{stop}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Boarded - Form-Group -->
                             <div class="form-group">
-                                <label class="col-form-label col-form-label-lg">Boarded{{this.selectedBus}}</label>
+                                <label class="col-form-label col-form-label-lg">Boarded</label>
                                 <div class="form-row">
                                     <div class="col-sm-5">
                                         <button type="button"
@@ -29,9 +56,9 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <input type="number" pattern="[0-9]*" inputmode="numeric"
-                                            class="form-control form-control-lg input-group-text" style="height:80px"
-                                            name="boarded" min="0" [(ngModel)]="log.boarded" #logBoarded="ngModel"
-                                            required>
+                                            class="form-control form-control-lg input-group-text largerSize"
+                                            style="height:80px" name="boarded" min="0" [(ngModel)]="log.boarded"
+                                            #logBoarded="ngModel" required readonly>
                                     </div>
                                     <div class="col-sm-5">
                                         <button type="button"
@@ -48,7 +75,6 @@
                                     Invalid input. It can only contain counting numbers.
                                 </div>
                             </div>
-
                             <!-- Left at Stop - Form-Group -->
                             <div class="form-group">
                                 <label class="col-form-label col-form-label-lg">Left Behind</label>
@@ -59,71 +85,55 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <input type="number" pattern="[0-9]*" inputmode="numeric"
-                                            class="form-control form-control-lg input-group-text" style="height:80px"
-                                            name="leftBehind" min="0" [(ngModel)]="log.leftBehind"
-                                            #leftBehind="ngModel">
+                                            class="form-control form-control-lg input-group-text largerSize"
+                                            style="height:80px" name="leftBehind" min="0" [(ngModel)]="log.leftBehind"
+                                            #leftBehind="ngModel" readonly>
                                     </div>
                                     <div class="col-sm-5">
                                         <button type="button" class="btn btn-info btn-number btn-xl btn-block"
                                             (click)="increaseLeftBehindValueClicked()">+</button>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Driver DropDown -->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="col-form-label col-form-label-lg">Driver</label>
-                                        <select [(ngModel)]="log.driver" name="driver" class="form-control" required>
-                                            <option *ngFor="let driver of driverDropdown" [ngValue]="driver">{{driver}}
-                                            </option>
-                                        </select>
+                                    <div class="alert alert-warning"
+                                        *ngIf="logBoarded?.errors?.pattern && logBoarded.touched">
+                                        Invalid input. It can only contain counting numbers.
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Loop DropDown -->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="col-form-label col-form-label-lg">Loop</label>
-                                        <select [(ngModel)]="log.loop" (change)="populateStopsDropdown()" name="loop"
-                                            class="form-control">
-                                            <option *ngFor="let loop of loopDropdown" [ngValue]="loop">{{loop}}</option>
-                                        </select>
+                            <br />
+                            <br />
+
+                            <!-- Footer -->
+                            <footer class="footer font-small dark">
+                                <button type="submit" [disabled]="dropdownDisabled"
+                                    class="btn btn-primary btn-xl-square btn-block">Submit Entry</button>
+                                <div class="card">
+                                    <div class="card-header">
+                                        Information
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Feedback Element -->
+                                        <div class="alert alert-danger" [@simpleFadeAnimation]="'in'"
+                                            *ngIf="errorMessageState">
+                                            <h4>
+                                                {{errorMessage}}
+                                            </h4>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <h5>{{selectedDriver}}</h5>
+                                            </div>
+                                            <div class="col-sm-4"><h5>{{selectedLoop}}</h5></div>
+                                            <div class="col-sm-4 text-center">
+                                                <h5>Bus # {{selectedBus}}</h5>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <!-- Stop DropDown -->
-                            <div class="row" [@simpleFadeAnimation]="'in'" *ngIf="stopDropdownState">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="col-form-label col-form-label-lg">Stop</label>
-                                        <select [(ngModel)]="log.stop" [disabled]="dropdownDisabled" name="stop"
-                                            class="form-control">
-                                            <option *ngFor="let stop of stopDropdown" [ngValue]="stop">{{stop}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Submit Form -->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <p>
-                                        <button type="submit" [disabled]="dropdownDisabled" class="btn btn-primary btn-xl btn-block">Add</button>
-                                    </p>
-                                </div>
-                            </div>
+                            </footer>
                         </form>
-                        <!-- Feedback Elements -->
-                        <div class="alert alert-danger" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState">
-                            <h4>
-                                {{errorMessage}}
-                            </h4>
-                        </div>
+
+                        <!-- Feedback Element -->
                         <div class="overlay" [@simpleFadeAnimation]="'in'" *ngIf="successMessageState">
                             <div class="successMessage">
                                 <div></div>

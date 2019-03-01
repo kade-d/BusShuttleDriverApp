@@ -4,27 +4,83 @@
   </h1>
 </div>
 
+
+      <!-- Bus DropDown -->
+<div class="row">
+    <div class="col-sm-2">
+      </div>
+    <div class="col-sm-8">
+          <div class="form-group">
+            <h3 class="text-center">Select Your Bus Number</h3>
+            <select [(ngModel)]="selectedBus" (ngModelChange)="this.dropdownsService.changeBus($event)" name="bus" class="form-control">
+              <option *ngFor="let bus of busDropdown" [ngValue]="bus">{{bus}}</option>
+            </select>
+          </div>
+    </div>
+    <div class="col-sm-2">
+    </div>
+</div>
+
+<!-- Driver DropDown -->
+<div class="row">
+    <div class="col-sm-2">
+      </div>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <h3 class="text-center ">Select Your Name</h3>
+        <select [(ngModel)]="selectedDriver" (ngModelChange)="this.dropdownsService.changeDriver($event)" name="driver" class="form-control" required>
+          <option *ngFor="let driver of driverDropdown" [ngValue]="driver">{{driver}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="col-sm-2">
+    </div>
+</div>
+
 <!-- Loop DropDown -->
 <div class="row">
-  <div class="col-md-12">
-    <div class="form-group">
-      <label class="col-form-label col-form-label-lg">Select a Bus Number</label>
-      <select [(ngModel)]="selectedBus" (ngModelChange)="this.dropdownsService.changeBus($event)" name="bus" class="form-control">
-        <option *ngFor="let bus of busDropdown" [ngValue]="bus">{{bus}}</option>
-      </select>
+    <div class="col-sm-2">
+      </div>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <h3 class="text-center ">Select The Loop</h3>
+        <select [(ngModel)]="selectedLoop" (ngModelChange)="this.dropdownsService.changeLoop($event)" name="loop" class="form-control" required>
+          <option *ngFor="let loop of loopsDropdown" [ngValue]="loop">{{loop}}
+          </option>
+        </select>
+      </div>
     </div>
-  </div>
+    <div class="col-sm-2">
+    </div>
 </div>
+
+
+<div class="row">
+    <div class="col-sm-2">
+      </div>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <div><a class="btn btn-xl btn-success btn-block" routerLink="/form">Start</a></div>
+      </div>
+    </div>
+    <div class="col-sm-2">
+    </div>
+</div>
+
+
+
+
 
 <!-- Footer -->
 <footer class="footer font-small dark">
 
   <div class="card">
     <button id='syncButton' (click)="displayConfirmation()" [@simpleFadeAnimation]="'in'"
-      class="btn btn-success btn-xl btn-block">End Shift</button>
+      class="btn btn-dark btn-xl btn-block">End Shift</button>
 
     <div class="card-header">
-      Information {{this.selectedBus}}
+      Information
     </div>
 
     <div class="card-body">
@@ -35,4 +91,3 @@
   </div>
 
 </footer>
-<!-- Footer -->

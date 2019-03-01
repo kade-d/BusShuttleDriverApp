@@ -53,6 +53,9 @@ export class ConfigureComponent implements OnInit {
 displayConfirmation() {
   this.didStartSync = true;
   this.logService.syncLogs();
+  this.dropdownsService.changeBus('Select a Bus');
+  this.dropdownsService.changeDriver('Select Your Name');
+  this.dropdownsService.changeLoop('Select a Loop');
   }
 
   private populateBusDropdown(): void {

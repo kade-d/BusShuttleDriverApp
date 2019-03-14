@@ -14,6 +14,6 @@ export class Log {
     loop: string,
     driver: string,
     leftBehind: number,
-    busNumber?:   string,
+    busNumber:   string,
     id?:   number) {}
 }

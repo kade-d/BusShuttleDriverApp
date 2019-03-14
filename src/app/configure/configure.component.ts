@@ -6,6 +6,8 @@ import { DropdownsService } from '../Services/dropdowns.service';
 import { Bus } from '../Models/bus';
 import { User } from '../Models/user';
 import { Loop } from '../Models/loop';
+import { Router } from '@angular/router';
+import { AuthenticationService } from '../Services/authentication.service';
 
 @Component({
   selector: 'app-configure',
@@ -35,8 +37,13 @@ export class ConfigureComponent implements OnInit {
   selectedBus: string;
   selectedDriver: string;
   selectedLoop: string;
+  errorMessageState = false;
+  busDropdownState: boolean;
+  driverDropdownState: boolean;
+  loopDropdownState: boolean;
 
-  constructor(public logService: LogService, public dropdownsService: DropdownsService) {
+  constructor(public logService: LogService, public dropdownsService: DropdownsService,
+    private router: Router, private authenticationService: AuthenticationService) {
    }
 
   ngOnInit() {
@@ -48,9 +55,21 @@ export class ConfigureComponent implements OnInit {
     this.populateBusDropdown();
     this.populateDriversDropdown();
     this.populateLoopsDropdown();
+    if (this.logService.logsToSend.length > 0) {
+      this.logService.changeSyncMessage('syncStarted');
+    }
   }
 
-displayConfirmation() {
+  validateStartButton() {
+    if (this.selectedBus === 'Select a Bus' || this.selectedDriver === 'Select Your Name' || this.selectedLoop === 'Select a Loop') {
+      this.errorMessage = 'Oops! Select all choices above.';
+      this.errorMessageState = true;
+    } else {
+      this.router.navigate(['/form']);
+    }
+  }
+
+startSync() {
   this.didStartSync = true;
   this.logService.syncLogs();
   this.dropdownsService.changeBus('Select a Bus');
@@ -59,6 +78,7 @@ displayConfirmation() {
   }
 
   private populateBusDropdown(): void {
+    this.busDropdownState = false;
     this.dropdownsService.getBusNumbers()
       .subscribe(
         (jsonData: Bus) => {
@@ -68,6 +88,7 @@ displayConfirmation() {
             this.busDropdown.push(jsonData.data[x]);
           }
           console.log('Populated the Buses Dropdown');
+          this.busDropdownState = true;
         },
         (error: any) => {
           location.reload();
@@ -77,6 +98,7 @@ displayConfirmation() {
   }
 
   private populateDriversDropdown(): void {
+    this.driverDropdownState = false;
     this.dropdownsService.getDrivers()
       .subscribe(
         (jsonData: User) => {
@@ -86,6 +108,7 @@ displayConfirmation() {
             this.driverDropdown.push((jsonData.data[x].firstname) + ' ' + (jsonData.data[x].lastname));
           }
           console.log('Populated the Drivers Dropdown');
+          this.driverDropdownState = true;
         },
         (error: any) => {
           location.reload();
@@ -95,6 +118,7 @@ displayConfirmation() {
   }
 
   private populateLoopsDropdown(): void {
+    this.loopDropdownState = false;
     this.dropdownsService.getAllLoops()
       .subscribe(
         (jsonData: Loop) => {
@@ -104,12 +128,31 @@ displayConfirmation() {
             this.loopsDropdown.push(jsonData.data[x]);
           }
           console.log('Populated the Loops Dropdown');
+          this.loopDropdownState = true;
         },
         (error: any) => {
           location.reload();
           this.showErrorMessage('Could not get loops. Please try refreshing the page.');
         }
       );
+  }
+
+  logout() {
+    this.dropdownsService.changeBus('Select a Bus');
+    this.dropdownsService.changeDriver('Select Your Name');
+    this.dropdownsService.changeLoop('Select a Loop');
+    this.authenticationService.logout();
+    this.router.navigate(['/login']);
+  }
+
+  getSyncMessage(): string {
+    if (this.syncingCount === 1) {
+      return (this.syncingCount + ' ' + 'item');
+    } if (this.syncingCount > 1) {
+      return (this.syncingCount + ' ' + 'items');
+    } else {
+      return ('All done! There is nothing');
+    }
   }
 
   private showErrorMessage(message: string): void {

@@ -1,18 +1,21 @@
+
+
 <div id="box" class="alert alert-success center-block" *ngIf="didStartSync" [@simpleFadeAnimation]="'in'">
   <h1>
     {{syncingMessage}}
   </h1>
 </div>
 
-
+<br/>
+<form>
       <!-- Bus DropDown -->
 <div class="row">
     <div class="col-sm-2">
       </div>
     <div class="col-sm-8">
           <div class="form-group">
-            <h3 class="text-center">Select Your Bus Number</h3>
-            <select [(ngModel)]="selectedBus" (ngModelChange)="this.dropdownsService.changeBus($event)" name="bus" class="form-control">
+            <h3 class="text-center">What is your bus number?</h3>
+            <select [(ngModel)]="selectedBus" (ngModelChange)="this.dropdownsService.changeBus($event)" name="bus" [disabled]="!busDropdownState" class="form-control text-center" required>
               <option *ngFor="let bus of busDropdown" [ngValue]="bus">{{bus}}</option>
             </select>
           </div>
@@ -27,8 +30,8 @@
       </div>
     <div class="col-sm-8">
       <div class="form-group">
-        <h3 class="text-center ">Select Your Name</h3>
-        <select [(ngModel)]="selectedDriver" (ngModelChange)="this.dropdownsService.changeDriver($event)" name="driver" class="form-control" required>
+        <h3 class="text-center ">What is your name?</h3>
+        <select [(ngModel)]="selectedDriver" (ngModelChange)="this.dropdownsService.changeDriver($event)" name="driver" [disabled]="!driverDropdownState" class="form-control" required>
           <option *ngFor="let driver of driverDropdown" [ngValue]="driver">{{driver}}
           </option>
         </select>
@@ -44,8 +47,8 @@
       </div>
     <div class="col-sm-8">
       <div class="form-group">
-        <h3 class="text-center ">Select The Loop</h3>
-        <select [(ngModel)]="selectedLoop" (ngModelChange)="this.dropdownsService.changeLoop($event)" name="loop" class="form-control" required>
+        <h3 class="text-center ">What loop will you be on?</h3>
+        <select [(ngModel)]="selectedLoop" (ngModelChange)="this.dropdownsService.changeLoop($event)" name="loop" [disabled]="!loopDropdownState" class="form-control" required>
           <option *ngFor="let loop of loopsDropdown" [ngValue]="loop">{{loop}}
           </option>
         </select>
@@ -61,13 +64,18 @@
       </div>
     <div class="col-sm-8">
       <div class="form-group">
-        <div><a class="btn btn-xl btn-success btn-block" routerLink="/form">Start</a></div>
+        <div><button class="btn btn-xl btn-block" (click)="validateStartButton()">Start</button></div>
+        <div class="alert alert-danger text-center" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState">
+          <h4>
+              {{errorMessage}}
+          </h4>
+      </div>
       </div>
     </div>
     <div class="col-sm-2">
     </div>
 </div>
-
+</form>
 
 
 
@@ -76,18 +84,22 @@
 <footer class="footer font-small dark">
 
   <div class="card">
-    <button id='syncButton' (click)="displayConfirmation()" [@simpleFadeAnimation]="'in'"
-      class="btn btn-dark btn-xl btn-block">End Shift</button>
+    
+      
+      
 
     <div class="card-header">
-      Information
+      App Information
     </div>
 
     <div class="card-body">
-      <h5 class="card-title" [@simpleFadeAnimation]="'in'">There are {{syncingCount}} item(s) left to sync.</h5>
+      <h3 class="card-title" [@simpleFadeAnimation]="'in'">{{getSyncMessage()}} left to sync.</h3>
       <p class="card-text" [@simpleFadeAnimation]="'in'">App version: {{version}}</p>
       <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
     </div>
-  </div>
+    <button id='syncButton' (click)="startSync()" 
+      class="btn btn-xl-card btn-block" *ngIf="syncingMessage == 'Syncing, please do not close this page.' || syncingMessage == 'There was an error. Please ensure you have a stable WiFi connection and try again.'">Sync Remaining {{getSyncMessage()}}</button>
+      <a class="btn btn-lg btn-xl-logout btn-block" *ngIf="syncingMessage == 'All done! Have a wonderful day!'"  data-toggle="collapse" href="/login" (click)="logout()">Logout</a>
+    </div>
 
 </footer>

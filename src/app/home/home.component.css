@@ -11,12 +11,42 @@
 .btn-xl {
     padding: 10px 20px;
     font-size: 40px;
-    border-radius: 10px;
+    border-radius: 15px;
+    background-color: #51626d;
+    color: white;
 }
+
+.btn-xl-plus {
+  padding: 10px 20px;
+  font-size: 40px;
+  border-radius: 15px;
+  background-color: #3A6B75;
+  color: white;
+}
+
+.btn-settings {
+  padding: 10px 20px;
+  font-size: 30px;
+  border-radius: 0px;
+  background-color: #51626d;
+  color: white;
+
+}
+
 .btn-xl-square {
   padding: 10px 20px;
   font-size: 60px;
-  border-radius: 0px;
+  border-radius: 15px;
+  background-color: #63b255;
+  color: white;
+}
+
+.btn-xl-success {
+  padding: 10px 20px;
+  font-size: 60px;
+  border-radius: 15px;
+  background-color: white;
+  color: black;
 }
 
 label {
@@ -36,7 +66,7 @@ select {
 }
 
 .overlay {
-  background-color: #5cb85c;
+  background-color: #63b255;
   position: fixed;
   top: 0;
   left: 0;
@@ -62,17 +92,17 @@ select {
 
 .stopName {
   font-size: 70px;
+  color: white;
 }
 
 .footer {
-  position: fixed;
+  position: relative;
   left: 0;
-  bottom: 0;
+  bottom: -60%;
   width: 100%;
   text-align: center;
   padding: 20px;
 }
-
 
 .largerSize {
   font-size: 55px;

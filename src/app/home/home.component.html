@@ -7,10 +7,10 @@
 </head>
 
 <body>
-    <div class="" style="background-color:transparent !important;">
+    <div style="background-color:transparent !important;">
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 ">
                     <p></p>
                     <!-- Form -->
                     <div id="theForm">
@@ -37,8 +37,8 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-form-label col-form-label-lg">Stop</label>
-                                        <select [(ngModel)]="log.stop" [disabled]="dropdownDisabled" name="stop"
-                                            class="form-control">
+                                        <select [(ngModel)]="log.stop" (click)="resetErrors()"
+                                            [disabled]="dropdownDisabled" name="stop" class="form-control">
                                             <option *ngFor="let stop of stopDropdown" [ngValue]="stop">{{stop}}</option>
                                         </select>
                                     </div>
@@ -51,7 +51,7 @@
                                 <div class="form-row">
                                     <div class="col-sm-5">
                                         <button type="button"
-                                            class="btn btn-dark btn-number btn-xl btn-block disableZoom"
+                                            class="btn btn-secondary btn-number btn-xl btn-block disableZoom"
                                             (click)="decreaseBoardedValueClicked()">-</button>
                                     </div>
                                     <div class="col-sm-2">
@@ -62,7 +62,7 @@
                                     </div>
                                     <div class="col-sm-5">
                                         <button type="button"
-                                            class="btn btn-info btn-number btn-xl btn-block disableZoom"
+                                            class="btn btn-number btn-xl-plus btn-block disableZoom"
                                             (click)="increaseBoardedValueClicked()">+</button>
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@
                                 <label class="col-form-label col-form-label-lg">Left Behind</label>
                                 <div class="form-row">
                                     <div class="col-sm-5">
-                                        <button type="button" class="btn btn-dark btn-number btn-xl btn-block"
+                                        <button type="button" class="btn btn-secondary btn-number btn-xl btn-block"
                                             (click)="decreaseLeftBehindValueClicked()">-</button>
                                     </div>
                                     <div class="col-sm-2">
@@ -90,7 +90,7 @@
                                             #leftBehind="ngModel" readonly>
                                     </div>
                                     <div class="col-sm-5">
-                                        <button type="button" class="btn btn-info btn-number btn-xl btn-block"
+                                        <button type="button" class="btn btn-number btn-xl-plus btn-block"
                                             (click)="increaseLeftBehindValueClicked()">+</button>
                                     </div>
                                     <div class="alert alert-warning"
@@ -101,36 +101,55 @@
                             </div>
 
                             <br />
-                            <br />
 
                             <!-- Footer -->
                             <footer class="footer font-small dark">
                                 <button type="submit" [disabled]="dropdownDisabled"
-                                    class="btn btn-primary btn-xl-square btn-block">Submit Entry</button>
+                                    class="btn btn-xl-square btn-block">Submit Entry</button>
+                                <div class="alert alert-danger" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState">
+                                    <h4>
+                                        {{errorMessage}}
+                                    </h4>
+                                </div>
+                                <h3>
+                                    <p>for {{this.log.stop}}</p>
+                                </h3>
+                                <br />
                                 <div class="card">
-                                    <div class="card-header">
-                                        Information
+                                        <div class="card-header">
+                                    <div class="row">
+                                            <div class="col-sm-4"></div>
+                                       <div class=" col-sm-4"> Configured Settings</div>
+                                        
+                                        <div class="col-sm-4" style='color: #63b255; text-align: right;' *ngIf="this.logService.getSyncingStatus() == true">
+                                            {{isSyncingMessage}}
+                                        </div>
+                                        
+                                    </div>
                                     </div>
                                     <div class="card-body">
                                         <!-- Feedback Element -->
-                                        <div class="alert alert-danger" [@simpleFadeAnimation]="'in'"
-                                            *ngIf="errorMessageState">
-                                            <h4>
-                                                {{errorMessage}}
-                                            </h4>
-                                        </div>
+
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <h5>{{selectedDriver}}</h5>
                                             </div>
-                                            <div class="col-sm-4"><h5>{{selectedLoop}}</h5></div>
+                                            <div class="col-sm-4">
+                                                <h5>{{selectedLoop}}</h5>
+                                            </div>
                                             <div class="col-sm-4 text-center">
                                                 <h5>Bus # {{selectedBus}}</h5>
                                             </div>
+                                            <br />
                                         </div>
                                     </div>
+                                    <button class="btn btn-lg btn-settings btn-block" [disabled]="this.logService.getSyncingStatus() == true"
+                                        routerLink="/configure">Change Settings</button>
+   
                                 </div>
+                                
                             </footer>
+
                         </form>
 
                         <!-- Feedback Element -->
@@ -148,6 +167,8 @@
                                 <div>
                                     has been added to the queue.
                                 </div>
+                                <a style="color: black" class="btn btn-lg btn-xl-success btn-block"
+                                        (click)="cancelSuccessMessage()">Undo</a>
                                 <div></div>
                                 <div></div>
                                 <div></div>

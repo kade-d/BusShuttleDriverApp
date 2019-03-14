@@ -19,7 +19,7 @@ ___
 Run `ng serve --open` inside of the project folder and let the project build and compile . If a browser window does not automatically open, navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Building and Deploying for Production Server
-Run `npm run dist` inside of the project folder. This will generate contents in `dist/BusLog/` that can be uploaded to a web server.
+Run `ng build --prod` inside of the project folder. This will generate contents in `dist/BusLog/` that can be uploaded to a web server.
 
 ## Setting-Up the SQL Database
 We have included the document[here](https://github.com/kdesimini/Bus-Shuttle-Log-Collection-System/blob/master/Resources/Create_Database_Dev.sql) to recreate our database.

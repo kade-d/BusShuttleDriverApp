@@ -1,14 +1,16 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Log } from '../Models/log';
 import { LogService } from '../Services/log.service';
 import { NgForm } from '@angular/forms';
 import { Stop } from '../Models/stop';
 import { Loop } from '../Models/loop';
-import { timer } from 'rxjs';
+import { timer, Observable, interval } from 'rxjs';
 import { DropdownsService } from '../Services/dropdowns.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SwUpdate } from '@angular/service-worker';
 import { Router } from '@angular/router';
+import { exit } from 'process';
+import { switchMap, mapTo } from 'rxjs/operators';
 
 @Component({
   templateUrl: 'home.component.html',
@@ -26,29 +28,39 @@ import { Router } from '@angular/router';
   ]
 })
 
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+  @ViewChild('form', { read: NgForm }) form: any;
   logs: Log;
   errorMessage = '';
   successMessage = '';
-  total = 0;
-  log = new Log(0, '', '', '', '', 0);
+  isSyncingMessage = 'Sync in progress';
+  log = new Log(0, '', '', '', '', 0, '');
   stops = new Stop();
   loops = new Loop();
   stopDropdown = [];
   loopDropdown = [];
   driverDropdown = [];
+
   errorMessageState = false;
   successMessageState = false;
-  subscription: any;
+
   stopDropdownPosition: number;
+
   stopDropdownState: boolean;
   loopDropdownState: boolean;
   dropdownDisabled: boolean;
+
   selectedBus: string;
   selectedDriver: string;
   selectedLoop: string;
+  successTimer = timer(10000);
+  syncTimer = timer(30000);
 
-  constructor(private logService: LogService, private swUpdate: SwUpdate,
+  successSubscription: any;
+  submitSubscription: any;
+  syncSubscription: any;
+
+  constructor(public logService: LogService, private swUpdate: SwUpdate,
     public dropdownsService: DropdownsService, private router: Router) {
 
     this.log.stop = null;
@@ -57,11 +69,38 @@ export class HomeComponent implements OnInit {
     this.dropdownsService.currentLoop.subscribe(passedValue => this.selectedLoop = passedValue);
     this.populateLoopsDropdown();
     this.populateStopsDropdown();
+
+    // If page is accessed without being configured, redirect to settings page.
+    if (this.selectedLoop === 'Select a Loop') {
+      this.router.navigateByUrl('/configure');
+    }
+
+    // Check if we have internet and attemtp to sync logs.
+    const example = this.syncTimer.pipe(switchMap(() => interval(30000)));
+    this.syncSubscription = example.subscribe(() => {
+          if ('onLine' in navigator) {
+          if (!navigator.onLine) {
+            console.log('offline');
+            if (exit) {
+              return;
+            }
+          } else {
+            if (logService.logsToSend.length > 0) {
+              console.log('online');
+              logService.syncLogs();
+            }
+          }
+    }
+    });
+  }
+
+  ngOnDestroy() {
+    this.syncSubscription.unsubscribe();
   }
 
   ngOnInit() {
-    if (this.swUpdate.isEnabled) {
 
+    if (this.swUpdate.isEnabled) {
       this.swUpdate.available.subscribe(() => {
         if (confirm('There is a new version available. Load New Version?')) {
           window.location.reload();
@@ -70,6 +109,7 @@ export class HomeComponent implements OnInit {
     } else {
       console.log('swUpdate is not available.');
     }
+
   }
 
   decreaseBoardedValueClicked(): void {
@@ -115,7 +155,6 @@ export class HomeComponent implements OnInit {
     this.dropdownsService.getAllStops(this.selectedLoop)
       .subscribe(
         (data: Stop) => {
-          console.log(data);
           this.stopDropdown.push('Select a stop');
           // tslint:disable-next-line:forin We know this already works.
           for (const x in data.data) {
@@ -159,10 +198,14 @@ export class HomeComponent implements OnInit {
     this.log.loop = this.selectedLoop;
     this.errorMessageState = false;
     const copy = { ...this.log }; // Creating a copy of the member 'log'.
-    console.log(copy);
-    this.logService.storeLogsLocally(copy);
     this.showSuccessMessage(this.log.stop);
-    this.resetFormControls(form);
+
+    // Subscribing to the timer. If undo pressed, we unsubscribe.
+    this.submitSubscription = this.successTimer.subscribe(() => {
+      this.resetFormControls(this.form);
+      this.logService.storeLogsLocally(copy);
+      console.log('object stored locally from submitLog');
+      });
   }
 
   private validateForm(form: NgForm): boolean {
@@ -170,6 +213,8 @@ export class HomeComponent implements OnInit {
     if (this.log.stop === null || this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop') {
       this.showErrorMessage('Oops! Please select a stop.');
       return false;
+    } if (this.log.stop === undefined) {
+      this.form.controls['stop'].setValue(this.stopDropdown[1])
     }
 
     if (this.selectedDriver === 'Select Your Name' || this.selectedDriver === '' || this.selectedDriver === undefined) {
@@ -216,7 +261,6 @@ export class HomeComponent implements OnInit {
   }
 
   private resetFormControls(form: NgForm) {
-    console.log(this.stopDropdown.length);
     if (this.stopDropdownPosition === this.stopDropdown.length - 2) {
       this.stopDropdownPosition = 1;
       form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition]);
@@ -224,18 +268,22 @@ export class HomeComponent implements OnInit {
       this.stopDropdownPosition = this.stopDropdown.indexOf(this.log.stop);
       form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition + 1]);
     }
-    console.log(this.stopDropdownPosition);
     form.controls['boarded'].reset();
     form.controls['leftBehind'].reset();
   }
 
-  private showSuccessMessage(stop?: string): void {
+  private showSuccessMessage(stop?: string ): void {
     this.successMessage = stop;
     this.successMessageState = true;
-    const successTimer = timer(8000);
-    this.subscription = successTimer.subscribe(() => {
-      this.successMessageState = false;
+    this.successSubscription = this.successTimer.subscribe(() => {
+    this.successMessageState = false;
     });
+  }
+
+  cancelSuccessMessage(): void {
+    this.successMessageState = false;
+    this.successSubscription.unsubscribe();
+    this.submitSubscription.unsubscribe();
   }
 
   private showErrorMessage(message: string): void {

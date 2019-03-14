@@ -1,7 +1,25 @@
 .btn-xl {
-    padding: 10px 20px;
-    font-size: 60px;
-    border-radius: 0px;
+  padding: 10px 20px;
+  font-size: 60px;
+  border-radius: 15px;
+  background-color: #63b255;
+  color: white;
+}
+
+.btn-xl-card {
+  padding: 10px 20px;
+  font-size: 60px;
+  border-radius: 0px;
+  background-color: #DC2830;
+  color: white;
+}
+
+.btn-xl-logout {
+  padding: 10px 20px;
+  font-size: 60px;
+  border-radius: 0px;
+  background-color: #51626d;
+  color: white;
 }
 
 .center-block {
@@ -16,8 +34,8 @@ select {
 	appearance: none;
     /* and then whatever styles you want*/
   text-align: center;
-  font-size: 30px;
-	height: 40px; 
+  font-size: 25px;
+	height: 50px; 
 	padding: 5px;
 }
 
@@ -28,7 +46,7 @@ h1 {
 }
 
 .footer {
-  position: fixed;
+  position: relative;
   left: 0;
   bottom: 0;
   width: 100%;

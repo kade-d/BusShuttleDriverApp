@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { retryWhen, catchError } from 'rxjs/operators';
+import { retryWhen, catchError, retry } from 'rxjs/operators';
 import { Observable, throwError, timer, BehaviorSubject } from 'rxjs';
 import { mergeMap, finalize } from 'rxjs/operators';
 import { Log } from '../Models/log';
@@ -15,8 +15,9 @@ export class LogService {
   logsToSend: Log[] = [];
   stops: Stop[];
   loops: Loop[];
+  isSyncing: boolean;
 
-  private syncMessageSource = new BehaviorSubject<string>('Syncing, please do not close this page.');
+  private syncMessageSource = new BehaviorSubject<string>('All done! Have a wonderful day!');
   currentSyncMessage = this.syncMessageSource.asObservable();
 
   private syncCountSource = new BehaviorSubject<number>(0);
@@ -25,13 +26,25 @@ export class LogService {
   constructor(private http: HttpClient) {
     const logs: Log[] = JSON.parse(localStorage.getItem('logs'));
     if (logs !== null) {
+      this.logsToSend = logs;
       this.changeSyncCount(logs.length);
     }
-
   }
 
   changeSyncMessage(message: string) {
-    this.syncMessageSource.next(message);
+    if (message === 'syncStarted') {
+      this.syncMessageSource.next('Syncing, please do not close this page.');
+    } if (message === 'syncDone') {
+      this.syncMessageSource.next('All done! Have a wonderful day!');
+    } if (message === 'syncError') {
+      this.syncMessageSource.next('There was an error. Please ensure you have a stable WiFi connection and try again.');
+    } if (message === 'initialSyncState') {
+      this.syncMessageSource.next('All done! Have a wonderful day!');
+    }
+  }
+
+  getSyncingStatus(): boolean {
+    return this.isSyncing;
   }
 
   changeSyncCount(count: number) {
@@ -41,40 +54,41 @@ export class LogService {
   storeLogsLocally(log: Log) {
     this.logsToSend.push(log);
     localStorage.setItem('logs', JSON.stringify(this.logsToSend));
-    if(this.logsToSend === null) {
+    if (this.logsToSend === null) {
       return;
     } else {
       this.changeSyncCount(this.logsToSend.length);
     }
   }
 
-  syncLogs() {
-    const logs: Log[] = JSON.parse(localStorage.getItem('logs'));
-    
-    if (logs === null || logs.length === 0 || logs === undefined) {
-      this.changeSyncMessage('All caught up. Nothing to sync!');
+
+  public syncLogs(): void {
+    console.log('syncLogs Initiated');
+    this.isSyncing = true;
+    if (this.logsToSend === null || this.logsToSend.length === 0 || this.logsToSend === undefined) {
+      this.changeSyncMessage('syncDone');
       return;
     }
-    this.changeSyncMessage('Syncing, please do not close this page.');
+    this.changeSyncMessage('syncStarted');
 
-    for (let i = logs.length - 1; i >= 0; i--) {
-      const log = logs[i];
+    for (let i = this.logsToSend.length - 1; i >= 0; i--) {
+      const log = this.logsToSend[i];
       this.store(log)
         .subscribe((success) => {
           console.log(success);
-          logs.pop();
-          this.changeSyncCount(logs.length);
-          console.log("length is " + logs.length);
-
-          console.log(logs.length);
-          if (logs.length === 0) {
-            this.changeSyncMessage('All done! Have a wonderful day!');
+          this.logsToSend.pop();
+          localStorage.setItem('logs', JSON.stringify(this.logsToSend));
+          this.changeSyncCount(this.logsToSend.length);
+          if (this.logsToSend.length === 0) {
+            this.changeSyncMessage('syncDone');
+            this.isSyncing = false;
             localStorage.clear();
             this.logsToSend = [];
           }
         },
         (err: any) => {
-          this.changeSyncMessage('There was an error. Please notify your supervisor.');
+          this.isSyncing = false;
+          this.changeSyncMessage('syncError');
         });
     }
   }
@@ -82,16 +96,16 @@ export class LogService {
   store(log: Log): Observable<Log> {
     return this.http.post<Log>(this.baseUrl + '/store', { data: log })
       .pipe(
-        retryWhen(this.generateRetryStrategy()({
+        retryWhen(this.generateRetryStrategy(log)({
           scalingDuration: 1000,
           excludedStatusCodes: [500]
         })),
         catchError(this.handleError));
   }
 
-  private generateRetryStrategy() {
+  private generateRetryStrategy(log: Log) {
     const retryStrategy = ({
-      maxRetryAttempts = 50,
+      maxRetryAttempts = 4,
       scalingDuration = 1000,
       excludedStatusCodes = []
     }: {
@@ -105,7 +119,7 @@ export class LogService {
           // if maximum number of retries have been met
           // or response is a status code we don't wish to retry, throw error
           if (
-            retryAttempt > maxRetryAttempts ||
+            retryAttempt === maxRetryAttempts ||
             excludedStatusCodes.find(e => e === error.status)
           ) {
             return this.handleError(error);
@@ -116,7 +130,7 @@ export class LogService {
           );
           return timer(retryAttempt * scalingDuration);
         }),
-        finalize(() => console.log('Entry has been successfully added!'))
+        finalize(() => console.log('Error! something went wrong.'))
       );
     };
     return retryStrategy;

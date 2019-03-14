@@ -20,12 +20,13 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         const drivers = {'data': [{'firstname': 'Ron', 'lastname': 'Swanson'}, {'firstname': 'Steven', 'lastname': 'Meyers'},
         {'firstname': 'Sarah', 'lastname': 'Thompson'}, {'firstname': 'Jeff', 'lastname': 'Bezos'}]};
 
-        const log = {stop: 'Burkhardt', timestamp:"asdfasf", loop: 'Red Loop', driver: 'Steven Meyers', boarded: 1, leftBehind: 0};
+        const log = {stop: 'Burkhardt', timestamp:'asdfasf', loop: 'Red Loop', driver: 'Steven Meyers', boarded: 1, leftBehind: 0, busNumber: 903};
+        const buses = {'data': ['930', '931', '935']};
 
         const authHeader = request.headers.get('Authorization');
         const isLoggedIn = authHeader && authHeader.startsWith('Bearer fake-jwt-token');
 
-        console.log('BACKEND-LESS BUILD - FOR PRODUCTION, DISABLE THE BACKEND INTERCEPTOR');
+        // console.log('BACKEND-LESS BUILD - FOR PRODUCTION, DISABLE THE BACKEND INTERCEPTOR');
 
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {
@@ -65,6 +66,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             // if (request.url.endsWith('/getUsers.php') && request.method === 'GET') {
             //     if (!isLoggedIn) { return unauthorised(); }
             //     return ok(drivers);
+            // }
+
+            // // get all buses
+            // if (request.url.endsWith('/getBusNumbers.php') && request.method === 'GET') {
+            //     if (!isLoggedIn) { return unauthorised(); }
+            //     return ok(buses);
             // }
 
             // // Store Log

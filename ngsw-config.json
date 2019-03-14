@@ -33,12 +33,14 @@
         "/getLoops",
         "/getLoops.php",
         "/getUsers",
-        "/getUsers.php"
+        "/getUsers.php",
+        "/getBusNumbers.php",
+        "/getBusNumbers"
       ],
       "cacheConfig": {
         "strategy?": "freshness",
         "maxSize": 500,
-        "maxAge": "12h"
+        "maxAge": "30d"
       }
     }
     

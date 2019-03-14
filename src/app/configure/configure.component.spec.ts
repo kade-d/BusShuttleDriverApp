@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConfigureComponent } from './configure.component';
+import { ConfigureComponent as ConfigureComponent} from './configure.component';
 import { HttpClient } from 'selenium-webdriver/http';
 import { LogService } from '../Services/log.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -31,7 +31,4 @@ describe('ConfigureComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
 });

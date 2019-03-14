@@ -26,7 +26,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         const authHeader = request.headers.get('Authorization');
         const isLoggedIn = authHeader && authHeader.startsWith('Bearer fake-jwt-token');
 
-        console.log('BACKEND-LESS BUILD - FOR PRODUCTION, DISABLE THE BACKEND INTERCEPTOR');
+        // console.log('BACKEND-LESS BUILD - FOR PRODUCTION, DISABLE THE BACKEND INTERCEPTOR');
 
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {

@@ -1,29 +1,34 @@
 
+
 # Front-End
-1. Install Node.js and npm from https://nodejs.org/en/
-
-1. Navigate inside of project folder and run `npm install`
-
-___
-
 To see a demo of what's currently in this branch, visit https://www.mildvariety.club
-To see the database of entries for development/debugging, visit https://www.mildvariety.club/buslog
+To see the database of entries for development/debugging, visit https://buslogs.mildvariety.club
+`let me know if you need the usernames and passwords`
 
 Current versioning:
-*  _npm version 6.4.1_
-*  _node version 10.9.0_
+*  _npm: version 6.4.1_
+*  _node: version 10.13.0_
+___
+1. Install Node.js and npm from https://nodejs.org/en/
+1. Install Angular CLI from https://angular.io/cli
+1. Clone this repository into a folder of your choosing (preferably where you won't have to change permissions)
+1. Using Terminal or Command Prompt, navigate inside of project folder and run `npm install`
+## Running a Development Server
+(Service worker won't work in the development server)
 
-## Development server
-Run `ng serve` inside of the cloned folder for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve --open` inside of the project folder and let the project build and compile . If a browser window does not automatically open, navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Build and Deploy
-Run `npm run dist` to generate a dist/ folder that holds a BusLog/ folder that can be uploaded to a web server.
+## Building and Deploying for Production Server
+Run `npm run dist` inside of the project folder. This will generate contents in `dist/BusLog/` that can be uploaded to a web server.
 
-## Setup SQL Database
-In our case, our main webhost allows us to use phpMyAdmin to create and manage our MySQL database. Currently, we are using Dreamhost for testing and protyping. We have included documents [here](https://github.com/kdesimini/Bus-Shuttle-Log-Collection-System/blob/master/Resources/Create_Database_Dev.sql) to be used to recreate our database.
+## Setting-Up the SQL Database
+We have included the document[here](https://github.com/kdesimini/Bus-Shuttle-Log-Collection-System/blob/master/Resources/Create_Database_Dev.sql) to recreate our database.
 
-## Running unit tests
+## Running Unit Tests
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+## Running End-To-End Tests
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+___
+
+To see a [list of third party software and licenses used in this project](https://github.com/kdesimini/Bus-Shuttle-Log-Collection-System/blob/master/README.md), visit our main project repository. 

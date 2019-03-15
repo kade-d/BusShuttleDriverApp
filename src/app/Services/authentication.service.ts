@@ -19,18 +19,19 @@ export class AuthenticationService {
         return this.currentUserSubject.value;
     }
 
-    login(username: string, password: string) {
+    login(email: string, password: string) {
         // REPLACE THIS URL WITH THE ACTUAL API ENDPOINT
-        return this.http.post<any>(`https://localhost/users/authenticate`, { username, password })
+        return this.http.post<any>(`https://www.mildvariety.club/api/login.php`, { email, password })
             .pipe(map(user => {
                 // login successful if there's a jwt token in the response
-                if (user && user.token) {
+                if (user.token) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.currentUserSubject.next(user);
+                    console.log(user);
+                } else {
+                    return user;
                 }
-
-                return user;
             }));
     }
 

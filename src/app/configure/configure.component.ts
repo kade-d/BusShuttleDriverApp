@@ -91,7 +91,7 @@ startSync() {
           this.busDropdownState = true;
         },
         (error: any) => {
-          location.reload();
+          // location.reload();
           this.showErrorMessage('Could not get buses. Please try refreshing the page.');
         }
       );
@@ -111,7 +111,7 @@ startSync() {
           this.driverDropdownState = true;
         },
         (error: any) => {
-          location.reload();
+          // location.reload();
           this.showErrorMessage('Could not get driver names. Please try refreshing the page.');
         }
       );
@@ -131,7 +131,7 @@ startSync() {
           this.loopDropdownState = true;
         },
         (error: any) => {
-          location.reload();
+          // location.reload();
           this.showErrorMessage('Could not get loops. Please try refreshing the page.');
         }
       );

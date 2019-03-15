@@ -9,7 +9,7 @@ import { User } from '../Models/user';
 export class FakeBackendInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const users: User[] = [
-            { id: 1, username: 'shuttle', password: 'bus', firstName: 'Test', lastName: 'User' }
+            { id: 1, email: 'shuttle', password: 'bus', firstname: 'Test', lastname: 'User' , token: 'sdlfasdf'}
         ];
 
         const loops = {'data': ['Green Loop', 'Red Loop', 'Blue Loop', 'Orange Loop', 'Demand Response', 'Sunday Orange']};
@@ -32,17 +32,17 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         return of(null).pipe(mergeMap(() => {
 
             // authenticate - public
-            if (request.url.endsWith('/users/authenticate') && request.method === 'POST') {
-                const user = users.find(x => x.username === request.body.username && x.password === request.body.password);
-                if (!user) { return error('Username or password is incorrect'); }
-                return ok({
-                    id: user.id,
-                    username: user.username,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    token: `fake-jwt-token`
-                });
-            }
+            // if (request.url.endsWith('/users/authenticate') && request.method === 'POST') {
+            //     const user = users.find(x => x.username === request.body.username && x.password === request.body.password);
+            //     if (!user) { return error('Username or password is incorrect'); }
+            //     return ok({
+            //         id: user.id,
+            //         username: user.username,
+            //         firstname: user.firstname,
+            //         lastname: user.lastname,
+            //         token: `fake-jwt-token`
+            //     });
+            // }
 
             // // get all users
             // if (request.url.endsWith('/users') && request.method === 'GET') {

@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { AuthenticationService } from '../Services/authentication.service';
+import { stringify } from '@angular/core/src/util';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -11,15 +12,21 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
+
+            let errorMessage: string;
+
             if (err.status === 401) {
-                // auto logout if 401 response returned from api
                 this.authenticationService.logout();
                 // tslint:disable-next-line: deprecation
                 location.reload(true);
+            } else if (err.status === 403) {
+                errorMessage = 'Your password or username is incorrect.'
+            } else if (err.status === 504) {
+                errorMessage = 'Oops, you don\'t have internet or the server is down. :/';
+            } else {
+                errorMessage = 'An unknown error has ocurred.';
             }
-
-            const error = err.error.message || err.statusText;
-            return throwError(error);
+            return throwError(errorMessage);
         }));
     }
 }

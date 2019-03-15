@@ -75,7 +75,7 @@ export class LogService {
       const log = this.logsToSend[i];
       this.store(log)
         .subscribe((success) => {
-          console.log(success);
+          // console.log(success);
           this.logsToSend.pop();
           localStorage.setItem('logs', JSON.stringify(this.logsToSend));
           this.changeSyncCount(this.logsToSend.length);
@@ -105,7 +105,7 @@ export class LogService {
 
   private generateRetryStrategy(log: Log) {
     const retryStrategy = ({
-      maxRetryAttempts = 4,
+      maxRetryAttempts = 3,
       scalingDuration = 1000,
       excludedStatusCodes = []
     }: {
@@ -130,7 +130,7 @@ export class LogService {
           );
           return timer(retryAttempt * scalingDuration);
         }),
-        finalize(() => console.log('Error! something went wrong.'))
+        // finalize(() => (console.log('Error! something went wrong.')))
       );
     };
     return retryStrategy;

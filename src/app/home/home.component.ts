@@ -4,13 +4,13 @@ import { LogService } from '../Services/log.service';
 import { NgForm } from '@angular/forms';
 import { Stop } from '../Models/stop';
 import { Loop } from '../Models/loop';
-import { timer, Observable, interval } from 'rxjs';
+import { timer, interval } from 'rxjs';
 import { DropdownsService } from '../Services/dropdowns.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SwUpdate } from '@angular/service-worker';
 import { Router } from '@angular/router';
 import { exit } from 'process';
-import { switchMap, mapTo } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   templateUrl: 'home.component.html',
@@ -67,7 +67,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.dropdownsService.currentBusNumber.subscribe(passedValue => this.selectedBus = passedValue);
     this.dropdownsService.currentDriver.subscribe(passedValue => this.selectedDriver = passedValue);
     this.dropdownsService.currentLoop.subscribe(passedValue => this.selectedLoop = passedValue);
-    this.populateLoopsDropdown();
+    // this.populateLoopsDropdown();
     this.populateStopsDropdown();
 
     // If page is accessed without being configured, redirect to settings page.
@@ -75,9 +75,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl('/configure');
     }
 
-    // Check if we have internet and attemtp to sync logs.
-    const example = this.syncTimer.pipe(switchMap(() => interval(30000)));
-    this.syncSubscription = example.subscribe(() => {
+    // Check if we have internet and attempt to sync logs.
+    const obsTimer = this.syncTimer.pipe(switchMap(() => interval(30000)));
+    this.syncSubscription = obsTimer.subscribe(() => {
           if ('onLine' in navigator) {
           if (!navigator.onLine) {
             console.log('offline');
@@ -99,7 +99,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
+    // Prompt reload if Service Worker detects new files.
     if (this.swUpdate.isEnabled) {
       this.swUpdate.available.subscribe(() => {
         if (confirm('There is a new version available. Load New Version?')) {
@@ -109,6 +109,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     } else {
       console.log('swUpdate is not available.');
     }
+
+
 
   }
 
@@ -168,24 +170,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         (error: any) => {
           this.router.navigateByUrl('/configure');
           this.showErrorMessage('Could not get stops. Select a loop or try refreshing the page.');
-        }
-      );
-  }
-
-  private populateLoopsDropdown(): void {
-    this.dropdownsService.getAllLoops()
-      .subscribe(
-        (jsonData: Loop) => {
-          this.loopDropdown.push('Select a loop');
-          // tslint:disable-next-line:forin We know this already works.
-          for (const x in jsonData.data) {
-            this.loopDropdown.push(jsonData.data[x]);
-          }
-          console.log('Populated the Loops Dropdown');
-        },
-        (error: any) => {
-          this.router.navigateByUrl('/configure');
-          this.showErrorMessage('Could not get loops. Please try refreshing the page.');
         }
       );
   }
@@ -286,11 +270,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.submitSubscription.unsubscribe();
   }
 
-  private showErrorMessage(message: string): void {
-    this.errorMessageState = true;
-    this.errorMessage = message;
-  }
-
   pad(n) { // function for adding leading zeros to dates/times
     return n < 10 ? '0' + n : n;
   }
@@ -304,5 +283,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       + this.pad(date.getMinutes()) + ':'
       + this.pad(date.getSeconds()));
     return timestamp;
+  }
+
+  private showErrorMessage(message: string): void {
+    this.errorMessageState = true;
+    this.errorMessage = message;
   }
 }

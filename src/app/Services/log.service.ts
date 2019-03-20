@@ -40,6 +40,8 @@ export class LogService {
       this.syncMessageSource.next('There was an error. Please ensure you have a stable WiFi connection and try again.');
     } if (message === 'initialSyncState') {
       this.syncMessageSource.next('All done! Have a wonderful day!');
+    } if (message === 'noInternet') {
+      this.syncMessageSource.next('There was an error. Please ensure you have a stable WiFi connection and try again.');
     }
   }
 
@@ -71,33 +73,43 @@ export class LogService {
     }
     this.changeSyncMessage('syncStarted');
 
-    for (let i = this.logsToSend.length - 1; i >= 0; i--) {
-      const log = this.logsToSend[i];
-      this.store(log)
-        .subscribe((success) => {
-          // console.log(success);
-          this.logsToSend.pop();
-          localStorage.setItem('logs', JSON.stringify(this.logsToSend));
-          this.changeSyncCount(this.logsToSend.length);
-          if (this.logsToSend.length === 0) {
-            this.changeSyncMessage('syncDone');
-            this.isSyncing = false;
-            localStorage.clear();
-            this.logsToSend = [];
+    if ('onLine' in navigator) {
+      if (!navigator.onLine) {
+        console.log('offline');
+        this.changeSyncMessage('noInternet');
+      } else {
+        if (this.logsToSend.length > 0) {
+          for (let i = this.logsToSend.length - 1; i >= 0; i--) {
+            const log = this.logsToSend[i];
+            this.store(log)
+              .subscribe((success) => {
+                // console.log(success);
+                this.logsToSend.pop();
+                localStorage.setItem('logs', JSON.stringify(this.logsToSend));
+                this.changeSyncCount(this.logsToSend.length);
+                if (this.logsToSend.length === 0) {
+                  this.changeSyncMessage('syncDone');
+                  this.isSyncing = false;
+                  localStorage.clear();
+                  this.logsToSend = [];
+                }
+              },
+              (err: any) => {
+                this.isSyncing = false;
+                this.changeSyncMessage('syncError');
+              });
           }
-        },
-        (err: any) => {
-          this.isSyncing = false;
-          this.changeSyncMessage('syncError');
-        });
-    }
+        }
+      }
+}
+
   }
 
   store(log: Log): Observable<Log> {
     return this.http.post<Log>(this.baseUrl + '/store', { data: log })
       .pipe(
         retryWhen(this.generateRetryStrategy(log)({
-          scalingDuration: 1000,
+          scalingDuration: 500,
           excludedStatusCodes: [500]
         })),
         catchError(this.handleError));
@@ -105,8 +117,8 @@ export class LogService {
 
   private generateRetryStrategy(log: Log) {
     const retryStrategy = ({
-      maxRetryAttempts = 3,
-      scalingDuration = 1000,
+      maxRetryAttempts = 2,
+      scalingDuration = 500,
       excludedStatusCodes = []
     }: {
       maxRetryAttempts?: number,

@@ -32,17 +32,17 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         return of(null).pipe(mergeMap(() => {
 
             // authenticate - public
-            // if (request.url.endsWith('/users/authenticate') && request.method === 'POST') {
-            //     const user = users.find(x => x.username === request.body.username && x.password === request.body.password);
-            //     if (!user) { return error('Username or password is incorrect'); }
-            //     return ok({
-            //         id: user.id,
-            //         username: user.username,
-            //         firstname: user.firstname,
-            //         lastname: user.lastname,
-            //         token: `fake-jwt-token`
-            //     });
-            // }
+            if (request.url.endsWith('/users/authenticate') && request.method === 'POST') {
+                const user = users.find(x => x.username === request.body.username && x.password === request.body.password);
+                if (!user) { return error('Username or password is incorrect'); }
+                return ok({
+                    id: user.id,
+                    username: user.username,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
+                    token: `fake-jwt-token`
+                });
+            }
 
             // // get all users
             // if (request.url.endsWith('/users') && request.method === 'GET') {

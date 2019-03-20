@@ -41,13 +41,22 @@ export class ConfigureComponent implements OnInit {
   busDropdownState: boolean;
   driverDropdownState: boolean;
   loopDropdownState: boolean;
+  noInternet = false;
 
   constructor(public logService: LogService, public dropdownsService: DropdownsService,
     private router: Router, private authenticationService: AuthenticationService) {
    }
 
   ngOnInit() {
-    this.logService.currentSyncMessage.subscribe(passedMessage => this.syncingMessage = passedMessage);
+    this.logService.currentSyncMessage.subscribe(passedMessage => {
+      this.syncingMessage = passedMessage;
+      if (passedMessage === 'There was an error. Please ensure you have a stable WiFi connection and try again.') {
+        this.noInternet = true;
+      } else {
+        this.noInternet = false;
+      }
+    });
+
     this.logService.currentSyncCount.subscribe(passedCount => this.syncingCount = passedCount);
     this.dropdownsService.currentBusNumber.subscribe(passedValue => this.selectedBus = passedValue);
     this.dropdownsService.currentDriver.subscribe(passedValue => this.selectedDriver = passedValue);
@@ -128,7 +137,16 @@ startSync() {
             this.loopsDropdown.push(jsonData.data[x]);
           }
           console.log('Populated the Loops Dropdown');
-          this.loopDropdownState = true;
+          for (let i = 1; i < this.loopsDropdown.length; i++) {
+            this.dropdownsService.getAllStops(this.loopsDropdown[i])
+            .subscribe((a) => {
+              console.log(a);
+              if (i === this.loopsDropdown.length - 1) {
+                this.loopDropdownState = true; // enable loop dropdown only after ALL stops are cached.
+              }
+            });
+            console.log('caching stops for ' + this.loopsDropdown[i] );
+          }
         },
         (error: any) => {
           // location.reload();

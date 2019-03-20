@@ -4,7 +4,6 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { AuthenticationService } from '../Services/authentication.service';
-import { stringify } from '@angular/core/src/util';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -20,9 +19,9 @@ export class ErrorInterceptor implements HttpInterceptor {
                 // tslint:disable-next-line: deprecation
                 location.reload(true);
             } else if (err.status === 403) {
-                errorMessage = 'Your password or username is incorrect.'
+                errorMessage = 'Your password or username is incorrect.';
             } else if (err.status === 504) {
-                errorMessage = 'Oops, you don\'t have internet or the server is down. :/';
+                errorMessage = 'Oops, it looks like you don\'t have internet.';
             } else {
                 errorMessage = 'An unknown error has ocurred.';
             }

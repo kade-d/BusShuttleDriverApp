@@ -29,7 +29,6 @@
       "name": "api-performance",
       "urls": [
         "/getStops",
-        "/getStops.php?searchTerm=",
         "/getLoops",
         "/getLoops.php",
         "/getUsers",
@@ -38,7 +37,7 @@
         "/getBusNumbers"
       ],
       "cacheConfig": {
-        "strategy?": "freshness",
+        "strategy": "freshness",
         "maxSize": 500,
         "maxAge": "30d"
       }

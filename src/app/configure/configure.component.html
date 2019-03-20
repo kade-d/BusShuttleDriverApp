@@ -1,37 +1,48 @@
+<div id="box" class="alert alert-info center-block" *ngIf="didStartSync && !noInternet" [@simpleFadeAnimation]="'in'">
 
-
-<div id="box" class="alert alert-success center-block" *ngIf="didStartSync" [@simpleFadeAnimation]="'in'">
   <h1>
     {{syncingMessage}}
   </h1>
 </div>
-
-<br/>
-<form>
-      <!-- Bus DropDown -->
-<div class="row">
-    <div class="col-sm-2">
-      </div>
-    <div class="col-sm-8">
-          <div class="form-group">
-            <h3 class="text-center">What is your bus number?</h3>
-            <select [(ngModel)]="selectedBus" (ngModelChange)="this.dropdownsService.changeBus($event)" name="bus" [disabled]="!busDropdownState" class="form-control text-center" required>
-              <option *ngFor="let bus of busDropdown" [ngValue]="bus">{{bus}}</option>
-            </select>
-          </div>
-    </div>
-    <div class="col-sm-2">
-    </div>
+<div id="box" class="alert alert-danger center-block" *ngIf="didStartSync && noInternet" [@simpleFadeAnimation]="'in'">
+  <h1>
+    {{syncingMessage}}
+  </h1>
 </div>
-
-<!-- Driver DropDown -->
-<div class="row">
+<br />
+<form>
+  <!-- Bus DropDown -->
+  <div class="row">
     <div class="col-sm-2">
-      </div>
+    </div>
     <div class="col-sm-8">
       <div class="form-group">
-        <h3 class="text-center ">What is your name?</h3>
-        <select [(ngModel)]="selectedDriver" (ngModelChange)="this.dropdownsService.changeDriver($event)" name="driver" [disabled]="!driverDropdownState" class="form-control" required>
+        <h3 class="text-center">
+          What is your bus number?
+          <img *ngIf="!busDropdownState" class="pl-2" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        </h3>
+        <select [(ngModel)]="selectedBus" (ngModelChange)="this.dropdownsService.changeBus($event)" name="bus"
+          [disabled]="!busDropdownState" class="form-control text-center" required>
+          <option *ngFor="let bus of busDropdown" [ngValue]="bus">{{bus}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-sm-2">
+    </div>
+  </div>
+
+  <!-- Driver DropDown -->
+  <div class="row">
+    <div class="col-sm-2">
+    </div>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <h3 class="text-center ">
+          What is your name?
+            <img *ngIf="!driverDropdownState" class="pl-2" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        </h3>
+        <select [(ngModel)]="selectedDriver" (ngModelChange)="this.dropdownsService.changeDriver($event)" name="driver"
+          [disabled]="!driverDropdownState" class="form-control" required>
           <option *ngFor="let driver of driverDropdown" [ngValue]="driver">{{driver}}
           </option>
         </select>
@@ -39,16 +50,20 @@
     </div>
     <div class="col-sm-2">
     </div>
-</div>
+  </div>
 
-<!-- Loop DropDown -->
-<div class="row">
+  <!-- Loop DropDown -->
+  <div class="row">
     <div class="col-sm-2">
-      </div>
+    </div>
     <div class="col-sm-8">
       <div class="form-group">
-        <h3 class="text-center ">What loop will you be on?</h3>
-        <select [(ngModel)]="selectedLoop" (ngModelChange)="this.dropdownsService.changeLoop($event)" name="loop" [disabled]="!loopDropdownState" class="form-control" required>
+        <h3 class="text-center ">
+          What loop will you be on?
+          <img *ngIf="!loopDropdownState" class="pl-2" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        </h3>
+        <select [(ngModel)]="selectedLoop" (ngModelChange)="this.dropdownsService.changeLoop($event)" name="loop"
+          [disabled]="!loopDropdownState" class="form-control" required>
           <option *ngFor="let loop of loopsDropdown" [ngValue]="loop">{{loop}}
           </option>
         </select>
@@ -56,25 +71,25 @@
     </div>
     <div class="col-sm-2">
     </div>
-</div>
+  </div>
 
 
-<div class="row">
+  <div class="row">
     <div class="col-sm-2">
-      </div>
+    </div>
     <div class="col-sm-8">
       <div class="form-group">
         <div><button class="btn btn-xl btn-block" (click)="validateStartButton()">Start</button></div>
         <div class="alert alert-danger text-center" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState">
           <h4>
-              {{errorMessage}}
+            {{errorMessage}}
           </h4>
-      </div>
+        </div>
       </div>
     </div>
     <div class="col-sm-2">
     </div>
-</div>
+  </div>
 </form>
 
 
@@ -84,9 +99,9 @@
 <footer class="footer font-small dark">
 
   <div class="card">
-    
-      
-      
+
+
+
 
     <div class="card-header">
       App Information
@@ -97,9 +112,11 @@
       <p class="card-text" [@simpleFadeAnimation]="'in'">App version: {{version}}</p>
       <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
     </div>
-    <button id='syncButton' (click)="startSync()" 
-      class="btn btn-xl-card btn-block" *ngIf="syncingMessage == 'Syncing, please do not close this page.' || syncingMessage == 'There was an error. Please ensure you have a stable WiFi connection and try again.'">Sync Remaining {{getSyncMessage()}}</button>
-      <a class="btn btn-lg btn-xl-logout btn-block" *ngIf="syncingMessage == 'All done! Have a wonderful day!'"  data-toggle="collapse" href="/login" (click)="logout()">Logout</a>
-    </div>
+    <button id='syncButton' (click)="startSync()" class="btn btn-xl-card btn-block"
+      *ngIf="syncingMessage == 'Syncing, please do not close this page.' || syncingMessage == 'There was an error. Please ensure you have a stable WiFi connection and try again.'">Sync
+      Remaining {{getSyncMessage()}}</button>
+    <a class="btn btn-lg btn-xl-logout btn-block" *ngIf="syncingMessage == 'All done! Have a wonderful day!'"
+      data-toggle="collapse" href="/login" (click)="logout()">Logout</a>
+  </div>
 
 </footer>

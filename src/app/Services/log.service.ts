@@ -11,7 +11,7 @@ import { Loop } from '../Models/loop';
   providedIn: 'root'
 })
 export class LogService {
-  baseUrl = 'https://www.mildvariety.club/api';
+  baseUrl = '/api';
   logsToSend: Log[] = [];
   stops: Stop[];
   loops: Loop[];
@@ -69,6 +69,7 @@ export class LogService {
     this.isSyncing = true;
     if (this.logsToSend === null || this.logsToSend.length === 0 || this.logsToSend === undefined) {
       this.changeSyncMessage('syncDone');
+      this.isSyncing = false;
       return;
     }
     this.changeSyncMessage('syncStarted');
@@ -77,8 +78,10 @@ export class LogService {
       if (!navigator.onLine) {
         console.log('offline');
         this.changeSyncMessage('noInternet');
+        this.isSyncing = false;
       } else {
         if (this.logsToSend.length > 0) {
+          this.isSyncing = true;
           for (let i = this.logsToSend.length - 1; i >= 0; i--) {
             const log = this.logsToSend[i];
             this.store(log)

@@ -278,7 +278,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const date = new Date();
     const timestamp = (date.getFullYear() + '/'
       + this.pad((date.getMonth()) + 1) + '/'
-      + this.pad(date.getUTCDate()) + ' '
+      + this.pad(date.getDate()) + ' ' 
       + this.pad(date.getHours()) + ':'
       + this.pad(date.getMinutes()) + ':'
       + this.pad(date.getSeconds()));

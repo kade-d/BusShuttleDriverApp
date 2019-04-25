@@ -44,6 +44,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 });
             }
 
+            //These are all commented out because they're hitting the REAL backend system. 
+            
             // // get all users
             // if (request.url.endsWith('/users') && request.method === 'GET') {
             //     if (!isLoggedIn) { return unauthorised(); }

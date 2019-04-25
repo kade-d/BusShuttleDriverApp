@@ -64,6 +64,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     public dropdownsService: DropdownsService, private router: Router) {
 
     this.log.stop = null;
+    this.log.boarded = 0;
+    this.log.leftBehind = 0;
     this.dropdownsService.currentBusNumber.subscribe(passedValue => this.selectedBus = passedValue);
     this.dropdownsService.currentDriver.subscribe(passedValue => this.selectedDriver = passedValue);
     this.dropdownsService.currentLoop.subscribe(passedValue => this.selectedLoop = passedValue);
@@ -78,19 +80,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Check if we have internet and attempt to sync logs.
     const obsTimer = this.syncTimer.pipe(switchMap(() => interval(30000)));
     this.syncSubscription = obsTimer.subscribe(() => {
-          if ('onLine' in navigator) {
-          if (!navigator.onLine) {
-            console.log('offline');
-            if (exit) {
-              return;
-            }
-          } else {
-            if (logService.logsToSend.length > 0) {
-              console.log('online');
-              logService.syncLogs();
-            }
+      if ('onLine' in navigator) {
+        if (!navigator.onLine) {
+          console.log('offline');
+          if (exit) {
+            return;
           }
-    }
+        } else {
+          if (logService.logsToSend.length > 0) {
+            console.log('online');
+            logService.syncLogs();
+          }
+        }
+      }
     });
   }
 
@@ -109,9 +111,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     } else {
       console.log('swUpdate is not available.');
     }
-
-
-
   }
 
   decreaseBoardedValueClicked(): void {
@@ -216,12 +215,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    if (this.log.boarded >= 40) {
+    if (this.log.boarded >= 65) {
       this.showErrorMessage('Oops! The number for "Boarded" is too large.');
       return false;
     }
 
-    if (this.log.leftBehind >= 40) {
+    if (this.log.leftBehind >= 65) {
       this.showErrorMessage('Oops! The number for "Left Behind" is too large.');
       return false;
     }
@@ -252,8 +251,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.stopDropdownPosition = this.stopDropdown.indexOf(this.log.stop);
       form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition + 1]);
     }
-    form.controls['boarded'].reset();
-    form.controls['leftBehind'].reset();
+    this.log.boarded = 0;
+    this.log.leftBehind = 0;
   }
 
   private showSuccessMessage(stop?: string ): void {

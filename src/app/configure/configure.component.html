@@ -92,16 +92,10 @@
   </div>
 </form>
 
-
-
-
 <!-- Footer -->
 <footer class="footer font-small dark">
 
   <div class="card">
-
-
-
 
     <div class="card-header">
       App Information
@@ -110,13 +104,12 @@
     <div class="card-body">
       <h3 class="card-title" [@simpleFadeAnimation]="'in'">{{getSyncMessage()}} left to sync.</h3>
       <p class="card-text" [@simpleFadeAnimation]="'in'">App version: {{version}}</p>
-      <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
     </div>
     <button id='syncButton' (click)="startSync()" class="btn btn-xl-card btn-block"
       *ngIf="syncingMessage == 'Syncing, please do not close this page.' || syncingMessage == 'There was an error. Please ensure you have a stable WiFi connection and try again.'">Sync
       Remaining {{getSyncMessage()}}</button>
-    <a class="btn btn-lg btn-xl-logout btn-block" *ngIf="syncingMessage == 'All done! Have a wonderful day!'"
-      data-toggle="collapse" href="/login" (click)="logout()">Logout</a>
+    <button class="btn btn-lg btn-xl-logout btn-block" [disabled]="syncingMessage != 'All done! Have a wonderful day!'"
+      data-toggle="collapse" href="/login" (click)="logout()">Logout</button>
   </div>
 
 </footer>

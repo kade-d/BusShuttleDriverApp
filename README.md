@@ -1,8 +1,6 @@
 
 
-# Front-End
-To see a demo of what's currently in this branch, visit https://www.mildvariety.club
-To see the database of entries for development/debugging, visit https://buslogs.mildvariety.club
+# Front-End - Driver App
 `let me know if you need the usernames and passwords`
 
 Current versioning:

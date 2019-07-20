@@ -3,6 +3,9 @@ import { LogService } from './log.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, timer, throwError } from 'rxjs';
 import { mergeMap, retryWhen, catchError } from 'rxjs/operators';
+import { Bus } from '../Models/bus';
+import { Loop } from '../Models/loop';
+import { User } from '../Models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +21,15 @@ export class DropdownsService {
 
   private loopNameSource = new BehaviorSubject<string>('Select a Loop');
   currentLoop = this.loopNameSource.asObservable();
+
+  private busDropdownSource = new BehaviorSubject<Bus[]>([ ]);
+  currentBusDropdown = this.busDropdownSource.asObservable();
+
+  private loopDropdownSource = new BehaviorSubject<Loop[]>([ ]);
+  currentLoopDropdown = this.loopDropdownSource.asObservable();
+
+  private driverDropdownSource = new BehaviorSubject<User[]>([ ]);
+  currentDriverDropdown = this.driverDropdownSource.asObservable();
 
   constructor(private logService: LogService, private http: HttpClient) {
     this.baseUrl = this.logService.baseUrl;
@@ -69,6 +81,18 @@ export class DropdownsService {
 
   changeDriver(message: string) {
     this.driverNameSource.next(message);
+  }
+
+  changeBusDropdown(message: Bus[]) {
+    this.busDropdownSource.next(message);
+  }
+
+  changeLoopDropdown(message: Loop[]) {
+    this.loopDropdownSource.next(message);
+  }
+
+  changeDriverDropdown(message: User[]) {
+    this.driverDropdownSource.next(message);
   }
 
   changeLoop(message: string) {

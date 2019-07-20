@@ -5,5 +5,5 @@
     password?: string;
     firstname?: string;
     lastname?: string;
-    token: string;
+    token?: string;
 }

@@ -10,7 +10,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { SwUpdate } from '@angular/service-worker';
 import { Router } from '@angular/router';
 import { exit } from 'process';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, findIndex } from 'rxjs/operators';
 
 @Component({
   templateUrl: 'home.component.html',
@@ -40,6 +40,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   stopDropdown = [];
   loopDropdown = [];
   driverDropdown = [];
+  stop = null;
+
+  stopName = 'No Stop Selected Yet'; // sets the value under the submit button
 
   errorMessageState = false;
   successMessageState = false;
@@ -50,10 +53,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   loopDropdownState: boolean;
   dropdownDisabled: boolean;
 
-  selectedBus: string;
-  selectedDriver: string;
-  selectedLoop: string;
-  successTimer = timer(10000);
+  selectedBus: Object;
+  selectedDriver: Object;
+  selectedLoop: Object;
+  successTimer = timer(1000);
   syncTimer = timer(30000);
 
   successSubscription: any;
@@ -153,15 +156,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.dropdownDisabled = true;
     this.log.stop = 'Select a stop';
     this.stopDropdown = [];
-    this.dropdownsService.getAllStops(this.selectedLoop)
+    this.dropdownsService.getAllStops(this.selectedLoop[0])
       .subscribe(
         (data: Stop) => {
-          this.stopDropdown.push('Select a stop');
           // tslint:disable-next-line:forin We know this already works.
           for (const x in data.data) {
-            this.stopDropdown.push(data.data[x]);
+            this.stopDropdown.push([data.data[x].id, data.data[x].stops]);
           }
           console.log('Populated the Stops Dropdown');
+          
           this.stopDropdownState = true;
           this.dropdownDisabled = false;
           this.errorMessageState = false;
@@ -176,18 +179,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   submitLog(form: NgForm): void {
     if (this.validateForm(form) === false) { return; }
     this.log.timestamp = this.getTimeStamp();
-    this.log.driver = this.selectedDriver;
-    this.log.busNumber = this.selectedBus;
-    this.log.loop = this.selectedLoop;
+    this.log.driver = this.selectedDriver[0];
+    this.log.busNumber = this.selectedBus[0];
+    this.log.loop = this.selectedLoop[0];
+    this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x[0] === this.log.stop)][1];
     this.errorMessageState = false;
     const copy = { ...this.log }; // Creating a copy of the member 'log'.
-    this.showSuccessMessage(this.log.stop);
+    this.showSuccessMessage(this.stopName);
 
     // Subscribing to the timer. If undo pressed, we unsubscribe.
     this.submitSubscription = this.successTimer.subscribe(() => {
       this.resetFormControls(this.form);
       this.logService.storeLogsLocally(copy);
-      console.log('object stored locally from submitLog');
+      console.log('object stored locally');
+          // if an item hasn't been selected in the stop dropdown, don't change stopName under submit button.
+    if (this.stopDropdown[this.stopDropdown.findIndex(x => x[0] === this.log.stop)] !== undefined) {
+      this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x[0] === this.log.stop)][1];
+    }
       });
   }
 
@@ -197,7 +205,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.showErrorMessage('Oops! Please select a stop.');
       return false;
     } if (this.log.stop === undefined) {
-      this.form.controls['stop'].setValue(this.stopDropdown[1])
+      this.form.controls['stop'].setValue(this.stopDropdown[1]);
     }
 
     if (this.selectedDriver === 'Select Your Name' || this.selectedDriver === '' || this.selectedDriver === undefined) {
@@ -237,6 +245,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private resetErrors(): void {
+
+    // if an item hasn't been selected in the stop dropdown, don't change stopName under submit button.
+    if (this.stopDropdown[this.stopDropdown.findIndex(x => x[0] === this.log.stop)] !== undefined) {
+      this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x[0] === this.log.stop)][1];
+    }
     this.successMessage = '';
     this.errorMessage = '';
     this.successMessageState = false;
@@ -244,12 +257,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private resetFormControls(form: NgForm) {
-    if (this.stopDropdownPosition === this.stopDropdown.length - 2) {
+    if (this.log.stop !== null && this.log.stop !== 'Select a stop' 
+        && this.stopDropdown.findIndex(x => x[0] === this.log.stop) < this.stopDropdown.length - 1 ) {
+      this.stopDropdownPosition = this.stopDropdown.findIndex(x => x[0] === this.log.stop) + 1;
+      form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition][0]);
+    } else if (this.stopDropdownPosition === this.stopDropdown.length - 1) {
       this.stopDropdownPosition = 1;
-      form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition]);
-    } else {
-      this.stopDropdownPosition = this.stopDropdown.indexOf(this.log.stop);
-      form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition + 1]);
+      form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition - 1][0]);
     }
     this.log.boarded = 0;
     this.log.leftBehind = 0;
@@ -269,7 +283,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.submitSubscription.unsubscribe();
   }
 
-  pad(n) { // function for adding leading zeros to dates/times
+  pad(n: any) { // function for adding leading zeros to dates/times
     return n < 10 ? '0' + n : n;
   }
 
@@ -277,7 +291,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const date = new Date();
     const timestamp = (date.getFullYear() + '/'
       + this.pad((date.getMonth()) + 1) + '/'
-      + this.pad(date.getDate()) + ' ' 
+      + this.pad(date.getDate()) + ' '
       + this.pad(date.getHours()) + ':'
       + this.pad(date.getMinutes()) + ':'
       + this.pad(date.getSeconds()));

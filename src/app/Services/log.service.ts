@@ -11,7 +11,7 @@ import { Loop } from '../Models/loop';
   providedIn: 'root'
 })
 export class LogService {
-  baseUrl = '/api';
+  baseUrl = 'http://localhost/api';
   logsToSend: Log[] = [];
   stops: Stop[];
   loops: Loop[];
@@ -109,7 +109,7 @@ export class LogService {
   }
 
   store(log: Log): Observable<Log> {
-    return this.http.post<Log>(this.baseUrl + '/store', { data: log })
+    return this.http.post<Log>(this.baseUrl + '/store.php', { data: log })
       .pipe(
         retryWhen(this.generateRetryStrategy(log)({
           scalingDuration: 500,

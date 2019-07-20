@@ -34,9 +34,9 @@ export class ConfigureComponent implements OnInit {
   driverDropdown = [];
   loopsDropdown = [];
   errorMessage = '';
-  selectedBus: string;
-  selectedDriver: string;
-  selectedLoop: string;
+  selectedBus: Object;
+  selectedDriver: Object;
+  selectedLoop: Object;
   errorMessageState = false;
   busDropdownState: boolean;
   driverDropdownState: boolean;
@@ -91,10 +91,9 @@ startSync() {
     this.dropdownsService.getBusNumbers()
       .subscribe(
         (jsonData: Bus) => {
-          this.busDropdown.push('Select a Bus');
           // tslint:disable-next-line:forin We know this already works.
           for (const x in jsonData.data) {
-            this.busDropdown.push(jsonData.data[x]);
+            this.busDropdown.push([jsonData.data[x].id, jsonData.data[x].busIdentifier]);
           }
           console.log('Populated the Buses Dropdown');
           this.busDropdownState = true;
@@ -110,10 +109,9 @@ startSync() {
     this.dropdownsService.getDrivers()
       .subscribe(
         (jsonData: User) => {
-          this.driverDropdown.push('Select Your Name');
           // tslint:disable-next-line:forin We know this already works.
           for (const x in jsonData.data) {
-            this.driverDropdown.push((jsonData.data[x].firstname) + ' ' + (jsonData.data[x].lastname));
+            this.driverDropdown.push([jsonData.data[x].id, (jsonData.data[x].firstname) + ' ' + (jsonData.data[x].lastname)]);
           }
           console.log('Populated the Drivers Dropdown');
           this.driverDropdownState = true;
@@ -129,21 +127,19 @@ startSync() {
     this.dropdownsService.getAllLoops()
       .subscribe(
         (jsonData: Loop) => {
-          this.loopsDropdown.push('Select a Loop');
           // tslint:disable-next-line:forin We know this already works.
           for (const x in jsonData.data) {
-            this.loopsDropdown.push(jsonData.data[x]);
+            this.loopsDropdown.push([jsonData.data[x].id, jsonData.data[x].loopName]);
           }
           console.log('Populated the Loops Dropdown');
           for (let i = 1; i < this.loopsDropdown.length; i++) {
             this.dropdownsService.getAllStops(this.loopsDropdown[i])
             .subscribe((a) => {
-              console.log(a);
               if (i === this.loopsDropdown.length - 1) {
                 this.loopDropdownState = true; // enable loop dropdown only after ALL stops are cached.
               }
             });
-            console.log('caching stops for ' + this.loopsDropdown[i] );
+            //console.log('caching stops for ' + this.loopsDropdown[i] );
           }
         },
         (error: any) => {

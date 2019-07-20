@@ -24,8 +24,9 @@
                                         <label class="col-form-label col-form-label-lg">Stop</label><img *ngIf="dropdownDisabled" class="pl-2" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
 
                                         <select [(ngModel)]="log.stop" (click)="resetErrors()"
-                                            [disabled]="dropdownDisabled" name="stop" class="form-control">
-                                            <option *ngFor="let stop of stopDropdown" [ngValue]="stop">{{stop}}</option>
+                                            [disabled]="dropdownDisabled" name="stop" class="form-control" >
+                                            <option>Select a Stop</option>
+                                            <option *ngFor="let stop of stopDropdown" [ngValue]="stop[0]">{{stop[1]}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -98,7 +99,7 @@
                                     </h4>
                                 </div>
                                 <h3>
-                                    <p>for {{this.log.stop}}</p>
+                                    <p>for {{stopName}}</p>
                                 </h3>
                                 <br />
                                 <div class="card">
@@ -118,13 +119,13 @@
 
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <h5>{{selectedDriver}}</h5>
+                                                <h5>{{selectedDriver[1]}}</h5>
                                             </div>
                                             <div class="col-sm-4">
-                                                <h5>{{selectedLoop}}</h5>
+                                                <h5>{{selectedLoop[1]}}</h5>
                                             </div>
                                             <div class="col-sm-4 text-center">
-                                                <h5>Bus # {{selectedBus}}</h5>
+                                                <h5>Bus # {{selectedBus[1]}}</h5>
                                             </div>
                                             <br />
                                         </div>
@@ -148,7 +149,7 @@
                                 <div></div>
                                 <div>Your entry for</div>
                                 <div class="stopName">
-                                    {{successMessage}}
+                                    {{stopName}}
                                 </div>
                                 <div>
                                     has been added to the queue.

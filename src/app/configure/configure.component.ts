@@ -90,6 +90,29 @@ export class ConfigureComponent implements OnInit {
     this.dropdownsService.changeLoop('Select a Loop');
   }
 
+  private clearCacheByNameOrAll(allKeys: boolean) {
+    caches.keys().then(function (cacheNames) {
+        return Promise.all(
+            cacheNames.filter(function (cacheName) {
+                if (allKeys) { return true; }
+            }).map(function (cacheName) {
+                return caches.delete(cacheName);
+            })
+        );
+    }).finally(() => {
+      this.populateBusDropdown();
+      this.populateDriversDropdown();
+      this.populateLoopsDropdown(); });
+}
+
+  refreshDropdowns() {
+    this.driverDropdown = [];
+    this.busDropdown = [];
+    this.loopsDropdown = [];
+    this.clearCacheByNameOrAll(true);
+
+  }
+
   private populateBusDropdown(): void {
     this.busDropdownState = false;
     this.dropdownsService.getBusNumbers()

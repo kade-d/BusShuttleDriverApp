@@ -105,6 +105,7 @@
     </div>
 
     <div class="card-body">
+    <button id='syncButton' (click)="refreshDropdowns()" class="btn btn-light btn-block">Refresh Dropdowns</button>
       <h3 class="card-title" [@simpleFadeAnimation]="'in'">{{getSyncMessage()}} left to sync.</h3>
       <p class="card-text" [@simpleFadeAnimation]="'in'">App version: {{version}}</p>
     </div>

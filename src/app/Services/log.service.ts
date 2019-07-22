@@ -93,7 +93,7 @@ export class LogService {
                 if (this.logsToSend.length === 0) {
                   this.changeSyncMessage('syncDone');
                   this.isSyncing = false;
-                  localStorage.clear();
+                  localStorage.removeItem('logs');
                   this.logsToSend = [];
                 }
               },

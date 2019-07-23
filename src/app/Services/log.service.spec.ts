@@ -28,7 +28,7 @@ describe('LogService', () => {
             expect(returnObj).toEqual(dummyLog);
         });
 
-        const request = httpMock.expectOne(service.baseUrl + '/store');
+        const request = httpMock.expectOne(service.baseUrl + '/store.php');
         expect(request.request.method).toBe('POST');
         request.flush(dummyLog);
     });

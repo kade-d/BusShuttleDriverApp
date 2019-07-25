@@ -36,10 +36,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   errorMessage = '';
   successMessage = '';
   isSyncingMessage = 'Sync in progress';
-  log = new Log(0, '', '', '', '', 0, '');
+  log = new Log(0, null, '', '', '', 0, '');
   stops = new Stop();
   loops = new Loop();
-  stopDropdown = [];
+  stopDropdown: Stop[];
   loopDropdown = [];
   driverDropdown = [];
   currentBusDropdown: Bus[];
@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   selectedBus: Object;
   selectedDriver: Object;
   selectedLoop: Object;
-  successTimer = timer(1000);
+  successTimer = timer(10000);
   syncTimer = timer(30000);
 
   successSubscription: any;
@@ -159,8 +159,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   populateStopsDropdown(): void {
     this.dropdownDisabled = true;
-    this.log.stop = 'Select a stop';
     this.stopDropdown = [];
+    this.log.stop = new Stop('Select a Stop', 0);
 
     // This actually handles putting the data in the stopdropdown to display to the user.
     this.dropdownsService.getAllStops(this.selectedLoop[0])
@@ -168,7 +168,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         (data: Stop) => {
           // tslint:disable-next-line:forin We know this already works.
           for (const x in data.data) {
-            this.stopDropdown.push([data.data[x].id, data.data[x].stops]);
+            this.stopDropdown.push(new Stop(data.data[x].id, data.data[x].stops));
           }
           console.log('Populated the Stops Dropdown');
 
@@ -189,7 +189,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.log.driver = this.selectedDriver[0];
     this.log.busNumber = this.selectedBus[0];
     this.log.loop = this.selectedLoop[0];
-    this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x[0] === this.log.stop)][1];
+    this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x === this.log.stop)].name;
     this.errorMessageState = false;
     const copy = { ...this.log }; // Creating a copy of the member 'log'.
     this.showSuccessMessage(this.stopName);
@@ -199,18 +199,19 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.advanceStopToNextValue(this.form);
       this.resetFormControls(this.form);
       this.logService.storeLogsLocally(copy);
+      console.log(copy);
       console.log('object stored locally');
 
           // if an item hasn't been selected in the stop dropdown, don't change stopName under submit button.
-    if (this.stopDropdown[this.stopDropdown.findIndex(x => x[0] === this.log.stop)] !== undefined) {
-      this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x[0] === this.log.stop)][1];
+    if (this.stopDropdown[this.stopDropdown.findIndex(x => x === this.log.stop)] !== undefined) {
+      this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x === this.log.stop)].name;
     }
       });
   }
 
   private validateForm(form: NgForm): boolean {
     this.resetErrors();
-    if (this.log.stop === null || this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop') {
+    if (this.log.stop === null || this.log.stop.name === 'Select a stop' || this.log.loop === 'Select a loop') {
       this.showErrorMessage('Oops! Please select a stop.');
       return false;
     } if (this.log.stop === undefined) {
@@ -256,8 +257,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   private resetErrors(): void {
 
     // if an item hasn't been selected in the stop dropdown, don't change stopName under submit button.
-    if (this.stopDropdown[this.stopDropdown.findIndex(x => x[0] === this.log.stop)] !== undefined) {
-      this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x[0] === this.log.stop)][1];
+    if (this.stopDropdown[this.stopDropdown.findIndex(x => x === this.log.stop)] !== undefined) {
+      this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x === this.log.stop)].name;
     }
     this.successMessage = '';
     this.errorMessage = '';
@@ -272,13 +273,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private advanceStopToNextValue(form: NgForm) {
-    if (this.log.stop !== null && this.log.stop !== 'Select a stop'
-      && this.stopDropdown.findIndex(x => x[0] === this.log.stop) < this.stopDropdown.length - 1) {
-      this.stopDropdownPosition = this.stopDropdown.findIndex(x => x[0] === this.log.stop) + 1;
-      form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition][0]);
+    if (this.log.stop !== null && this.log.stop.name !== 'Select a stop'
+      && this.stopDropdown.findIndex(x => x === this.log.stop) < this.stopDropdown.length - 1) {
+      this.stopDropdownPosition = this.stopDropdown.findIndex(x => x === this.log.stop) + 1;
+      form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition].id);
     } else if (this.stopDropdownPosition === this.stopDropdown.length - 1) {
       this.stopDropdownPosition = 1;
-      form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition - 1][0]);
+      form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition - 1].id);
     }
   }
 

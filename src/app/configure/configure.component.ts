@@ -8,6 +8,7 @@ import { User } from '../Models/user';
 import { Loop } from '../Models/loop';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../Services/authentication.service';
+import { SwUpdate } from '@angular/service-worker';
 
 @Component({
   selector: 'app-configure',
@@ -48,10 +49,22 @@ export class ConfigureComponent implements OnInit {
   noInternet = false;
 
   constructor(public logService: LogService, public dropdownsService: DropdownsService,
-    private router: Router, private authenticationService: AuthenticationService) {
+    private router: Router, private swUpdate: SwUpdate, private authenticationService: AuthenticationService) {
   }
 
   ngOnInit() {
+
+        // Prompt reload if Service Worker detects new files.
+        if (this.swUpdate.isEnabled) {
+          this.swUpdate.available.subscribe(() => {
+            if (confirm('There is a new version available. Load New Version?')) {
+              window.location.reload();
+            }
+          });
+        } else {
+          console.log('swUpdate is not available.');
+        }
+
     this.logService.currentSyncMessage.subscribe(passedMessage => {
       this.syncingMessage = passedMessage;
       if (passedMessage === 'There was an error. Please ensure you have a stable WiFi connection and try again.') {

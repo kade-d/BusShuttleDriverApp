@@ -2,8 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" name="viewport"
-        content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <meta charset="utf-8" name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 </head>
 
 <body>
@@ -14,19 +13,17 @@
                     <p></p>
                     <!-- Form -->
                     <div id="theForm">
-                        <form #form="ngForm" [@simpleFadeAnimation]="'in'" name="theForm" *ngIf="!successMessageState"
-                            (ngSubmit)="submitLog(form)" class="text-center border border-light disableZoom">
+                        <form #form="ngForm" [@simpleFadeAnimation]="'in'" name="theForm" *ngIf="!successMessageState" (ngSubmit)="submitLog(form)" class="text-center border border-light disableZoom">
 
                             <!-- Stop DropDown -->
                             <div class="row" [@simpleFadeAnimation]="'in'">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-form-label col-form-label-lg">Stop</label><img *ngIf="dropdownDisabled" class="pl-2" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                                        <label class="col-form-label col-form-label-lg">Stop</label><img *ngIf="dropdownDisabled" class="pl-2" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                                        />
 
-                                        <select [(ngModel)]="log.stop" (click)="resetErrors()"
-                                            [disabled]="dropdownDisabled" name="stop" class="form-control" >
-                                            <option selected>Select a Stop</option>
-                                            <option *ngFor="let stop of stopDropdown" [ngValue]="stop">{{stop.name}}</option>
+                                        <select [(ngModel)]="log.stop" (click)="resetErrors()" [disabled]="dropdownDisabled" name="stop" class="form-control">
+                                            <option *ngFor="let stop of stopDropdown" [ngValue]="stop.id">{{stop.name}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -37,28 +34,19 @@
                                 <label class="col-form-label col-form-label-lg">Boarded</label>
                                 <div class="form-row">
                                     <div class="col-sm-5">
-                                        <button type="button"
-                                            class="btn btn-secondary btn-number btn-xl btn-block disableZoom"
-                                            (click)="decreaseBoardedValueClicked()">-</button>
+                                        <button type="button" class="btn btn-secondary btn-number btn-xl btn-block disableZoom" (click)="decreaseBoardedValueClicked()">-</button>
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="number" pattern="[0-9]*" inputmode="numeric"
-                                            class="form-control form-control-lg input-group-text largerSize"
-                                            style="height:80px" name="boarded" min="0" [(ngModel)]="log.boarded"
-                                            #logBoarded="ngModel" required readonly>
+                                        <input type="number" pattern="[0-9]*" inputmode="numeric" class="form-control form-control-lg input-group-text largerSize" style="height:80px" name="boarded" min="0" [(ngModel)]="log.boarded" #logBoarded="ngModel" required readonly>
                                     </div>
                                     <div class="col-sm-5">
-                                        <button type="button"
-                                            class="btn btn-number btn-xl-plus btn-block disableZoom"
-                                            (click)="increaseBoardedValueClicked()">+</button>
+                                        <button type="button" class="btn btn-number btn-xl-plus btn-block disableZoom" (click)="increaseBoardedValueClicked()">+</button>
                                     </div>
                                 </div>
-                                <div class="alert alert-warning"
-                                    *ngIf="logBoarded?.errors?.required && logBoarded.touched">
+                                <div class="alert alert-warning" *ngIf="logBoarded?.errors?.required && logBoarded.touched">
                                     The number of passengers boarded is required.
                                 </div>
-                                <div class="alert alert-warning"
-                                    *ngIf="logBoarded?.errors?.pattern && logBoarded.touched">
+                                <div class="alert alert-warning" *ngIf="logBoarded?.errors?.pattern && logBoarded.touched">
                                     Invalid input. It can only contain counting numbers.
                                 </div>
                             </div>
@@ -67,21 +55,15 @@
                                 <label class="col-form-label col-form-label-lg">Left Behind</label>
                                 <div class="form-row">
                                     <div class="col-sm-5">
-                                        <button type="button" class="btn btn-secondary btn-number btn-xl btn-block"
-                                            (click)="decreaseLeftBehindValueClicked()">-</button>
+                                        <button type="button" class="btn btn-secondary btn-number btn-xl btn-block" (click)="decreaseLeftBehindValueClicked()">-</button>
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="number" pattern="[0-9]*" inputmode="numeric"
-                                            class="form-control form-control-lg input-group-text largerSize"
-                                            style="height:80px" name="leftBehind" min="0" [(ngModel)]="log.leftBehind"
-                                            #leftBehind="ngModel" readonly>
+                                        <input type="number" pattern="[0-9]*" inputmode="numeric" class="form-control form-control-lg input-group-text largerSize" style="height:80px" name="leftBehind" min="0" [(ngModel)]="log.leftBehind" #leftBehind="ngModel" readonly>
                                     </div>
                                     <div class="col-sm-5">
-                                        <button type="button" class="btn btn-number btn-xl-plus btn-block"
-                                            (click)="increaseLeftBehindValueClicked()">+</button>
+                                        <button type="button" class="btn btn-number btn-xl-plus btn-block" (click)="increaseLeftBehindValueClicked()">+</button>
                                     </div>
-                                    <div class="alert alert-warning"
-                                        *ngIf="logBoarded?.errors?.pattern && logBoarded.touched">
+                                    <div class="alert alert-warning" *ngIf="logBoarded?.errors?.pattern && logBoarded.touched">
                                         Invalid input. It can only contain counting numbers.
                                     </div>
                                 </div>
@@ -91,8 +73,7 @@
 
                             <!-- Footer -->
                             <footer class="footer font-small dark">
-                                <button type="submit" [disabled]="dropdownDisabled"
-                                    class="btn btn-xl-square btn-block">Submit Entry</button>
+                                <button type="submit" [disabled]="dropdownDisabled" class="btn btn-xl-square btn-block">Submit Entry</button>
                                 <div class="alert alert-danger" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState">
                                     <h4>
                                         {{errorMessage}}
@@ -103,38 +84,37 @@
                                 </h3>
                                 <br />
                                 <div class="card">
-                                        <div class="card-header">
-                                    <div class="row">
+                                    <div class="card-header">
+                                        <div class="row">
                                             <div class="col-sm-4"></div>
-                                       <div class=" col-sm-4"> Configured Settings</div>
-                                        
-                                        <div class="col-sm-4" style='color: #63b255; text-align: right;' *ngIf="this.logService.getSyncingStatus() == true">
-                                            {{isSyncingMessage}}
+                                            <div class=" col-sm-4"> Configured Settings</div>
+
+                                            <div class="col-sm-4" style='color: #63b255; text-align: right;' *ngIf="this.logService.getSyncingStatus() == true">
+                                                {{isSyncingMessage}}
+                                            </div>
+
                                         </div>
-                                        
-                                    </div>
                                     </div>
                                     <div class="card-body">
                                         <!-- Feedback Element -->
 
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <h5>{{selectedDriver[1]}}</h5>
+                                                <h5>{{selectedDriver.name}}</h5>
                                             </div>
                                             <div class="col-sm-4">
-                                                <h5>{{selectedLoop[1]}}</h5>
+                                                <h5>{{selectedLoop.name}}</h5>
                                             </div>
                                             <div class="col-sm-4 text-center">
-                                                <h5>Bus # {{selectedBus[1]}}</h5>
+                                                <h5>Bus # {{selectedBus.name}}</h5>
                                             </div>
                                             <br />
                                         </div>
                                     </div>
-                                    <button class="btn btn-lg btn-settings btn-block" [disabled]="this.logService.getSyncingStatus() == true"
-                                        routerLink="/configure">Change Settings</button>
-   
+                                    <button class="btn btn-lg btn-settings btn-block" [disabled]="this.logService.getSyncingStatus() == true" routerLink="/configure">Change Settings</button>
+
                                 </div>
-                                
+
                             </footer>
 
                         </form>
@@ -154,8 +134,7 @@
                                 <div>
                                     has been added to the queue.
                                 </div>
-                                <a style="color: black" class="btn btn-lg btn-xl-success btn-block"
-                                        (click)="cancelSuccessMessage()">Undo</a>
+                                <a style="color: black" class="btn btn-lg btn-xl-success btn-block" (click)="cancelSuccessMessage()">Undo</a>
                                 <div></div>
                                 <div></div>
                                 <div></div>

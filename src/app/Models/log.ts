@@ -2,7 +2,7 @@ import { Stop } from './stop';
 
 export class Log {
   boarded: number;
-  stop: Stop;
+  stop: string;
   timestamp: string;
   loop: string;
   driver: string;
@@ -11,7 +11,7 @@ export class Log {
   id?:   number;
   constructor(
     boarded: number,
-    stop: Stop,
+    stop: string,
     timestamp: string,
     loop: string,
     driver: string,

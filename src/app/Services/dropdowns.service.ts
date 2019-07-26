@@ -13,74 +13,41 @@ import { User } from '../Models/user';
 export class DropdownsService {
   baseUrl: string;
 
-  private busNumberSource = new BehaviorSubject<string>('Select a Bus');
+  // These behavior subjects communicate the data between components.
+  // When one is updated, it's reflected in all places it's used.
+  private busNumberSource = new BehaviorSubject<Bus>(new Bus('0', 'Select a Bus'));
   currentBusNumber = this.busNumberSource.asObservable();
 
-  private driverNameSource = new BehaviorSubject<string>('Select Your Name');
+  private driverNameSource = new BehaviorSubject<User>(new User('0', 'Select your Name'));
   currentDriver = this.driverNameSource.asObservable();
 
-  private loopNameSource = new BehaviorSubject<string>('Select a Loop');
+  private loopNameSource = new BehaviorSubject<Loop>(new Loop('Select a loop', '0'));
   currentLoop = this.loopNameSource.asObservable();
 
-  private busDropdownSource = new BehaviorSubject<Bus[]>([ ]);
+  private busDropdownSource = new BehaviorSubject<Bus[]>([]);
   currentBusDropdown = this.busDropdownSource.asObservable();
 
-  private loopDropdownSource = new BehaviorSubject<Loop[]>([ ]);
+  private loopDropdownSource = new BehaviorSubject<Loop[]>([]);
   currentLoopDropdown = this.loopDropdownSource.asObservable();
 
-  private driverDropdownSource = new BehaviorSubject<User[]>([ ]);
+  private driverDropdownSource = new BehaviorSubject<User[]>([]);
   currentDriverDropdown = this.driverDropdownSource.asObservable();
 
   constructor(private logService: LogService, private http: HttpClient) {
     this.baseUrl = this.logService.baseUrl;
-   }
-
-  getAllStops(selectedLoop: string) {
-    return this.http.get(this.baseUrl + '/getStops.php?searchTerm=' + selectedLoop)
-    .pipe(
-      retryWhen(this.generateRetryStrategy()({
-        scalingDuration: 1000,
-        excludedStatusCodes: [500]
-      })),
-      catchError(this.handleError));
   }
 
-  getAllLoops() {
-    return this.http.get(this.baseUrl + '/getLoops.php')
-    .pipe(
-      retryWhen(this.generateRetryStrategy()({
-        scalingDuration: 1000,
-        excludedStatusCodes: [500]
-      })),
-      catchError(this.handleError));
-  }
-
-  getDrivers() {
-    return this.http.get(this.baseUrl + '/getUsers.php')
-    .pipe(
-      retryWhen(this.generateRetryStrategy()({
-        scalingDuration: 1000,
-        excludedStatusCodes: [500]
-      })),
-      catchError(this.handleError));
-  }
-
-  getBusNumbers() {
-    return this.http.get(this.baseUrl + '/getBusNumbers.php')
-    .pipe(
-      retryWhen(this.generateRetryStrategy()({
-        scalingDuration: 1000,
-        excludedStatusCodes: [500]
-      })),
-      catchError(this.handleError));
-  }
-
-  changeBus(message: string) {
+  // These handle modifications to the behavior subjects
+  changeBus(message: Bus) {
     this.busNumberSource.next(message);
   }
 
-  changeDriver(message: string) {
+  changeDriver(message: User) {
     this.driverNameSource.next(message);
+  }
+
+  changeLoop(message: Loop) {
+    this.loopNameSource.next(message);
   }
 
   changeBusDropdown(message: Bus[]) {
@@ -95,8 +62,45 @@ export class DropdownsService {
     this.driverDropdownSource.next(message);
   }
 
-  changeLoop(message: string) {
-    this.loopNameSource.next(message);
+
+  getAllStops(selectedLoop: string) {
+    return this.http.get(this.baseUrl + '/getStops.php?searchTerm=' + selectedLoop)
+      .pipe(
+        retryWhen(this.generateRetryStrategy()({
+          scalingDuration: 1000,
+          excludedStatusCodes: [500]
+        })),
+        catchError(this.handleError));
+  }
+
+  getAllLoops() {
+    return this.http.get(this.baseUrl + '/getLoops.php')
+      .pipe(
+        retryWhen(this.generateRetryStrategy()({
+          scalingDuration: 1000,
+          excludedStatusCodes: [500]
+        })),
+        catchError(this.handleError));
+  }
+
+  getDrivers() {
+    return this.http.get(this.baseUrl + '/getUsers.php')
+      .pipe(
+        retryWhen(this.generateRetryStrategy()({
+          scalingDuration: 1000,
+          excludedStatusCodes: [500]
+        })),
+        catchError(this.handleError));
+  }
+
+  getBusNumbers() {
+    return this.http.get(this.baseUrl + '/getBusNumbers.php')
+      .pipe(
+        retryWhen(this.generateRetryStrategy()({
+          scalingDuration: 1000,
+          excludedStatusCodes: [500]
+        })),
+        catchError(this.handleError));
   }
 
   private generateRetryStrategy() {

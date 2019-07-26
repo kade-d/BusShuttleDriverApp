@@ -38,9 +38,9 @@ export class ConfigureComponent implements OnInit {
 
   errorMessage = '';
 
-  selectedBus: Object;
-  selectedDriver: Object;
-  selectedLoop: Object;
+  selectedBus: Bus;
+  selectedDriver: User;
+  selectedLoop: Loop;
 
   errorMessageState = false;
   busDropdownState = true;
@@ -87,7 +87,10 @@ export class ConfigureComponent implements OnInit {
   }
 
   validateStartButton() {
-    if (this.selectedBus === 'Select a Bus' || this.selectedDriver === 'Select Your Name' || this.selectedLoop === 'Select a Loop') {
+    if ( this.selectedDriver.name === 'Select your Name' || this.selectedBus.name === 'Select a Bus'
+    || this.selectedDriver.name === '' || this.selectedDriver.name === undefined || this.selectedDriver.name === null
+      || this.selectedLoop.name === 'Select a loop' || this.selectedLoop.name === '' || this.selectedLoop.name === undefined
+      || this.selectedBus.name === '' || this.selectedBus.name === undefined) {
       this.errorMessage = 'Oops! Select all choices above.';
       this.errorMessageState = true;
     } else {
@@ -98,9 +101,6 @@ export class ConfigureComponent implements OnInit {
   startSync() {
     this.didStartSync = true;
     this.logService.syncLogs();
-    this.dropdownsService.changeBus('Select a Bus');
-    this.dropdownsService.changeDriver('Select Your Name');
-    this.dropdownsService.changeLoop('Select a Loop');
   }
 
   private clearCacheByNameOrAll(allKeys: boolean) {
@@ -134,7 +134,7 @@ export class ConfigureComponent implements OnInit {
           this.busDropdown = [];
           // tslint:disable-next-line:forin We know this already works.
           for (const x in jsonData.data) {
-            this.busDropdown.push([jsonData.data[x].id, jsonData.data[x].busIdentifier]);
+            this.busDropdown.push(new Bus(jsonData.data[x].id, jsonData.data[x].busIdentifier));
           }
           this.dropdownsService.changeBusDropdown(this.busDropdown);
           console.log('Populated the Buses Dropdown');
@@ -153,9 +153,10 @@ export class ConfigureComponent implements OnInit {
         (jsonData: User) => {
           // tslint:disable-next-line:forin We know this already works.
           for (const x in jsonData.data) {
-            this.driverDropdown.push([jsonData.data[x].id, (jsonData.data[x].firstname) + ' ' + (jsonData.data[x].lastname)]);
+            this.driverDropdown.push(new User(jsonData.data[x].id, (jsonData.data[x].firstname) + ' ' + (jsonData.data[x].lastname)));
           }
           console.log('Populated the Drivers Dropdown');
+          this.dropdownsService.changeDriverDropdown(this.driverDropdown);
           this.driverDropdownState = true;
         },
         (error: any) => {
@@ -171,17 +172,16 @@ export class ConfigureComponent implements OnInit {
         (jsonData: Loop) => {
           // tslint:disable-next-line:forin We know this already works.
           for (const x in jsonData.data) {
-            this.loopsDropdown.push([jsonData.data[x].id, jsonData.data[x].loopName]);
+            this.loopsDropdown.push(new Loop( jsonData.data[x].loopName, jsonData.data[x].id));
           }
           console.log('Populated the Loops Dropdown');
-          for (let i = 1; i < this.loopsDropdown.length + 1; i++) {
-            this.dropdownsService.getAllStops(this.loopsDropdown[i - 1][0])
+          // tslint:disable-next-line:forin
+          for (let x in this.loopsDropdown) {
+            this.dropdownsService.getAllStops(x)
               .subscribe((a) => {
-                if (i === this.loopsDropdown.length - 1) {
-                  this.loopDropdownState = true; // enable loop dropdown only after ALL stops are cached.
-                }
+                this.loopDropdownState = true;
               });
-            // console.log('caching stops for ' + this.loopsDropdown[i] );
+            console.log('a');
           }
         },
         (error: any) => {
@@ -191,9 +191,11 @@ export class ConfigureComponent implements OnInit {
   }
 
   logout() {
-    this.dropdownsService.changeBus('Select a Bus');
-    this.dropdownsService.changeDriver('Select Your Name');
-    this.dropdownsService.changeLoop('Select a Loop');
+    // TODO: Finish implementing proper logout that resets the form. 
+    
+    //this.dropdownsService.changeBus(new Bus('0', 'Select a Bus'));
+    //this.dropdownsService.changeDriver('Select Your Name');
+   // this.dropdownsService.changeLoop('Select a Loop');
     this.authenticationService.logout();
     this.router.navigate(['/login']);
   }

@@ -97,14 +97,14 @@ export class LogService {
                   this.logsToSend = [];
                 }
               },
-              (err: any) => {
-                this.isSyncing = false;
-                this.changeSyncMessage('syncError');
-              });
+                (err: any) => {
+                  this.isSyncing = false;
+                  this.changeSyncMessage('syncError');
+                });
           }
         }
       }
-}
+    }
 
   }
 

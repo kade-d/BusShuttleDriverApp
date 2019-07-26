@@ -13,6 +13,7 @@ import { exit } from 'process';
 import { switchMap, findIndex } from 'rxjs/operators';
 import { Bus } from '../Models/bus';
 import { forEach } from '@angular/router/src/utils/collection';
+import { User } from '../Models/user';
 
 @Component({
   templateUrl: 'home.component.html',
@@ -36,9 +37,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   errorMessage = '';
   successMessage = '';
   isSyncingMessage = 'Sync in progress';
-  log = new Log(0, null, '', '', '', 0, '');
+  log = new Log(0, '', '', '', '', 0, '');
   stops = new Stop();
-  loops = new Loop();
+  loops = new Loop(null, null);
   stopDropdown: Stop[];
   loopDropdown = [];
   driverDropdown = [];
@@ -56,10 +57,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   loopDropdownState: boolean;
   dropdownDisabled: boolean;
 
-  selectedBus: Object;
-  selectedDriver: Object;
-  selectedLoop: Object;
-  successTimer = timer(10000);
+  selectedBus: Bus;
+  selectedDriver: User;
+  selectedLoop: Loop;
+  successTimer = timer(1000);
   syncTimer = timer(30000);
 
   successSubscription: any;
@@ -81,7 +82,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.populateStopsDropdown();
 
     // If page is accessed without being configured, redirect to settings page.
-    if (this.selectedLoop === 'Select a Loop') {
+    if (this.selectedLoop.name === 'Select a loop') {
       this.router.navigateByUrl('/configure');
     }
 
@@ -159,13 +160,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   populateStopsDropdown(): void {
     this.dropdownDisabled = true;
+    this.log.stop = 'Select a stop';
     this.stopDropdown = [];
-    this.log.stop = new Stop('Select a Stop', 0);
 
     // This actually handles putting the data in the stopdropdown to display to the user.
-    this.dropdownsService.getAllStops(this.selectedLoop[0])
+    this.dropdownsService.getAllStops(this.selectedLoop.id)
       .subscribe(
         (data: Stop) => {
+          //this.stopDropdown.push(new Stop(null, 'Select a Stop'));
           // tslint:disable-next-line:forin We know this already works.
           for (const x in data.data) {
             this.stopDropdown.push(new Stop(data.data[x].id, data.data[x].stops));
@@ -186,10 +188,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   submitLog(form: NgForm): void {
     if (this.validateForm(form) === false) { return; }
     this.log.timestamp = this.getTimeStamp();
-    this.log.driver = this.selectedDriver[0];
-    this.log.busNumber = this.selectedBus[0];
-    this.log.loop = this.selectedLoop[0];
-    this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x === this.log.stop)].name;
+    this.log.driver = this.selectedDriver.id;
+    this.log.busNumber = this.selectedBus.id;
+    this.log.loop = this.selectedLoop.id;
+    this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x.id === this.log.stop)].name;
     this.errorMessageState = false;
     const copy = { ...this.log }; // Creating a copy of the member 'log'.
     this.showSuccessMessage(this.stopName);
@@ -199,36 +201,36 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.advanceStopToNextValue(this.form);
       this.resetFormControls(this.form);
       this.logService.storeLogsLocally(copy);
-      console.log(copy);
+      console.log(copy)
       console.log('object stored locally');
 
           // if an item hasn't been selected in the stop dropdown, don't change stopName under submit button.
-    if (this.stopDropdown[this.stopDropdown.findIndex(x => x === this.log.stop)] !== undefined) {
-      this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x === this.log.stop)].name;
+    if (this.stopDropdown[this.stopDropdown.findIndex(x => x.id === this.log.stop)] !== undefined) {
+      this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x.id === this.log.stop)].name;
     }
       });
   }
 
   private validateForm(form: NgForm): boolean {
     this.resetErrors();
-    if (this.log.stop === null || this.log.stop.name === 'Select a stop' || this.log.loop === 'Select a loop') {
+    if (this.log.stop === null || this.log.stop === 'Select a stop' || this.log.loop === 'Select a loop') {
       this.showErrorMessage('Oops! Please select a stop.');
       return false;
     } if (this.log.stop === undefined) {
       this.form.controls['stop'].setValue(this.stopDropdown[1]);
     }
 
-    if (this.selectedDriver === 'Select Your Name' || this.selectedDriver === '' || this.selectedDriver === undefined) {
+    if (this.selectedDriver.name === 'Select your Name' || this.selectedDriver.name === '' || this.selectedDriver.name === undefined) {
       this.showErrorMessage('Oops! Please select your name.');
       return false;
     }
 
-    if (this.selectedBus === 'Select a Bus' || this.selectedBus === undefined || this.selectedBus === null) {
+    if (this.selectedBus.name === 'Select a Bus' || this.selectedBus.name === undefined || this.selectedBus.name === null) {
       this.showErrorMessage('Oops! Please select your bus number.');
       return false;
     }
 
-    if (this.selectedLoop === 'Select a Loop' || this.selectedLoop === undefined || this.selectedLoop === null) {
+    if (this.selectedLoop.name === 'Select a loop' || this.selectedLoop.name === undefined || this.selectedLoop.name === null) {
       this.showErrorMessage('Oops! Please select your loop');
       return false;
     }
@@ -257,8 +259,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   private resetErrors(): void {
 
     // if an item hasn't been selected in the stop dropdown, don't change stopName under submit button.
-    if (this.stopDropdown[this.stopDropdown.findIndex(x => x === this.log.stop)] !== undefined) {
-      this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x === this.log.stop)].name;
+    if (this.stopDropdown[this.stopDropdown.findIndex(x => x.id === this.log.stop)] !== undefined) {
+      this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x.id === this.log.stop)].name;
     }
     this.successMessage = '';
     this.errorMessage = '';
@@ -273,9 +275,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private advanceStopToNextValue(form: NgForm) {
-    if (this.log.stop !== null && this.log.stop.name !== 'Select a stop'
-      && this.stopDropdown.findIndex(x => x === this.log.stop) < this.stopDropdown.length - 1) {
-      this.stopDropdownPosition = this.stopDropdown.findIndex(x => x === this.log.stop) + 1;
+    if (this.log.stop !== null && this.log.stop !== 'Select a stop'
+      && this.stopDropdown.findIndex(x => x.id === this.log.stop) < this.stopDropdown.length - 1) {
+      this.stopDropdownPosition = this.stopDropdown.findIndex(x => x.id === this.log.stop) + 1;
       form.controls['stop'].setValue(this.stopDropdown[this.stopDropdownPosition].id);
     } else if (this.stopDropdownPosition === this.stopDropdown.length - 1) {
       this.stopDropdownPosition = 1;

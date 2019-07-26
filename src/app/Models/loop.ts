@@ -1,6 +1,9 @@
 export class Loop {
   [x: string]: any;
-    loops?: string;
     name?: string;
-    constructor() {}
+    id?: string;
+    constructor(name: string, id: string) {
+      this.name = name;
+      this.id = id;
+    }
   }

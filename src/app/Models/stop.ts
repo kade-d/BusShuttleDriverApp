@@ -3,7 +3,7 @@ export class Stop {
     stops?: string;
     id?: string;
     name?: string;
-    constructor(id?, name?) {
+    constructor(id: string, name: string) {
       this.id = id;
       this.name = name;
     }

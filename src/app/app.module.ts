@@ -18,8 +18,6 @@ import { LoginComponent } from './login/login.component';
 import { ConfigureComponent } from './configure/configure.component';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,

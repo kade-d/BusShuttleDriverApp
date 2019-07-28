@@ -11,7 +11,7 @@ import { Loop } from '../Models/loop';
   providedIn: 'root'
 })
 export class LogService {
-  baseUrl = 'http://localhost/api';
+  baseUrl = '/api';
   logsToSend: Log[] = [];
   stops: Stop[];
   loops: Loop[];

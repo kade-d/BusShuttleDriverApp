@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   successMessage = '';
   isSyncingMessage = 'Sync in progress';
   log = new Log(0, '', '', '', '', 0, '');
-  stops = new Stop();
+  stops = new Stop(null, null);
   loops = new Loop(null, null);
   stopDropdown: Stop[];
   loopDropdown = [];
@@ -60,7 +60,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   selectedBus: Bus;
   selectedDriver: User;
   selectedLoop: Loop;
-  successTimer = timer(1000);
+  successTimer = timer(10000);
   syncTimer = timer(30000);
 
   successSubscription: any;
@@ -167,7 +167,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.dropdownsService.getAllStops(this.selectedLoop.id)
       .subscribe(
         (data: Stop) => {
-          //this.stopDropdown.push(new Stop(null, 'Select a Stop'));
+          // this.stopDropdown.push(new Stop(null, 'Select a Stop'));
           // tslint:disable-next-line:forin We know this already works.
           for (const x in data.data) {
             this.stopDropdown.push(new Stop(data.data[x].id, data.data[x].stops));
@@ -201,7 +201,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.advanceStopToNextValue(this.form);
       this.resetFormControls(this.form);
       this.logService.storeLogsLocally(copy);
-      console.log(copy)
+      console.log(copy);
       console.log('object stored locally');
 
           // if an item hasn't been selected in the stop dropdown, don't change stopName under submit button.

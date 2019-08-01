@@ -176,8 +176,8 @@ export class ConfigureComponent implements OnInit {
           }
           console.log('Populated the Loops Dropdown');
           // tslint:disable-next-line:forin
-          for (let x in this.loopsDropdown) {
-            this.dropdownsService.getAllStops(x)
+          for (const loopForCache of this.loopsDropdown) {
+            this.dropdownsService.getAllStops(loopForCache.id)
               .subscribe((a) => {
                 this.loopDropdownState = true;
               });

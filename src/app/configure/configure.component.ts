@@ -191,11 +191,9 @@ export class ConfigureComponent implements OnInit {
   }
 
   logout() {
-    // TODO: Finish implementing proper logout that resets the form. 
-    
-    //this.dropdownsService.changeBus(new Bus('0', 'Select a Bus'));
-    //this.dropdownsService.changeDriver('Select Your Name');
-   // this.dropdownsService.changeLoop('Select a Loop');
+    this.dropdownsService.changeBus(new Bus('0', 'Select a Bus'));
+    this.dropdownsService.changeDriver(new User('0', 'Select your Name'));
+    this.dropdownsService.changeLoop(new Loop('Select a loop', '0'));
     this.authenticationService.logout();
     this.router.navigate(['/login']);
   }

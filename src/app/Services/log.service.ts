@@ -93,23 +93,23 @@ export class LogService {
                 if (this.logsToSend.length === 0) {
                   this.changeSyncMessage('syncDone');
                   this.isSyncing = false;
-                  localStorage.clear();
+                  localStorage.removeItem('logs');
                   this.logsToSend = [];
                 }
               },
-              (err: any) => {
-                this.isSyncing = false;
-                this.changeSyncMessage('syncError');
-              });
+                (err: any) => {
+                  this.isSyncing = false;
+                  this.changeSyncMessage('syncError');
+                });
           }
         }
       }
-}
+    }
 
   }
 
   store(log: Log): Observable<Log> {
-    return this.http.post<Log>(this.baseUrl + '/store', { data: log })
+    return this.http.post<Log>(this.baseUrl + '/store.php', { data: log })
       .pipe(
         retryWhen(this.generateRetryStrategy(log)({
           scalingDuration: 500,

@@ -5,9 +5,9 @@ import { AuthenticationService } from './Services/authentication.service';
 import { User } from './Models/user';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
 })
 export class AppComponent {
 
@@ -18,7 +18,7 @@ export class AppComponent {
         this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
         document.ontouchmove = function (e) {
             e.preventDefault();
-          }
+        };
     }
     currentUser: User;
 

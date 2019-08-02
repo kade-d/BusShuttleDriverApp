@@ -1,3 +1,5 @@
+import { Stop } from './stop';
+
 export class Log {
   boarded: number;
   stop: string;

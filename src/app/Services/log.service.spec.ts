@@ -22,13 +22,14 @@ describe('LogService', () => {
     });
 
     it('should perform POST request and return dummyLog obj.', () => {
+        // tslint:disable-next-line:max-line-length
         const dummyLog: Log = { boarded: 4, stop: 'MU', timestamp: '2019/02/19 05:09:36', loop: 'Green', driver: 'steve', leftBehind: 3, busNumber: '903' };
 
         service.store(dummyLog).subscribe(returnObj => {
             expect(returnObj).toEqual(dummyLog);
         });
 
-        const request = httpMock.expectOne(service.baseUrl + '/store');
+        const request = httpMock.expectOne(service.baseUrl + '/store.php');
         expect(request.request.method).toBe('POST');
         request.flush(dummyLog);
     });

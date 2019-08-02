@@ -8,6 +8,7 @@ import { User } from '../Models/user';
 import { Loop } from '../Models/loop';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../Services/authentication.service';
+import { SwUpdate } from '@angular/service-worker';
 
 @Component({
   selector: 'app-configure',
@@ -15,13 +16,13 @@ import { AuthenticationService } from '../Services/authentication.service';
   styleUrls: ['./configure.component.css'],
   animations: [
     trigger('simpleFadeAnimation', [
-      state('in', style({opacity: 1})),
+      state('in', style({ opacity: 1 })),
       transition(':enter', [
-        style({opacity: 0}),
-        animate(600 )
+        style({ opacity: 0 }),
+        animate(600)
       ]),
-        transition(':leave',
-        animate(600, style({opacity: 0})))
+      transition(':leave',
+        animate(600, style({ opacity: 0 })))
     ])
   ]
 })
@@ -30,24 +31,40 @@ export class ConfigureComponent implements OnInit {
   syncingCount: number;
   didStartSync: boolean;
   version: string = versionEnvironment.version;
-  busDropdown = [];
-  driverDropdown = [];
-  loopsDropdown = [];
+
+  busDropdown: Bus[];
+  driverDropdown: User[];
+  loopsDropdown: Loop[];
+
   errorMessage = '';
-  selectedBus: string;
-  selectedDriver: string;
-  selectedLoop: string;
+
+  selectedBus: Bus;
+  selectedDriver: User;
+  selectedLoop: Loop;
+
   errorMessageState = false;
-  busDropdownState: boolean;
-  driverDropdownState: boolean;
-  loopDropdownState: boolean;
+  busDropdownState = true;
+  driverDropdownState = true;
+  loopDropdownState = true;
   noInternet = false;
 
   constructor(public logService: LogService, public dropdownsService: DropdownsService,
-    private router: Router, private authenticationService: AuthenticationService) {
-   }
+    private router: Router, private swUpdate: SwUpdate, private authenticationService: AuthenticationService) {
+  }
 
   ngOnInit() {
+
+        // Prompt reload if Service Worker detects new files.
+        if (this.swUpdate.isEnabled) {
+          this.swUpdate.available.subscribe(() => {
+            if (confirm('There is a new version available. Load New Version?')) {
+              window.location.reload();
+            }
+          });
+        } else {
+          console.log('swUpdate is not available.');
+        }
+
     this.logService.currentSyncMessage.subscribe(passedMessage => {
       this.syncingMessage = passedMessage;
       if (passedMessage === 'There was an error. Please ensure you have a stable WiFi connection and try again.') {
@@ -61,16 +78,19 @@ export class ConfigureComponent implements OnInit {
     this.dropdownsService.currentBusNumber.subscribe(passedValue => this.selectedBus = passedValue);
     this.dropdownsService.currentDriver.subscribe(passedValue => this.selectedDriver = passedValue);
     this.dropdownsService.currentLoop.subscribe(passedValue => this.selectedLoop = passedValue);
-    this.populateBusDropdown();
-    this.populateDriversDropdown();
-    this.populateLoopsDropdown();
-    if (this.logService.logsToSend.length > 0) {
-      this.logService.changeSyncMessage('syncStarted');
-    }
+    this.dropdownsService.currentBusDropdown.subscribe(passedValue => this.busDropdown = passedValue);
+    this.dropdownsService.currentDriverDropdown.subscribe(passedValue => this.driverDropdown = passedValue);
+    this.dropdownsService.currentLoopDropdown.subscribe(passedValue => this.loopsDropdown = passedValue);
+
+    this.verifyDropDownsAreNotEmpty();
+
   }
 
   validateStartButton() {
-    if (this.selectedBus === 'Select a Bus' || this.selectedDriver === 'Select Your Name' || this.selectedLoop === 'Select a Loop') {
+    if ( this.selectedDriver.name === 'Select your Name' || this.selectedBus.name === 'Select a Bus'
+    || this.selectedDriver.name === '' || this.selectedDriver.name === undefined || this.selectedDriver.name === null
+      || this.selectedLoop.name === 'Select a loop' || this.selectedLoop.name === '' || this.selectedLoop.name === undefined
+      || this.selectedBus.name === '' || this.selectedBus.name === undefined) {
       this.errorMessage = 'Oops! Select all choices above.';
       this.errorMessageState = true;
     } else {
@@ -78,12 +98,32 @@ export class ConfigureComponent implements OnInit {
     }
   }
 
-startSync() {
-  this.didStartSync = true;
-  this.logService.syncLogs();
-  this.dropdownsService.changeBus('Select a Bus');
-  this.dropdownsService.changeDriver('Select Your Name');
-  this.dropdownsService.changeLoop('Select a Loop');
+  startSync() {
+    this.didStartSync = true;
+    this.logService.syncLogs();
+  }
+
+  private clearCacheByNameOrAll(allKeys: boolean) {
+    caches.keys().then(function (cacheNames) {
+        return Promise.all(
+            cacheNames.filter(function (cacheName) {
+                if (allKeys) { return true; }
+            }).map(function (cacheName) {
+                return caches.delete(cacheName);
+            })
+        );
+    }).finally(() => {
+      this.populateBusDropdown();
+      this.populateDriversDropdown();
+      this.populateLoopsDropdown(); });
+}
+
+  refreshDropdowns() {
+    this.driverDropdown = [];
+    this.busDropdown = [];
+    this.loopsDropdown = [];
+    this.clearCacheByNameOrAll(true);
+
   }
 
   private populateBusDropdown(): void {
@@ -91,11 +131,12 @@ startSync() {
     this.dropdownsService.getBusNumbers()
       .subscribe(
         (jsonData: Bus) => {
-          this.busDropdown.push('Select a Bus');
+          this.busDropdown = [];
           // tslint:disable-next-line:forin We know this already works.
           for (const x in jsonData.data) {
-            this.busDropdown.push(jsonData.data[x]);
+            this.busDropdown.push(new Bus(jsonData.data[x].id, jsonData.data[x].busIdentifier));
           }
+          this.dropdownsService.changeBusDropdown(this.busDropdown);
           console.log('Populated the Buses Dropdown');
           this.busDropdownState = true;
         },
@@ -110,12 +151,12 @@ startSync() {
     this.dropdownsService.getDrivers()
       .subscribe(
         (jsonData: User) => {
-          this.driverDropdown.push('Select Your Name');
           // tslint:disable-next-line:forin We know this already works.
           for (const x in jsonData.data) {
-            this.driverDropdown.push((jsonData.data[x].firstname) + ' ' + (jsonData.data[x].lastname));
+            this.driverDropdown.push(new User(jsonData.data[x].id, (jsonData.data[x].firstname) + ' ' + (jsonData.data[x].lastname)));
           }
           console.log('Populated the Drivers Dropdown');
+          this.dropdownsService.changeDriverDropdown(this.driverDropdown);
           this.driverDropdownState = true;
         },
         (error: any) => {
@@ -129,21 +170,18 @@ startSync() {
     this.dropdownsService.getAllLoops()
       .subscribe(
         (jsonData: Loop) => {
-          this.loopsDropdown.push('Select a Loop');
           // tslint:disable-next-line:forin We know this already works.
           for (const x in jsonData.data) {
-            this.loopsDropdown.push(jsonData.data[x]);
+            this.loopsDropdown.push(new Loop( jsonData.data[x].loopName, jsonData.data[x].id));
           }
           console.log('Populated the Loops Dropdown');
-          for (let i = 1; i < this.loopsDropdown.length; i++) {
-            this.dropdownsService.getAllStops(this.loopsDropdown[i])
-            .subscribe((a) => {
-              console.log(a);
-              if (i === this.loopsDropdown.length - 1) {
-                this.loopDropdownState = true; // enable loop dropdown only after ALL stops are cached.
-              }
-            });
-            console.log('caching stops for ' + this.loopsDropdown[i] );
+          // tslint:disable-next-line:forin
+          for (const loopForCache of this.loopsDropdown) {
+            this.dropdownsService.getAllStops(loopForCache.id)
+              .subscribe((a) => {
+                this.loopDropdownState = true;
+              });
+            console.log('a');
           }
         },
         (error: any) => {
@@ -153,11 +191,28 @@ startSync() {
   }
 
   logout() {
-    this.dropdownsService.changeBus('Select a Bus');
-    this.dropdownsService.changeDriver('Select Your Name');
-    this.dropdownsService.changeLoop('Select a Loop');
+    this.dropdownsService.changeBus(new Bus('0', 'Select a Bus'));
+    this.dropdownsService.changeDriver(new User('0', 'Select your Name'));
+    this.dropdownsService.changeLoop(new Loop('Select a loop', '0'));
     this.authenticationService.logout();
     this.router.navigate(['/login']);
+  }
+
+  // If dropdowns are empty, populate the dropdowns
+  verifyDropDownsAreNotEmpty() {
+    if (this.busDropdown[0] === undefined) {
+      this.populateBusDropdown();
+    }
+    if (this.driverDropdown[0] === undefined) {
+      this.populateDriversDropdown();
+    }
+    if (this.loopsDropdown[0] === undefined) {
+      this.populateLoopsDropdown();
+    }
+
+    if (this.logService.logsToSend.length > 0) {
+      this.logService.changeSyncMessage('syncStarted');
+    }
   }
 
   getSyncMessage(): string {

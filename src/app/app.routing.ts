@@ -22,7 +22,7 @@ const appRoutes: Routes = [
         component: HomeComponent,
         canActivate: [AuthGuard]
     },
-    
+
     {
         path: 'login',
         component: LoginComponent

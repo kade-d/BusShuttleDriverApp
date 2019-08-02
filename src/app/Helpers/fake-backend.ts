@@ -9,7 +9,7 @@ import { User } from '../Models/user';
 export class FakeBackendInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const users: User[] = [
-            { id: 1, email: 'shuttle', password: 'bus', firstname: 'Test', lastname: 'User' , token: 'sdlfasdf'}
+            { id: '1', email: 'shuttle', password: 'bus', firstname: 'Test', lastname: 'User' , token: 'sdlfasdf'}
         ];
 
         const loops = {'data': ['Green Loop', 'Red Loop', 'Blue Loop', 'Orange Loop', 'Demand Response', 'Sunday Orange']};
@@ -20,7 +20,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         const drivers = {'data': [{'firstname': 'Ron', 'lastname': 'Swanson'}, {'firstname': 'Steven', 'lastname': 'Meyers'},
         {'firstname': 'Sarah', 'lastname': 'Thompson'}, {'firstname': 'Jeff', 'lastname': 'Bezos'}]};
 
-        const log = {stop: 'Burkhardt', timestamp:'asdfasf', loop: 'Red Loop', driver: 'Steven Meyers', boarded: 1, leftBehind: 0, busNumber: 903};
+        // tslint:disable-next-line:max-line-length
+        const log = {stop: 'Burkhardt', timestamp: 'asdfasf', loop: 'Red Loop', driver: 'Steven Meyers', boarded: 1, leftBehind: 0, busNumber: 903};
         const buses = {'data': ['930', '931', '935']};
 
         const authHeader = request.headers.get('Authorization');
@@ -44,8 +45,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 });
             }
 
-            //These are all commented out because they're hitting the REAL backend system. 
-            
+            // These are all commented out because they're hitting the REAL backend system.
+
             // // get all users
             // if (request.url.endsWith('/users') && request.method === 'GET') {
             //     if (!isLoggedIn) { return unauthorised(); }

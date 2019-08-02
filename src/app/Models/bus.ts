@@ -1,6 +1,9 @@
 export class Bus {
     [x: string]: any;
-    busIdentifier: string;
+    id: string;
     name: string;
-    constructor() {}
+    constructor(id: string, name: string) {
+      this.id = id;
+      this.name = name;
+    }
   }

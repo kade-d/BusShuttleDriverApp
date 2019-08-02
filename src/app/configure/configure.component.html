@@ -12,6 +12,7 @@
                     />
                 </h3>
                 <select [(ngModel)]="selectedBus" (ngModelChange)="this.dropdownsService.changeBus($event)" name="bus" [disabled]="!busDropdownState" class="form-control text-center" required>
+                    <option selected>Select a Bus</option>
           <option *ngFor="let bus of busDropdown" [ngValue]="bus">{{bus.name}}</option>
         
         </select>
@@ -33,6 +34,7 @@
                     />
                 </h3>
                 <select [(ngModel)]="selectedDriver" (ngModelChange)="this.dropdownsService.changeDriver($event)" name="driver" [disabled]="!driverDropdownState" class="form-control" required>
+                        <option selected>Select your Name</option>
           <option *ngFor="let driver of driverDropdown" [ngValue]="driver">{{driver.name}}</option>
         </select>
             </div>
@@ -53,6 +55,7 @@
                     />
                 </h3>
                 <select [(ngModel)]="selectedLoop" (ngModelChange)="this.dropdownsService.changeLoop($event)" name="loop" [disabled]="!loopDropdownState" class="form-control" required>
+                        <option selected>Select a loop</option>
           <option *ngFor="let loop of loopsDropdown" [ngValue]="loop">{{loop.name}}
           </option>
         </select>

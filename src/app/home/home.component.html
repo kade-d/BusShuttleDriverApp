@@ -23,6 +23,7 @@
                                         />
 
                                         <select [(ngModel)]="log.stop" (click)="resetErrors()" [disabled]="dropdownDisabled" name="stop" class="form-control">
+                                                <option selected>Select a Stop</option>
                                             <option *ngFor="let stop of stopDropdown" [ngValue]="stop.id">{{stop.name}}</option>
                                         </select>
                                     </div>

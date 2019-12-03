@@ -6,12 +6,13 @@ import { mergeMap, finalize } from 'rxjs/operators';
 import { Log } from '../Models/log';
 import { Stop } from '../Models/stop';
 import { Loop } from '../Models/loop';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LogService {
-  baseUrl = 'http://localhost/BusShuttleAPI/api';
+  baseUrl = environment.BASE_API_URL;
   logsToSend: Log[] = [];
   stops: Stop[];
   loops: Loop[];

@@ -2,6 +2,7 @@
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 import { User } from '../Models/user';
 
@@ -21,7 +22,7 @@ export class AuthenticationService {
 
     login(email: string, password: string) {
         // REPLACE THIS URL WITH THE ACTUAL API ENDPOINT
-        return this.http.post<any>(`http://localhost/BusShuttleAPI/api/users/authenticate`, { email, password })
+        return this.http.post<any>(environment.BASE_API_URL+`/users/authenticate`, { email, password })
             .pipe(map(user => {
                 // login successful if there's a jwt token in the response
                 if (user.token) {

@@ -19,6 +19,9 @@ Run `ng serve --open` inside of the project folder and let the project build and
 ## Building and Deploying for Production Server
 Run `ng build --prod` inside of the project folder. This will generate contents in `dist/BusLog/` that can be uploaded to a web server.
 
+## Building and Deploying for Testing (tbus) Server
+Run `ng build --configuration tbus` inside of the project folder. This will generate contents in `dist/BusLog/` that can be uploaded to a web server.
+
 ## Setting-Up the SQL Database
 We have included the document[here](https://github.com/kdesimini/Bus-Shuttle-Log-Collection-System/blob/master/Resources/Create_Database_Dev.sql) to recreate our database.
 

@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  BASE_API_URL: 'https://pbuslog01.aws.bsu.edu/api'
+  BASE_API_URL: 'http://tbuslog01.aws.bsu.edu/api'
 };
 
 export const versionEnvironment = {

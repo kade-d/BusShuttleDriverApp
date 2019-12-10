@@ -10,7 +10,7 @@ ___
 1. Install Node.js and npm from https://nodejs.org/en/
 1. Install Angular CLI from https://angular.io/cli
 1. Clone this repository into a folder of your choosing (preferably where you won't have to change permissions)
-1. Using Terminal or Command Prompt, navigate inside of project folder and run `npm install`
+1. Using Terminal or Command Prompt, navigate inside of project folder and run `npm install` (use `npm ci` instead to avoid package-lock.json: see https://stackoverflow.com/questions/48524417/should-the-package-lock-json-file-be-added-to-gitignore)
 ## Running a Development Server
 (Service worker won't work in the development server)
 

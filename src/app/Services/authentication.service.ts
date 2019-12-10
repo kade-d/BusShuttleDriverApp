@@ -22,7 +22,7 @@ export class AuthenticationService {
 
     login(email: string, password: string) {
         // REPLACE THIS URL WITH THE ACTUAL API ENDPOINT
-        return this.http.post<any>(environment.BASE_API_URL+`/users/authenticate`, { email, password })
+        return this.http.post<any>(environment.BASE_API_URL+`/login.php`, { email, password })
             .pipe(map(user => {
                 // login successful if there's a jwt token in the response
                 if (user.token) {

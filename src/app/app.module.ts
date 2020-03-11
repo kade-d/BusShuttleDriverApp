@@ -17,6 +17,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { ConfigureComponent } from './configure/configure.component';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
+import { PostInspectionComponent } from './post-inspection/post-inspection.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ConfirmationComponent } from './confirmation/confirmation.component';
     HomeComponent,
     LoginComponent,
     ConfigureComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    PostInspectionComponent
   ],
   imports: [
     BrowserModule,

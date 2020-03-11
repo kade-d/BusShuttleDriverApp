@@ -1,0 +1,74 @@
+.btn-xl {
+    padding: 10px 20px;
+    font-size: 60px;
+    border-radius: 15px;
+    background-color: #63b255;
+    color: white;
+  }
+  
+  .btn-xl-card {
+    padding: 10px 20px;
+    font-size: 60px;
+    border-radius: 0px;
+    background-color: #DC2830;
+    color: white;
+  }
+  
+  .btn-xl-logout {
+    padding: 10px 20px;
+    font-size: 60px;
+    border-radius: 0px;
+    background-color: #51626d;
+    color: white;
+  }
+  
+  .center-block {
+    /* Instead of display:block */
+      text-align: center;
+  }
+  
+  select {
+      background: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0Ljk1IDEwIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2ZmZjt9LmNscy0ye2ZpbGw6IzQ0NDt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPmFycm93czwvdGl0bGU+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iNC45NSIgaGVpZ2h0PSIxMCIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMiIgcG9pbnRzPSIxLjQxIDQuNjcgMi40OCAzLjE4IDMuNTQgNC42NyAxLjQxIDQuNjciLz48cG9seWdvbiBjbGFzcz0iY2xzLTIiIHBvaW50cz0iMy41NCA1LjMzIDIuNDggNi44MiAxLjQxIDUuMzMgMy41NCA1LjMzIi8+PC9zdmc+) no-repeat 95% 50%;
+      -moz-appearance: none; 
+      -webkit-appearance: none; 
+      appearance: none;
+      /* and then whatever styles you want*/
+    text-align: center;
+    font-size: 25px;
+      height: 50px; 
+      padding: 5px;
+  }
+  
+  h1 {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+  }
+  
+  .footer {
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+  }
+  input[type='checkbox'] {
+    -webkit-appearance:none;
+    width:30px;
+    height:30px;
+    background:white;
+    border-radius:5px;
+    border:2px solid #555;
+}
+input[type='checkbox']:checked {
+    background: #63b255;
+}
+.tb-1 {
+    padding: 10px 20px;
+    font-size: 60px;
+    border-radius: 15px;
+    border: 1px solid black;
+    background-color: #63b255;
+    color: white;
+  }

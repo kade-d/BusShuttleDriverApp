@@ -1,5 +1,5 @@
 <br />
-
+<p>{{testItem}}</p>
 <form>
    
   <div class="row">
@@ -8,14 +8,14 @@
     <div class="col-sm-8">
       <div class="form-group">
         <table align="center">
-          <div class="form-group" *ngFor="let item of postItem">
+          <div class="form-group" *ngFor="let x of postItem">
             <h5>
           <tr>
             <td>
-              <input type="checkbox" [value]="item.value" />
+              <input type="checkbox" [value]="x.value" />
             </td>
             <td>
-              {{item.name}}
+              {{x.name}}
             </td>
           </tr>
           <tr></tr>

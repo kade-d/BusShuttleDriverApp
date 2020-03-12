@@ -17,7 +17,7 @@ export class PostInspectionComponent implements OnInit {
     {id: 5, name: 'post item 2', pre: '0', post: '1'},
     {id: 6, name: 'both item', pre: '1', post: '1'},
 ];
-testItem: Inspection =[];
+  testItem: Inspection =[];
 
   postItem: Inspection = [];
   constructor(
@@ -30,13 +30,16 @@ testItem: Inspection =[];
         postItem.push(element);
       }
     }
+    this.inspecService.getDBItems()
+    this.testItem =this.inspecService.getItems()
 
   }
 
   ngOnInit() {
     this.getPost(this.allInspectionItems,this.postItem)
+    this.inspecService.getDBItems()
+    this.testItem =this.inspecService.getItems()
 
-    //this.testItem= this.inspecService.getAll()
 
 
   }

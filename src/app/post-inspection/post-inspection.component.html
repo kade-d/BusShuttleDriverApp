@@ -8,8 +8,8 @@
     <div class="col-sm-8">
       <div class="form-group">
         <table align="center">
-          <div class="form-group" *ngFor="let item of arr">
-            <h3 class="text-center ">
+          <div class="form-group" *ngFor="let item of postItem">
+            <h5>
           <tr>
             <td>
               <input type="checkbox" [value]="item.value" />
@@ -19,7 +19,7 @@
             </td>
           </tr>
           <tr></tr>
-        </h3>
+        </h5>
         </div>
         </table>
 
@@ -58,21 +58,7 @@
             App Information
         </div>
 
-        <div class="card-body">
-            <button id='syncButton' (click)="refreshDropdowns()" class="btn btn-light btn-block">Refresh Dropdowns</button>
-            <p class="card-text" [@simpleFadeAnimation]="'in'">App version: {{version}}</p>
-            <div id="box" class="alert alert-info center-block" *ngIf="didStartSync && !noInternet" [@simpleFadeAnimation]="'in'">
-
-                <h1>
-                    {{syncingMessage}}
-                </h1>
-            </div>
-            <div id="box" class="alert alert-danger center-block" *ngIf="didStartSync && noInternet" [@simpleFadeAnimation]="'in'">
-                <h1>
-                    {{syncingMessage}}
-                </h1>
-            </div>
-        </div>
+        
 
         <button class="btn btn-lg btn-xl-logout btn-block" [disabled]="syncingMessage != 'All done! Have a wonderful day!'" data-toggle="collapse" href="/login" (click)="logout()">Logout</button>
         <button id='syncButton' (click)="startSync()" class="btn btn-xl-card btn-block" [disabled]="this.logService.isSyncing" *ngIf="syncingMessage == 'Syncing, please do not close this page.' || syncingMessage == 'There was an error. Please ensure you have a stable WiFi connection and try again.'">Sync

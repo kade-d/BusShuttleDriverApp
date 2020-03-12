@@ -38,6 +38,15 @@
       height: 50px; 
       padding: 5px;
   }
+  h5 {
+    text-align: center;
+    text-indent: 10px;
+    letter-spacing: 1px;
+    line-height: 0.0;
+    font-size: 40px;
+      height: 60px; 
+      
+  }
   
   h1 {
     width: 100%;
@@ -55,8 +64,8 @@
   }
   input[type='checkbox'] {
     -webkit-appearance:none;
-    width:30px;
-    height:30px;
+    width:60px;
+    height:60px;
     background:white;
     border-radius:5px;
     border:2px solid #555;
@@ -72,3 +81,5 @@ input[type='checkbox']:checked {
     background-color: #63b255;
     color: white;
   }
+
+ 

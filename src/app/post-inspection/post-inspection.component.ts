@@ -1,5 +1,7 @@
+import { InspectionService } from './../Services/inspection.service';
 import { Component, OnInit } from '@angular/core';
 import { Inspection } from './../Models/inspection-item';
+
 
 @Component({
   selector: 'app-post-inspection',
@@ -7,7 +9,7 @@ import { Inspection } from './../Models/inspection-item';
   styleUrls: ['./post-inspection.component.css']
 })
 export class PostInspectionComponent implements OnInit {
-  arr: Inspection = [
+  allInspectionItems: Inspection = [
     {id: 1, name: 'no item', pre: '0', post: '0'},
     {id: 2, name: 'pre item 1', pre: '1', post: '0'},
     {id: 3, name: 'pre item 2', pre: '1', post: '0'},
@@ -15,9 +17,26 @@ export class PostInspectionComponent implements OnInit {
     {id: 5, name: 'post item 2', pre: '0', post: '1'},
     {id: 6, name: 'both item', pre: '1', post: '1'},
 ];
-  constructor() { }
+testItem: Inspection =[];
+
+  postItem: Inspection = [];
+  constructor(
+    private inspecService: InspectionService
+  ) { }
+
+  getPost(alItem,postItem) {
+    for (const element of alItem) {
+      if (element.post === '1'){
+        postItem.push(element);
+      }
+    }
+
+  }
 
   ngOnInit() {
+    this.getPost(this.allInspectionItems,this.postItem)
+
+    //this.testItem= this.inspecService.getAll()
 
 
   }

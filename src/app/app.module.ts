@@ -18,6 +18,7 @@ import { LoginComponent } from './login/login.component';
 import { ConfigureComponent } from './configure/configure.component';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
 import { PostInspectionComponent } from './post-inspection/post-inspection.component';
+import { PreInspectionComponent } from './pre-inspection/pre-inspection.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { PostInspectionComponent } from './post-inspection/post-inspection.compo
     LoginComponent,
     ConfigureComponent,
     ConfirmationComponent,
-    PostInspectionComponent
+    PostInspectionComponent,
+    PreInspectionComponent
   ],
   imports: [
     BrowserModule,

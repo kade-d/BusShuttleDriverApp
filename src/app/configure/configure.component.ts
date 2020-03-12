@@ -94,7 +94,7 @@ export class ConfigureComponent implements OnInit {
       this.errorMessage = 'Oops! Select all choices above.';
       this.errorMessageState = true;
     } else {
-      this.router.navigate(['/form']);
+      this.router.navigate(['/pre-inspection']);
     }
   }
 

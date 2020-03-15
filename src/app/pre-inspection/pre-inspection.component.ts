@@ -1,6 +1,7 @@
 import { Inspection } from './../Models/inspection-item';
 import { Component,  OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { InspectionService } from './../Services/inspection.service';
 
 @Component({
   selector: 'app-pre-inspection',
@@ -8,18 +9,31 @@ import { Router } from '@angular/router';
   styleUrls: ['./pre-inspection.component.css']
 })
 export class PreInspectionComponent implements OnInit {
-  arr: Inspection = [
-    {done: true, id: 1, name: 'no item', pre: '0', post: '0'},
-    {done: true, id: 2, name: 'pre item 1', pre: '1', post: '0'},
-    {done: true, id: 3, name: 'pre item 2', pre: '1', post: '0'},
-    {done: true, id: 4, name: 'post item 1', pre: '0', post: '1'},
-    {done: true, id: 5, name: 'post item 2', pre: '0', post: '1'},
-    {done: true, id: 6, name: 'both item', pre: '1', post: '1'},
-];
-  constructor(private router: Router) {
+
+  allItems = [];
+  preItems = [];
+
+  constructor(private router: Router, private inspecService: InspectionService) {
 }
 
+
+
   ngOnInit() {
+    this.inspecService.getDBItems()
+    .subscribe(
+      (jsonData: Inspection) => {
+        // tslint:disable-next-line:forin We know this already works.
+        for (const x in jsonData.data) {
+          this.allItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_items_name,
+            jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
+
+            if (jsonData.data[x].pre_trip_inspection === '1') {
+              this.preItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_items_name,
+                jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
+            }
+        }
+      }
+    );
   }
 
   validateStartButton() {

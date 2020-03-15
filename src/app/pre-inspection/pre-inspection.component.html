@@ -1,14 +1,14 @@
 <br />
 
 <form>
-
+    
    <div class="text-center">
      <h1>Pre-Trip Inspection</h1>
    </div>
 
     <form class="form">
     
-        <div *ngFor="let item of arr">
+        <div *ngFor="let item of preItems">
             <div class="inputGroup">
                 <input id={{item.name}} name="option1" type="checkbox" />
                 <label for={{item.name}}>{{item.name}}</label>

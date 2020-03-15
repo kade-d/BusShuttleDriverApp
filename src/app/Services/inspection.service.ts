@@ -1,7 +1,11 @@
+
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Inspection } from '../Models/inspection-item';
+import { Observable } from 'rxjs';
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,23 +30,17 @@ export class InspectionService {
   }
 
   getAll() {
-    return this.http.get<Inspection[]>(environment.BASE_API_URL+ `/getInspectionItem.php`);
+    return this.http.get<Inspection[]>(environment.BASE_API_URL + `/getInspectionItem.php`);
   }
 
   addInspecReport(xItem){
     this.report.push(xItem);
   }
+ /* errorHandler(error: HttpErrorResponse){
+    return Observable.throw(error.message || 'Server Error');
+  }*/
 
-  getDBItems(): void {
-    //this.clearItems()
-    this.getAll()
-      .subscribe(
-        (jsonData: Inspection) => {
-          // tslint:disable-next-line:forin We know this already works.
-          for (const x in jsonData.data) {
-            this.items.push(new Inspection( jsonData.data[x].id, jsonData.data[x].name, jsonData.data[x].pre, jsonData.data[x].post));
-          }
-        }
-      );
+  getDBItems(): Observable<Inspection[]> {
+    return this.http.get<Inspection[]>(environment.BASE_API_URL + `/getInspectionItem.php`);
   }
 }

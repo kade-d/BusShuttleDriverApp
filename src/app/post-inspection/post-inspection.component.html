@@ -36,7 +36,7 @@
         </div>
         <div class="col-sm-8">
             <div class="form-group">
-                <div><button class="btn btn-xl btn-block" (click)="bbtest()">Next</button></div>
+                <div><button class="btn btn-xl btn-block" (click)="validateStartButton()">Next</button></div>
                 <div class="alert alert-danger text-center" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState">
                     <h4>
                         {{errorMessage}}

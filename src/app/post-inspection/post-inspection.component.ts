@@ -1,6 +1,7 @@
 import { InspectionService } from './../Services/inspection.service';
 import { Component, OnInit } from '@angular/core';
 import { Inspection } from './../Models/inspection-item';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -13,7 +14,8 @@ export class PostInspectionComponent implements OnInit {
   postItems = [];
 
   constructor(
-    private inspecService: InspectionService
+    private inspecService: InspectionService,
+    private router: Router
   ) { }
 
 
@@ -23,11 +25,11 @@ export class PostInspectionComponent implements OnInit {
       (jsonData: Inspection) => {
         // tslint:disable-next-line:forin We know this already works.
         for (const x in jsonData.data) {
-          this.allItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_items_name,
+          this.allItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
             jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
 
             if (jsonData.data[x].post_trip_inspection === '1') {
-              this.postItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_items_name,
+              this.postItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
                 jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
             }
         }
@@ -37,5 +39,7 @@ export class PostInspectionComponent implements OnInit {
 
 
   }
-
+  validateStartButton() {
+    this.router.navigate(['/form']);
+  }
 }

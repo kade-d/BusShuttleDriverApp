@@ -74,6 +74,7 @@ body {
   height: 15px;    
 }
 
+/* *********  checkboxes  ********** */
 
 .inputGroup {
   background-color: #fff;
@@ -171,57 +172,62 @@ code {
   padding: 0 8px;
 }
 
-/* input */
 
-*,
-*::after,
-*::before {
-  margin: 0;
-  padding: 0;
-  box-sizing: inherit;
-  font-size: 62,5%;
+/* --------------  input ---------------- */
+
+input[type="text"] {
+  box-sizing: border-box;
+  width: 100%;
+  height: calc(3em + 2px);
+  margin: 0 0 1em;
+  padding: 1em;
+  border: 1px solid #ccc;
+  border-radius: 1.5em;
+  background: #fff;
+  resize: none;
+  outline: none;
 }
-
+input[type="text"][required]:focus {
+  border-color: #5562eb;
+}
+input[type="text"][required]:focus + label[placeholder]:before {
+  color: #5562eb;
+}
+input[type="text"][required]:focus + label[placeholder]:before,
+input[type="text"][required]:valid + label[placeholder]:before {
+  transition-duration: 0.2s;
+  transform: translate(0, -1.5em) scale(0.9, 0.9);
+}
+input[type="text"][required]:invalid + label[placeholder][alt]:before {
+  content: attr(alt);
+}
+input[type="text"][required] + label[placeholder] {
+  display: block;
+  pointer-events: none;
+  line-height: 1.25em;
+  margin-top: calc(-3em - 2px);
+  margin-bottom: calc((3em - 1em) + 2px);
+}
+input[type="text"][required] + label[placeholder]:before {
+  content: attr(placeholder);
+  display: inline-block;
+  margin: 0 calc(1em + 2px);
+  padding: 0 2px;
+  color: #898989;
+  white-space: nowrap;
+  transition: 0.3s ease-in-out;
+  background-image: linear-gradient(to bottom, #fff, #fff);
+  background-size: 100% 5px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+html {
+  height: 100%;
+}
 body {
-  height: 100vh;
-	width: 100%;
-  background: #0f2027; /* fallback for old browsers */
-  background: linear-gradient(to right,#2c5364, #203a43, #0f2027);
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
-  color: #fff;
+  justify-content: center;
+  height: 100%;
 }
 
-.form__label {
-  font-family: 'Roboto', sans-serif;
-  font-size: 1.2rem;
-  margin-left: 2rem;
-  margin-top: 0.7rem;
-  display: block;
-  transition: all 0.3s;
-  transform: translateY(0rem);
-}
-
-.form__input {
-  font-family: 'Roboto', sans-serif;
-  color: #333;
-  font-size: 1.2rem;
-	margin: 0 auto;
-  padding: 1.5rem 2rem;
-  border-radius: 0.2rem;
-  background-color: rgb(255, 255, 255);
-  border: none;
-  width: 90%;
-  display: block;
-  border-bottom: 0.3rem solid transparent;
-  transition: all 0.3s;
-}
-
-.form__input:placeholder-shown + .form__label {
-  opacity: 0;
-  visibility: hidden;
-  -webkit-transform: translateY(-4rem);
-  transform: translateY(-4rem);
-}

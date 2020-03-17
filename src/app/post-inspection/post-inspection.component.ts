@@ -2,6 +2,10 @@ import { InspectionService } from './../Services/inspection.service';
 import { Component, OnInit } from '@angular/core';
 import { Inspection } from './../Models/inspection-item';
 import { Router } from '@angular/router';
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7a5abd9bf0fe490778e1f980d53a151519070e3b
 
 @Component({
   selector: 'app-post-inspection',
@@ -38,5 +42,7 @@ export class PostInspectionComponent implements OnInit {
 
 
   }
-
+  validateStartButton() {
+    this.router.navigate(['/form']);
+  }
 }

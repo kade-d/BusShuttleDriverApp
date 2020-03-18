@@ -1,7 +1,13 @@
+import { InspectionLog } from './../Models/inspectionLog';
+import { InspectionLogService } from './../Services/inspection-log.service';
 import { Inspection } from './../Models/inspection-item';
 import { Component,  OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { InspectionService } from './../Services/inspection.service';
+import { Bus } from '../Models/bus';
+import { User } from '../Models/user';
+import { Stop } from '../Models/stop';
+import { Loop } from '../Models/loop';
 
 @Component({
   selector: 'app-pre-inspection',
@@ -12,8 +18,14 @@ export class PreInspectionComponent implements OnInit {
 
   allItems = [];
   preItems = [];
+  startMileage: string;
+  
 
-  constructor(private router: Router, private inspecService: InspectionService) {
+  constructor(
+    private router: Router,
+    private inspecService: InspectionService,
+    public InspectionLogService: InspectionLogService,
+    public InspectionLog: InspectionLog) {
 }
   buttonState() {
     return !this.preItems.every(_ => _.state);
@@ -40,6 +52,8 @@ export class PreInspectionComponent implements OnInit {
   validateStartButton() {
       this.router.navigate(['/form']);
     }
+
+    
 }
 
 

@@ -5,7 +5,7 @@ export class InspectionLog {
     stop: string;
     timestamp: string;
     date: string;
-    begin: string;
+    begining: string;
     ending: string;
     startMileage: string;
     endMileage: string;

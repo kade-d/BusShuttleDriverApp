@@ -8,6 +8,7 @@ import { Bus } from '../Models/bus';
 import { User } from '../Models/user';
 import { Stop } from '../Models/stop';
 import { Loop } from '../Models/loop';
+import { isNgTemplate } from '@angular/compiler';
 
 @Component({
   selector: 'app-pre-inspection',
@@ -19,14 +20,13 @@ export class PreInspectionComponent implements OnInit {
   allItems = [];
   preItems = [];
   startMileage: string;
-  
+  inspectionLog = new InspectionLog('', '', '', '', '', '', '', '', '', '', '', '');
 
   constructor(
     private router: Router,
     private inspecService: InspectionService,
-    public InspectionLogService: InspectionLogService,
-    public InspectionLog: InspectionLog) {
-}
+    private inspectionService: InspectionLogService ) {}
+
   buttonState() {
     return !this.preItems.every(_ => _.state);
   }
@@ -53,7 +53,27 @@ export class PreInspectionComponent implements OnInit {
       this.router.navigate(['/form']);
     }
 
-    
+    submitLog(): void {
+    this.inspectionLog.timestamp = this.inspectionService.getTimeStamp();
+    this.inspectionLog.date = this.inspectionService.getDateStamp();
+    this.inspectionLog.begining = this.inspectionService.getHourStamp();
+    this.inspectionLog.driver = this.inspectionService.selectedDriver.id;
+    this.inspectionLog.busNumber = this.inspectionService.selectedBus.id;
+    this.inspectionLog.loop = this.inspectionService.selectedLoop.id;
+    this.createString();
+    this.inspectionLog.startMileage = this.startMileage;
+    const copy = { ...this.inspectionLog }; // Creating a copy of the member 'log'.
+    this.inspectionService.storeLogsLocally(copy);
+
+    // Subscribing to the timer. If undo pressed, we unsubscribe.
+  }
+
+  createString() {
+    for (const item of this.preItems) {
+        this.inspectionLog.pre = '' + item.id + ',';
+    }
+    }
+
 }
 
 

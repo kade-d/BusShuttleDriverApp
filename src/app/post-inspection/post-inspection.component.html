@@ -1,52 +1,32 @@
 <br />
 
+
 <form>
+    
+  <div class="text-center">
+    <h1>Post-Trip Inspection</h1>
+  </div>
+
+   <form class="form">
    
-  <div class="row">
-    <div class="col-sm-2">
-    </div>
-    <div class="col-sm-8">
-      <div class="form-group">
-        <table align="center">
-          <div class="form-group" *ngFor="let x of postItems">
-            <h5>
-          <tr>
-            <td>
-              <input type="checkbox" [value]="x.value" />
-            </td>
-            <td>
-              {{x.name}}
-            </td>
-          </tr>
-          <tr></tr>
-        </h5>
-        </div>
-        </table>
+       <div *ngFor="let item of postItems">
+           <div class="inputGroup">
+               <input id={{item.name}} name="option1" type="checkbox" [(ngModel)]="item.state"/>
+               <label for={{item.name}}>{{item.name}}</label>
+           </div>
+       </div>
+   
+       <br />
+       
+       <div class="form__group">
+           <input type="text"  id="name"  required="true" #mileage>
+           <label for="name" placeholder="Ending Mileage" ></label>
+       </div>
 
-      </div>
-      
-        
-    </div>
-    <div class="col-sm-2">
-    </div>
-</div>
+   </form>
+ 
+ <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
 
-    <div class="row">
-        <div class="col-sm-2">
-        </div>
-        <div class="col-sm-8">
-            <div class="form-group">
-                <div><button class="btn btn-xl btn-block" (click)="validateStartButton()">Next</button></div>
-                <div class="alert alert-danger text-center" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState">
-                    <h4>
-                        {{errorMessage}}
-                    </h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-2">
-        </div>
-    </div>
 </form>
 
 <!-- Footer -->
@@ -60,7 +40,7 @@
 
         
 
-        <button class="btn btn-lg btn-xl-logout btn-block" [disabled]="syncingMessage != 'All done! Have a wonderful day!'" data-toggle="collapse" href="/login" (click)="logout()">Logout</button>
+        <button class="btn btn-lg btn-xl-logout btn-block" [disabled]="buttonState()" data-toggle="collapse" href="/login" (click)="logout()">Logout</button>
         <button id='syncButton' (click)="startSync()" class="btn btn-xl-card btn-block" [disabled]="this.logService.isSyncing" *ngIf="syncingMessage == 'Syncing, please do not close this page.' || syncingMessage == 'There was an error. Please ensure you have a stable WiFi connection and try again.'">Sync
        {{getSyncMessage()}}</button>
     </div>

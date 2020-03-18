@@ -2,6 +2,7 @@ import { InspectionService } from './../Services/inspection.service';
 import { Component, OnInit } from '@angular/core';
 import { Inspection } from './../Models/inspection-item';
 import { Router } from '@angular/router';
+import { AuthenticationService } from '../Services/authentication.service';
 
 @Component({
   selector: 'app-post-inspection',
@@ -14,7 +15,8 @@ export class PostInspectionComponent implements OnInit {
 
   constructor(
     private inspecService: InspectionService,
-    private router: Router
+    private router: Router,
+    private authenticationService: AuthenticationService
   ) { }
 
 
@@ -40,5 +42,13 @@ export class PostInspectionComponent implements OnInit {
   }
   validateStartButton() {
     this.router.navigate(['/form']);
+  }
+  buttonState() {
+    return !this.postItems.every(_ => _.state);
+  }
+
+  logout() {
+    this.authenticationService.logout();
+    this.router.navigate(['/login']);
   }
 }

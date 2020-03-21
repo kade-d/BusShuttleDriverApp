@@ -10,7 +10,7 @@
     
         <div *ngFor="let item of preItems">
             <div class="inputGroup">
-                <input id={{item.name}} name="option1" type="checkbox" [(ngModel)]="item.state"/>
+                <input id={{item.name}} name="option1" type="checkbox" [(ngModel)]="item.state" />
                 <label for={{item.name}}>{{item.name}}</label>
             </div>
         </div>
@@ -18,7 +18,7 @@
         <br />
         
         <div class="form__group">
-            <input type="text"  id="name"  required="true" [(ngModel)]="startMileage">
+            <input type="text"  id="name"  required="true" (keyup)="onKey($event)" >
             <label for="name" placeholder="Starting Mileage" ></label>
         </div>
 
@@ -32,7 +32,7 @@
         </div>
         <div class="col-sm-8">
             <div class="form-group">
-                <div><button class="btn btn-xl btn-block" (click)="validateStartButton()" [disabled]="buttonState()">Start</button></div>
+                <div><button class="btn btn-xl btn-block" (click)="submitLog()" [disabled]="buttonState()">Start</button></div>
                 <div class="alert alert-danger text-center" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState">
                     <h4>
                         {{errorMessage}}
@@ -50,29 +50,7 @@
 
     <div class="card">
 
-        <div class="card-header">
-            App Information
-        </div>
-
-        <div class="card-body">
-            
-            <p class="card-text" [@simpleFadeAnimation]="'in'">App version: {{version}}</p>
-            <div id="box" class="alert alert-info center-block" *ngIf="didStartSync && !noInternet" [@simpleFadeAnimation]="'in'">
-
-                <h1>
-                    {{syncingMessage}}
-                </h1>
-            </div>
-            <div id="box" class="alert alert-danger center-block" *ngIf="didStartSync && noInternet" [@simpleFadeAnimation]="'in'">
-                <h1>
-                    {{syncingMessage}}
-                </h1>
-            </div>
-        </div>
-
-        <button class="btn btn-lg btn-xl-logout btn-block" [disabled]="syncingMessage != 'All done! Have a wonderful day!'" data-toggle="collapse" href="/login" (click)="logout()">Logout</button>
-        <button id='syncButton' (click)="startSync()" class="btn btn-xl-card btn-block" [disabled]="this.logService.isSyncing" *ngIf="syncingMessage == 'Syncing, please do not close this page.' || syncingMessage == 'There was an error. Please ensure you have a stable WiFi connection and try again.'">Sync
-       {{getSyncMessage()}}</button>
+        
     </div>
 
 </footer>

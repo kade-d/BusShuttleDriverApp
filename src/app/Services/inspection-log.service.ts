@@ -19,10 +19,8 @@ export class InspectionLogService {
   inspectionToSend: InspectionLog[] = [];
 
 
-  selectedBus: Bus;
-  selectedDriver: User;
-  selectedLoop: Loop;
-
+ 
+  inspectionLog = new InspectionLog('', '', '', '', '', '', '', '', '', '', '');
 
   constructor(private http: HttpClient) {
     const inspectionLogs: InspectionLog[] = JSON.parse(localStorage.getItem('inspectionLogs'));
@@ -35,6 +33,10 @@ export class InspectionLogService {
 
   store(inspectionLog: InspectionLog): Observable<InspectionLog> {
     return this.http.post<InspectionLog>(environment.BASE_API_URL + '/storeInspection.php', { data: inspectionLog });
+}
+
+postEndHour(){
+  this.inspectionLog.endingHours = this.getTimeStamp();
 }
 
 pad(n: any) { // function for adding leading zeros to dates/times

@@ -1,8 +1,12 @@
+import { PreInspectionComponent } from './../pre-inspection/pre-inspection.component';
+import { InspectionLog } from './../Models/inspectionLog';
 import { InspectionService } from './../Services/inspection.service';
 import { Component, OnInit } from '@angular/core';
 import { Inspection } from './../Models/inspection-item';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../Services/authentication.service';
+import { InspectionLogService } from './../Services/inspection-log.service';
+
 
 @Component({
   selector: 'app-post-inspection',
@@ -12,11 +16,14 @@ import { AuthenticationService } from '../Services/authentication.service';
 export class PostInspectionComponent implements OnInit {
   allItems = [];
   postItems = [];
-
+  tempData;
+  endMileage = '';
+  strItem = '';
   constructor(
     private inspecService: InspectionService,
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private inspectionService: InspectionLogService
   ) { }
 
 
@@ -44,11 +51,48 @@ export class PostInspectionComponent implements OnInit {
     this.router.navigate(['/form']);
   }
   buttonState() {
-    return !this.postItems.every(_ => _.state);
+    return !((this.postItems.every(_ => _.state)) && (this.endMileage !== ''));
+  }
+
+  onKey(event: any) { // without type info
+    this.endMileage = event.target.value;
   }
 
   logout() {
     this.authenticationService.logout();
     this.router.navigate(['/login']);
   }
+
+  submitLog(): void {
+
+    JSON.parse(localStorage.getItem('inspectionLogs'));
+    this.inspectionService.inspectionLog.endingHours = this.inspectionService.getTimeStamp();
+    this.createString();
+    this.inspectionService.inspectionLog.endingMileage = this.endMileage;
+
+    const copy = { ...this.inspectionService.inspectionLog }; // Creating a copy of the member 'log'.
+    this.inspectionService.storeLogsLocally(copy);
+
+    const inspectionLog = this.inspectionService.inspectionToSend[1];
+    this.inspectionService.store(inspectionLog)
+            .subscribe((success) => {
+            localStorage.setItem('inspectionLogs', JSON.stringify(this.inspectionService.inspectionLog ));
+            });
+
+    this.router.navigate(['/configure']);
+    // Subscribing to the timer. If undo pressed, we unsubscribe.
+  }
+
+  createString() {
+    for (let i = 0 ;  i < this.postItems.length ; i++) {
+      if ( i === this.postItems.length - 1 ) {
+        this.strItem = this.strItem + '' + this.postItems[i].id;
+
+      } else {
+          this.strItem = this.strItem + '' + this.postItems[i].id + ',';
+        }
+      }
+      this.inspectionService.inspectionLog.postInspection = this.strItem;
+    }
+
 }

@@ -6,7 +6,7 @@ import { Inspection } from './../Models/inspection-item';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../Services/authentication.service';
 import { InspectionLogService } from './../Services/inspection-log.service';
-
+import { ConnectionService } from 'ng-connection-service';
 
 @Component({
   selector: 'app-post-inspection',
@@ -19,11 +19,17 @@ export class PostInspectionComponent implements OnInit {
   tempData;
   endMileage = '';
   strItem = '';
+
+  status = true;
+  isConnected = true;
+  errMessage = '';
+
   constructor(
     private inspecService: InspectionService,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private inspectionService: InspectionLogService
+    private inspectionService: InspectionLogService,
+    //private connectionService: ConnectionService
   ) { }
 
 
@@ -65,22 +71,23 @@ export class PostInspectionComponent implements OnInit {
 
   submitLog(): void {
 
-    JSON.parse(localStorage.getItem('inspectionLogs'));
-    this.inspectionService.inspectionLog.endingHours = this.inspectionService.getTimeStamp();
-    this.createString();
-    this.inspectionService.inspectionLog.endingMileage = this.endMileage;
+      JSON.parse(localStorage.getItem('inspectionLogs'));
+      this.inspectionService.inspectionLog.endingHours = this.inspectionService.getTimeStamp();
+      this.createString();
+      this.inspectionService.inspectionLog.endingMileage = this.endMileage;
 
-    const copy = { ...this.inspectionService.inspectionLog }; // Creating a copy of the member 'log'.
-    this.inspectionService.storeLogsLocally(copy);
+      const copy = { ...this.inspectionService.inspectionLog }; // Creating a copy of the member 'log'.
+      this.inspectionService.storeLogsLocally(copy);
 
-    const inspectionLog = this.inspectionService.inspectionToSend[1];
-    this.inspectionService.store(inspectionLog)
-            .subscribe((success) => {
-            localStorage.setItem('inspectionLogs', JSON.stringify(this.inspectionService.inspectionLog ));
-            });
+      const inspectionLog = this.inspectionService.inspectionToSend[1];
+      this.inspectionService.store(inspectionLog)
+              .subscribe((success) => {
+              localStorage.setItem('inspectionLogs', JSON.stringify(this.inspectionService.inspectionLog ));
+              });
 
-    this.router.navigate(['/configure']);
-    // Subscribing to the timer. If undo pressed, we unsubscribe.
+      this.router.navigate(['/configure']);
+      // Subscribing to the timer. If undo pressed, we unsubscribe.
+      this.inspectionService.inspectionToSend = [];
   }
 
   createString() {

@@ -7,20 +7,31 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '../Services/authentication.service';
 import { InspectionLogService } from './../Services/inspection-log.service';
 import { ConnectionService } from 'ng-connection-service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-post-inspection',
   templateUrl: './post-inspection.component.html',
-  styleUrls: ['./post-inspection.component.css']
+  styleUrls: ['./post-inspection.component.css'],
+  animations: [
+    trigger('simpleFadeAnimation', [
+      state('in', style({ opacity: 1 })),
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate(600)
+      ]),
+      transition(':leave',
+        animate(600, style({ opacity: 0 })))
+    ])
+  ]
 })
 export class PostInspectionComponent implements OnInit {
   allItems = [];
   postItems = [];
-  tempData;
   endMileage = '';
   strItem = '';
 
-  status = true;
+  status = 'ONLINE';
   isConnected = true;
   errMessage = '';
 
@@ -29,7 +40,7 @@ export class PostInspectionComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private inspectionService: InspectionLogService,
-    //private connectionService: ConnectionService
+    private connectionService: ConnectionService
   ) { }
 
 
@@ -49,6 +60,15 @@ export class PostInspectionComponent implements OnInit {
         }
       }
     );
+
+    this.connectionService.monitor().subscribe(isConnected => {
+      this.isConnected = isConnected;
+      if (this.isConnected) {
+        this.status = 'ONLINE';
+      } else {
+        this.status = 'OFFLINE';
+      }
+    });
 
 
 
@@ -70,6 +90,12 @@ export class PostInspectionComponent implements OnInit {
   }
 
   submitLog(): void {
+    
+
+      if (this.status === 'OFFLINE') {
+        this.errMessage = 'Oops! There is no internet connection.';
+        //this.status = true;
+      } else {
 
       JSON.parse(localStorage.getItem('inspectionLogs'));
       this.inspectionService.inspectionLog.endingHours = this.inspectionService.getTimeStamp();
@@ -84,10 +110,12 @@ export class PostInspectionComponent implements OnInit {
               .subscribe((success) => {
               localStorage.setItem('inspectionLogs', JSON.stringify(this.inspectionService.inspectionLog ));
               });
-
+      this.inspectionService.inspectionToSend = [];
       this.router.navigate(['/configure']);
       // Subscribing to the timer. If undo pressed, we unsubscribe.
-      this.inspectionService.inspectionToSend = [];
+      }
+
+
   }
 
   createString() {

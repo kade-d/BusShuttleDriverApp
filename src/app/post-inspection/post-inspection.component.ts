@@ -45,6 +45,8 @@ export class PostInspectionComponent implements OnInit {
 
 
   ngOnInit() {
+    this.postItems = this.inspectionService.postItems;
+    /*
     this.inspecService.getDBItems()
     .subscribe(
       (jsonData: Inspection) => {
@@ -60,6 +62,7 @@ export class PostInspectionComponent implements OnInit {
         }
       }
     );
+    */
 
     this.connectionService.monitor().subscribe(isConnected => {
       this.isConnected = isConnected;
@@ -73,6 +76,7 @@ export class PostInspectionComponent implements OnInit {
 
 
   }
+
   validateStartButton() {
     this.router.navigate(['/form']);
   }
@@ -111,6 +115,9 @@ export class PostInspectionComponent implements OnInit {
               localStorage.setItem('inspectionLogs', JSON.stringify(this.inspectionService.inspectionLog ));
               });
       this.inspectionService.inspectionToSend = [];
+      this.inspectionService.allItems = [];
+      this.inspectionService.preItems = [];
+      this.inspectionService.postItems = [];
       this.router.navigate(['/configure']);
       // Subscribing to the timer. If undo pressed, we unsubscribe.
       }

@@ -35,9 +35,11 @@ export class PreInspectionComponent implements OnInit {
     public dropdownsService: DropdownsService,
     public inspectionService: InspectionLogService ) {
 
+      /*
     this.dropdownsService.currentBusNumber.subscribe(passedValue => this.selectedBus = passedValue);
     this.dropdownsService.currentDriver.subscribe(passedValue => this.selectedDriver = passedValue);
     this.dropdownsService.currentLoop.subscribe(passedValue => this.selectedLoop = passedValue);
+    */
     }
 
   buttonState() {
@@ -49,6 +51,9 @@ export class PreInspectionComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.preItems = this.inspectionService.preItems;
+    
+    /*
     this.inspecService.getDBItems()
     .subscribe(
       (jsonData: Inspection) => {
@@ -64,6 +69,7 @@ export class PreInspectionComponent implements OnInit {
         }
       }
     );
+    */
   }
 
   validateStartButton() {
@@ -74,9 +80,9 @@ export class PreInspectionComponent implements OnInit {
     this.inspectionService.inspectionLog.timestamp = this.inspectionService.getTimeStamp();
     this.inspectionService.inspectionLog.date = this.inspectionService.getDateStamp();
     this.inspectionService.inspectionLog.beginningHours = this.inspectionService.getTimeStamp();
-    this.inspectionService.inspectionLog.driver = this.selectedDriver.id;
-    this.inspectionService.inspectionLog.busNumber = this.selectedBus.id;
-    this.inspectionService.inspectionLog.loop = this.selectedLoop.id;
+    this.inspectionService.inspectionLog.driver = this.inspectionService.selectedDriver.id;
+    this.inspectionService.inspectionLog.busNumber = this.inspectionService.selectedBus.id;
+    this.inspectionService.inspectionLog.loop = this.inspectionService.selectedLoop.id;
     this.createString();
     this.inspectionService.inspectionLog.startingMileage = this.startMileage;
 

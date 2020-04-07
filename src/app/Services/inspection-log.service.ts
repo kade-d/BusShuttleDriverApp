@@ -8,7 +8,7 @@ import { Bus } from '../Models/bus';
 import { User } from '../Models/user';
 import { Stop } from '../Models/stop';
 import { Loop } from '../Models/loop';
-
+import { InspectionService } from './../Services/inspection.service';
 
 
 @Injectable({
@@ -17,12 +17,17 @@ import { Loop } from '../Models/loop';
 export class InspectionLogService {
 
   inspectionToSend: InspectionLog[] = [];
+  allItems = [];
+  preItems = [];
+  postItems = [];
 
-
- 
+  selectedBus: Bus;
+  selectedDriver: User;
+  selectedLoop: Loop;
+  
   inspectionLog = new InspectionLog('', '', '', '', '', '', '', '', '', '', '');
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private inspecService: InspectionService) {
     const inspectionLogs: InspectionLog[] = JSON.parse(localStorage.getItem('inspectionLogs'));
   }
 
@@ -30,6 +35,31 @@ export class InspectionLogService {
     this.inspectionToSend.push(inspectionLog);
     localStorage.setItem('inspectionLogs', JSON.stringify(this.inspectionToSend));
   }
+
+  /*
+  laodInspectionItems() {
+    this.inspecService.getDBItems()
+    .subscribe(
+      (jsonData: Inspection) => {
+        // tslint:disable-next-line:forin We know this already works.
+        for (const x in jsonData.data) {
+          this.allItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
+            jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
+
+            if (jsonData.data[x].pre_trip_inspection === '1') {
+              this.preItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
+                jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
+            }
+
+            if (jsonData.data[x].post_trip_inspection === '1') {
+              this.postItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
+                jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
+            }
+        }
+      }
+    );
+  }
+*/
 
   store(inspectionLog: InspectionLog): Observable<InspectionLog> {
     return this.http.post<InspectionLog>(environment.BASE_API_URL + '/storeInspection.php', { data: inspectionLog });

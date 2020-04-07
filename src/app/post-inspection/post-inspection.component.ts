@@ -6,8 +6,9 @@ import { Inspection } from './../Models/inspection-item';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../Services/authentication.service';
 import { InspectionLogService } from './../Services/inspection-log.service';
-import { ConnectionService } from 'ng-connection-service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Observable, Observer, fromEvent, merge } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-post-inspection',
@@ -31,51 +32,37 @@ export class PostInspectionComponent implements OnInit {
   endMileage = '';
   strItem = '';
 
-  status = 'ONLINE';
-  isConnected = true;
+  status = '';
+  public onlineOffline: boolean = navigator.onLine;
   errMessage = '';
 
   constructor(
     private inspecService: InspectionService,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private inspectionService: InspectionLogService,
-    private connectionService: ConnectionService
+    private inspectionService: InspectionLogService
   ) { }
 
 
   ngOnInit() {
-    this.inspecService.getDBItems()
-    .subscribe(
-      (jsonData: Inspection) => {
-        // tslint:disable-next-line:forin We know this already works.
-        for (const x in jsonData.data) {
-          this.allItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
-            jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
-
-            if (jsonData.data[x].post_trip_inspection === '1') {
-              this.postItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
-                jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
-            }
-        }
-      }
-    );
-
-    this.connectionService.monitor().subscribe(isConnected => {
-      this.isConnected = isConnected;
-      if (this.isConnected) {
-        this.status = 'ONLINE';
-      } else {
-        this.status = 'OFFLINE';
-      }
-    });
-
-
-
+    this.postItems = this.inspectionService.postItems;
+    this.createOnline$().subscribe(isOnline => this.onlineOffline = isOnline);
   }
+
+  createOnline$() {
+    return merge<boolean>(
+      fromEvent(window, 'offline').pipe(map(() => false)),
+      fromEvent(window, 'online').pipe(map(() => true)),
+      new Observable((sub: Observer<boolean>) => {
+        sub.next(navigator.onLine);
+        sub.complete();
+      }));
+  }
+
   validateStartButton() {
     this.router.navigate(['/form']);
   }
+
   buttonState() {
     return !((this.postItems.every(_ => _.state)) && (this.endMileage !== ''));
   }
@@ -84,17 +71,10 @@ export class PostInspectionComponent implements OnInit {
     this.endMileage = event.target.value;
   }
 
-  logout() {
-    this.authenticationService.logout();
-    this.router.navigate(['/login']);
-  }
-
   submitLog(): void {
-    
 
-      if (this.status === 'OFFLINE') {
+      if (!this.onlineOffline) {
         this.errMessage = 'Oops! There is no internet connection.';
-        //this.status = true;
       } else {
 
       JSON.parse(localStorage.getItem('inspectionLogs'));
@@ -111,10 +91,12 @@ export class PostInspectionComponent implements OnInit {
               localStorage.setItem('inspectionLogs', JSON.stringify(this.inspectionService.inspectionLog ));
               });
       this.inspectionService.inspectionToSend = [];
+      this.inspectionService.allItems = [];
+      this.inspectionService.preItems = [];
+      this.inspectionService.postItems = [];
       this.router.navigate(['/configure']);
       // Subscribing to the timer. If undo pressed, we unsubscribe.
       }
-
 
   }
 

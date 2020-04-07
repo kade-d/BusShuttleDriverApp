@@ -9,6 +9,9 @@ import { Loop } from '../Models/loop';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../Services/authentication.service';
 import { SwUpdate } from '@angular/service-worker';
+import { Inspection } from './../Models/inspection-item';
+import { InspectionLogService } from './../Services/inspection-log.service';
+import { InspectionService } from './../Services/inspection.service';
 
 @Component({
   selector: 'app-configure',
@@ -49,7 +52,8 @@ export class ConfigureComponent implements OnInit {
   noInternet = false;
 
   constructor(public logService: LogService, public dropdownsService: DropdownsService,
-    private router: Router, private swUpdate: SwUpdate, private authenticationService: AuthenticationService) {
+    private router: Router, private swUpdate: SwUpdate, private authenticationService: AuthenticationService,
+    private inspecService: InspectionService, public inspectionService: InspectionLogService) {
   }
 
   ngOnInit() {
@@ -83,6 +87,31 @@ export class ConfigureComponent implements OnInit {
     this.dropdownsService.currentLoopDropdown.subscribe(passedValue => this.loopsDropdown = passedValue);
 
     this.verifyDropDownsAreNotEmpty();
+
+    this.inspecService.getDBItems()
+    .subscribe(
+      (jsonData: Inspection) => {
+        // tslint:disable-next-line:forin We know this already works.
+        for (const x in jsonData.data) {
+          this.inspectionService.allItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
+            jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
+
+            if (jsonData.data[x].pre_trip_inspection === '1') {
+              this.inspectionService.preItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
+                jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
+            }
+
+            if (jsonData.data[x].post_trip_inspection === '1') {
+              this.inspectionService.postItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
+                jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
+            }
+        }
+      }
+    );
+
+    this.dropdownsService.currentBusNumber.subscribe(passedValue => this.inspectionService.selectedBus = passedValue);
+    this.dropdownsService.currentDriver.subscribe(passedValue => this.inspectionService.selectedDriver = passedValue);
+    this.dropdownsService.currentLoop.subscribe(passedValue => this.inspectionService.selectedLoop = passedValue);
 
   }
 

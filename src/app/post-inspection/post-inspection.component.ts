@@ -1,3 +1,4 @@
+import { ConnectionService } from './../Services/connection.service';
 import { PreInspectionComponent } from './../pre-inspection/pre-inspection.component';
 import { InspectionLog } from './../Models/inspectionLog';
 import { InspectionService } from './../Services/inspection.service';
@@ -7,8 +8,7 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '../Services/authentication.service';
 import { InspectionLogService } from './../Services/inspection-log.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { Observable, Observer, fromEvent, merge } from 'rxjs';
-import { map } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-post-inspection',
@@ -40,23 +40,14 @@ export class PostInspectionComponent implements OnInit {
     private inspecService: InspectionService,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private inspectionService: InspectionLogService
+    private inspectionService: InspectionLogService,
+    private connectionService: ConnectionService
   ) { }
 
 
   ngOnInit() {
     this.postItems = this.inspectionService.postItems;
-    this.createOnline$().subscribe(isOnline => this.onlineOffline = isOnline);
-  }
-
-  createOnline$() {
-    return merge<boolean>(
-      fromEvent(window, 'offline').pipe(map(() => false)),
-      fromEvent(window, 'online').pipe(map(() => true)),
-      new Observable((sub: Observer<boolean>) => {
-        sub.next(navigator.onLine);
-        sub.complete();
-      }));
+    this.connectionService.createOnline$().subscribe(isOnline => this.onlineOffline = isOnline);
   }
 
   validateStartButton() {

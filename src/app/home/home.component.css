@@ -49,6 +49,15 @@
   color: black;
 }
 
+.btn-xl-close {
+  padding: 10px 10px;
+  object-position: right;
+  font-size: 60px;
+  border-radius: 15px;
+  background-color: rgb(245, 13, 13);
+  color: white;
+}
+
 label {
     font-size: 22px;
 }

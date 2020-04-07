@@ -293,6 +293,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  closeSuccessMessage(): void {
+    this.successMessageState = false;
+    
+  }
+
   cancelSuccessMessage(): void {
     this.successMessageState = false;
     this.successSubscription.unsubscribe();

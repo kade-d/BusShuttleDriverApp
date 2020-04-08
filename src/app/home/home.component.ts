@@ -323,4 +323,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.errorMessageState = true;
     this.errorMessage = message;
   }
+
+  
 }

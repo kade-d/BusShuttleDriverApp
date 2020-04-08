@@ -308,9 +308,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.logService.directSubmit(log)
       .subscribe((success) => {
         localStorage.setItem('log', JSON.stringify(log ));
+        this.successSubscription.unsubscribe();
+        this.submitSubscription.unsubscribe();
         });
-      this.successSubscription.unsubscribe();
-      this.submitSubscription.unsubscribe();
 
     }
   }

@@ -52,24 +52,6 @@ export class PreInspectionComponent implements OnInit {
 
   ngOnInit() {
     this.preItems = this.inspectionService.preItems;
-    
-    /*
-    this.inspecService.getDBItems()
-    .subscribe(
-      (jsonData: Inspection) => {
-        // tslint:disable-next-line:forin We know this already works.
-        for (const x in jsonData.data) {
-          this.allItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
-            jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
-
-            if (jsonData.data[x].pre_trip_inspection === '1') {
-              this.preItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
-                jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
-            }
-        }
-      }
-    );
-    */
   }
 
   validateStartButton() {

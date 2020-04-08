@@ -19,7 +19,7 @@ export class LogService {
   loops: Loop[];
   isSyncing: boolean;
   public onlineOffline: boolean = navigator.onLine;
-  
+
   private syncMessageSource = new BehaviorSubject<string>('All done! Have a wonderful day!');
   currentSyncMessage = this.syncMessageSource.asObservable();
 
@@ -109,6 +109,10 @@ export class LogService {
       }
     }
 
+  }
+
+  directSubmit(log: Log): Observable<Log> {
+    return this.http.post<Log>(this.baseUrl + '/store.php', { data: log });
   }
 
   store(log: Log): Observable<Log> {

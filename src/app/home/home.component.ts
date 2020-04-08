@@ -14,6 +14,7 @@ import { switchMap, findIndex } from 'rxjs/operators';
 import { Bus } from '../Models/bus';
 import { forEach } from '@angular/router/src/utils/collection';
 import { User } from '../Models/user';
+import { ConnectionService } from './../Services/connection.service';
 
 @Component({
   templateUrl: 'home.component.html',
@@ -61,14 +62,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   selectedDriver: User;
   selectedLoop: Loop;
   successTimer = timer(10000);
-  syncTimer = timer(30000);
+  syncTimer = timer(11000);
 
   successSubscription: any;
   submitSubscription: any;
   syncSubscription: any;
 
+  public onlineOffline: boolean = navigator.onLine;
+
   constructor(public logService: LogService, private swUpdate: SwUpdate,
-    public dropdownsService: DropdownsService, private router: Router) {
+    public dropdownsService: DropdownsService, private router: Router,
+    private connectionService: ConnectionService) {
 
     this.log.stop = null;
     this.log.boarded = 0;
@@ -87,7 +91,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     // Check if we have internet and attempt to sync logs.
-    const obsTimer = this.syncTimer.pipe(switchMap(() => interval(30000)));
+    const obsTimer = this.syncTimer.pipe(switchMap(() => interval(11000)));
     this.syncSubscription = obsTimer.subscribe(() => {
       if ('onLine' in navigator) {
         if (!navigator.onLine) {
@@ -110,6 +114,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.connectionService.createOnline$().subscribe(isOnline => this.onlineOffline = isOnline);
     // Prompt reload if Service Worker detects new files.
     if (this.swUpdate.isEnabled) {
       this.swUpdate.available.subscribe(() => {
@@ -295,7 +300,19 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   closeSuccessMessage(): void {
     this.successMessageState = false;
-    
+    this.submitIfConnected(this.log);
+  }
+
+  submitIfConnected(log: Log){
+    if (this.onlineOffline) {
+      this.logService.directSubmit(log)
+      .subscribe((success) => {
+        localStorage.setItem('log', JSON.stringify(log ));
+        });
+      this.successSubscription.unsubscribe();
+      this.submitSubscription.unsubscribe();
+
+    }
   }
 
   cancelSuccessMessage(): void {
@@ -323,6 +340,4 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.errorMessageState = true;
     this.errorMessage = message;
   }
-
-  
 }

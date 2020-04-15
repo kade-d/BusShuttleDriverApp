@@ -55,8 +55,8 @@
   object-position: right;
   font-size: 60px;
   border-radius: 15px;
-  background-color: rgb(245, 13, 13);
-  color: white;
+  background-color: rgb(255, 255, 255);
+  color: black;
 }
 
 label {

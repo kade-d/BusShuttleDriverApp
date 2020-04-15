@@ -121,10 +121,11 @@
                         </form>
 
                         <!-- Feedback Element -->
+                        
                         <div class="overlay" [@simpleFadeAnimation]="'in'" *ngIf="successMessageState">
+                            <a style="color: black" class="btn-xl-close" (click)="closeSuccessMessage()">X</a>
                             <div class="successMessage">
                                 <div></div>
-                                <a style="color: white" class="btn-xl-close" (click)="closeSuccessMessage()">X</a>
                                 <div></div>
                                 <div></div>
                                 <div></div>

@@ -75,8 +75,8 @@ export class PostInspectionComponent implements OnInit {
 
       const copy = { ...this.inspectionService.inspectionLog }; // Creating a copy of the member 'log'.
       this.inspectionService.storeLogsLocally(copy);
-
-      const inspectionLog = this.inspectionService.inspectionToSend[1];
+      const aarayLastItem = this.inspectionService.inspectionToSend.length - 1;
+      const inspectionLog = this.inspectionService.inspectionToSend[aarayLastItem];
       this.inspectionService.store(inspectionLog)
               .subscribe((success) => {
               localStorage.setItem('inspectionLogs', JSON.stringify(this.inspectionService.inspectionLog ));

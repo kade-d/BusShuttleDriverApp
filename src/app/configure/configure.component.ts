@@ -88,6 +88,10 @@ export class ConfigureComponent implements OnInit {
 
     this.verifyDropDownsAreNotEmpty();
 
+    this.inspectionService.allItems = [];
+    this.inspectionService.preItems = [];
+    this.inspectionService.postItems = [];
+
     this.inspecService.getDBItems()
     .subscribe(
       (jsonData: Inspection) => {

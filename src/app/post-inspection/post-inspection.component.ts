@@ -34,7 +34,7 @@ export class PostInspectionComponent implements OnInit {
 
   status = '';
   public onlineOffline: boolean = navigator.onLine;
-  errMessage = '';
+  errMessage = 'Oops! There is no internet connection.';
 
   constructor(
     private inspecService: InspectionService,

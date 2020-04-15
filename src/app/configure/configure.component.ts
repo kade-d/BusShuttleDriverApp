@@ -12,6 +12,7 @@ import { SwUpdate } from '@angular/service-worker';
 import { Inspection } from './../Models/inspection-item';
 import { InspectionLogService } from './../Services/inspection-log.service';
 import { InspectionService } from './../Services/inspection.service';
+import { Stop } from '../Models/stop';
 
 @Component({
   selector: 'app-configure',
@@ -92,6 +93,8 @@ export class ConfigureComponent implements OnInit {
     this.inspectionService.preItems = [];
     this.inspectionService.postItems = [];
 
+    
+
     this.inspecService.getDBItems()
     .subscribe(
       (jsonData: Inspection) => {
@@ -127,8 +130,10 @@ export class ConfigureComponent implements OnInit {
       this.errorMessage = 'Oops! Select all choices above.';
       this.errorMessageState = true;
     } else {
+      this.getStopsFromDropdownService();
       this.router.navigate(['/pre-inspection']);
     }
+
   }
 
   startSync() {
@@ -261,4 +266,19 @@ export class ConfigureComponent implements OnInit {
   private showErrorMessage(message: string): void {
     this.errorMessage = message;
   }
+
+  private getStopsFromDropdownService() {
+    this.dropdownsService.stops = [];
+    this.dropdownsService.getAllStops(this.selectedLoop.id)
+      .subscribe(
+        (data: Stop) => {
+          // this.stopDropdown.push(new Stop(null, 'Select a Stop'));
+          // tslint:disable-next-line:forin We know this already works.
+          for (const x in data.data) {
+            this.dropdownsService.stops.push(new Stop(data.data[x].id, data.data[x].stops));
+            console.log(this.dropdownsService.stops);
+          }
+       }
+      );
+    }
 }

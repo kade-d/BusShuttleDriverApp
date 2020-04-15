@@ -83,7 +83,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.dropdownsService.currentBusDropdown.subscribe(passedValue => this.currentBusDropdown = passedValue);
     this.dropdownsService.currentLoopDropdown.subscribe(passedValue => this.loopDropdown = passedValue);
     // this.populateLoopsDropdown();
-    this.populateStopsDropdown();
+    this.populateStopsDropdown2();
 
     // If page is accessed without being configured, redirect to settings page.
     if (this.selectedLoop.name === 'Select a loop') {
@@ -189,6 +189,22 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       );
   }
+
+  populateStopsDropdown2(): void {
+    this.dropdownDisabled = true;
+    this.log.stop = 'Select a stop';
+    this.stopDropdownState = true;
+          this.dropdownDisabled = false;
+          this.errorMessageState = false;
+    this.stopDropdown = [];
+
+    // This actually handles putting the data in the stopdropdown to display to the user.
+
+    this.stopDropdown =  this.dropdownsService.stops;
+          console.log('Populated the Stops Dropdown');
+
+  }
+
 
   submitLog(form: NgForm): void {
     if (this.validateForm(form) === false) { return; }

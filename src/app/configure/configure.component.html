@@ -77,6 +77,11 @@
                         {{errorMessage}}
                     </h4>
                 </div>
+                <div class="alert alert-danger text-center" [@simpleFadeAnimation]="'in'" *ngIf="!onlineOffline">
+                    <h4>
+                        {{errMessage}}
+                    </h4>
+                </div>
             </div>
         </div>
         <div class="col-sm-2">

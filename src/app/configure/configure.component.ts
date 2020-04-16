@@ -13,6 +13,7 @@ import { Inspection } from './../Models/inspection-item';
 import { InspectionLogService } from './../Services/inspection-log.service';
 import { InspectionService } from './../Services/inspection.service';
 import { Stop } from '../Models/stop';
+import { ConnectionService } from './../Services/connection.service';
 
 @Component({
   selector: 'app-configure',
@@ -52,13 +53,17 @@ export class ConfigureComponent implements OnInit {
   loopDropdownState = true;
   noInternet = false;
 
+  public onlineOffline: boolean = navigator.onLine;
+  errMessage = 'Oops! There is no internet connection.';
+
   constructor(public logService: LogService, public dropdownsService: DropdownsService,
     private router: Router, private swUpdate: SwUpdate, private authenticationService: AuthenticationService,
-    private inspecService: InspectionService, public inspectionService: InspectionLogService) {
+    private inspecService: InspectionService, public inspectionService: InspectionLogService,
+    private connectionService: ConnectionService) {
   }
 
   ngOnInit() {
-
+    this.connectionService.createOnline$().subscribe(isOnline => this.onlineOffline = isOnline);
         // Prompt reload if Service Worker detects new files.
         if (this.swUpdate.isEnabled) {
           this.swUpdate.available.subscribe(() => {
@@ -120,18 +125,25 @@ export class ConfigureComponent implements OnInit {
     this.dropdownsService.currentDriver.subscribe(passedValue => this.inspectionService.selectedDriver = passedValue);
     this.dropdownsService.currentLoop.subscribe(passedValue => this.inspectionService.selectedLoop = passedValue);
 
+    //this.getStopsFromDropdownService(this.selectedLoop);
+
   }
 
   validateStartButton() {
-    if ( this.selectedDriver.name === 'Select your Name' || this.selectedBus.name === 'Select a Bus'
-    || this.selectedDriver.name === '' || this.selectedDriver.name === undefined || this.selectedDriver.name === null
-      || this.selectedLoop.name === 'Select a loop' || this.selectedLoop.name === '' || this.selectedLoop.name === undefined
-      || this.selectedBus.name === '' || this.selectedBus.name === undefined) {
-      this.errorMessage = 'Oops! Select all choices above.';
-      this.errorMessageState = true;
+    if (!this.onlineOffline) {
+      this.errMessage = 'Oops! There is no internet connection.';
     } else {
-      this.getStopsFromDropdownService();
-      this.router.navigate(['/pre-inspection']);
+
+      if (this.selectedDriver.name === 'Select your Name' || this.selectedBus.name === 'Select a Bus'
+        || this.selectedDriver.name === '' || this.selectedDriver.name === undefined || this.selectedDriver.name === null
+        || this.selectedLoop.name === 'Select a loop' || this.selectedLoop.name === '' || this.selectedLoop.name === undefined
+        || this.selectedBus.name === '' || this.selectedBus.name === undefined) {
+        this.errorMessage = 'Oops! Select all choices above.';
+        this.errorMessageState = true;
+      } else {
+        this.getStopsFromDropdownService();
+        this.router.navigate(['/pre-inspection']);
+      }
     }
 
   }

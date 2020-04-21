@@ -50,8 +50,8 @@ pad(n: any) { // function for adding leading zeros to dates/times
 
 getTimeStamp(): string {
   const date = new Date();
-  const timestamp = (date.getFullYear() + '/'
-    + this.pad((date.getMonth()) + 1) + '/'
+  const timestamp = (date.getFullYear() + '-'
+    + this.pad((date.getMonth()) + 1) + '-'
     + this.pad(date.getDate()) + ' '
     + this.pad(date.getHours()) + ':'
     + this.pad(date.getMinutes()) + ':'

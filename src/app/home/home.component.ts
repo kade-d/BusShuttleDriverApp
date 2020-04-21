@@ -319,7 +319,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.submitIfConnected(this.log);
   }
 
-  submitIfConnected(log: Log){
+  submitIfConnected(log: Log) {
     if (this.onlineOffline) {
       this.logService.directSubmit(log)
       .subscribe((success) => {
@@ -342,8 +342,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   getTimeStamp(): string {
     const date = new Date();
-    const timestamp = (date.getFullYear() + '/'
-      + this.pad((date.getMonth()) + 1) + '/'
+    const timestamp = (date.getFullYear() + '-'
+      + this.pad((date.getMonth()) + 1) + '-'
       + this.pad(date.getDate()) + ' '
       + this.pad(date.getHours()) + ':'
       + this.pad(date.getMinutes()) + ':'

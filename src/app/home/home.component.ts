@@ -15,6 +15,7 @@ import { Bus } from '../Models/bus';
 import { forEach } from '@angular/router/src/utils/collection';
 import { User } from '../Models/user';
 import { ConnectionService } from './../Services/connection.service';
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 @Component({
   templateUrl: 'home.component.html',
@@ -46,6 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   driverDropdown = [];
   currentBusDropdown: Bus[];
   stop = null;
+  cancelClicked = false;
 
   stopName = 'No Stop Selected Yet'; // sets the value under the submit button
 
@@ -62,11 +64,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   selectedDriver: User;
   selectedLoop: Loop;
   successTimer = timer(10000);
-  syncTimer = timer(11000);
+  syncTimer = timer(30000);
+  timeForRest = timer(10);
+  timerId: any;
 
   successSubscription: any;
   submitSubscription: any;
   syncSubscription: any;
+  resetForm: any;
 
   public onlineOffline: boolean = navigator.onLine;
 
@@ -91,7 +96,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     // Check if we have internet and attempt to sync logs.
-    const obsTimer = this.syncTimer.pipe(switchMap(() => interval(11000)));
+    const obsTimer = this.syncTimer.pipe(switchMap(() => interval(30000)));
     this.syncSubscription = obsTimer.subscribe(() => {
       if ('onLine' in navigator) {
         if (!navigator.onLine) {
@@ -126,6 +131,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       console.log('swUpdate is not available.');
     }
   }
+
 
   decreaseBoardedValueClicked(): void {
     if (this.log.boarded === 0 || this.log.boarded === undefined) {
@@ -215,21 +221,47 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x.id === this.log.stop)].name;
     this.errorMessageState = false;
     const copy = { ...this.log }; // Creating a copy of the member 'log'.
+    this.cancelClicked = false;
     this.showSuccessMessage(this.stopName);
+    
+    // check for the success message to disapper then try to either submit data directly or put it in the local storage.
+    this.timerId = setInterval(() => this.subscribe(copy), 1000);
+    setTimeout(() => clearInterval(this.timerId), 12000);
+  }
 
-    // Subscribing to the timer. If undo pressed, we unsubscribe.
-    this.submitSubscription = this.successTimer.subscribe(() => {
-      this.advanceStopToNextValue(this.form);
-      this.resetFormControls(this.form);
-      this.logService.storeLogsLocally(copy);
-      console.log(copy);
-      console.log('object stored locally');
+  private subscribe (copy: Log): void{
+    if (!this.successMessageState) {
+      if (!this.cancelClicked) {
 
-          // if an item hasn't been selected in the stop dropdown, don't change stopName under submit button.
-    if (this.stopDropdown[this.stopDropdown.findIndex(x => x.id === this.log.stop)] !== undefined) {
-      this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x.id === this.log.stop)].name;
+        // Try to either submit data directly or put it in the local storage.
+        this.submitSubscription = this.timeForRest.subscribe(() => {
+        this.advanceStopToNextValue(this.form);
+        this.resetFormControls(this.form);
+        if (this.onlineOffline) {
+          this.logService.directSubmit(copy)
+          .subscribe((success) => {
+            console.log('object strored in Database');
+            },(error: any) => {
+              this.logService.storeLogsLocally(copy);
+              console.log(copy);
+              console.log('object stored locally');
+            });
+        } else {
+              this.logService.storeLogsLocally(copy);
+              console.log(copy);
+              console.log('object stored locally');
+          }
+
+        // if an item hasn't been selected in the stop dropdown, don't change stopName under submit button.
+        if (this.stopDropdown[this.stopDropdown.findIndex(x => x.id === this.log.stop)] !== undefined) {
+          this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x.id === this.log.stop)].name;
+        }
+          });
+        clearInterval(this.timerId);
+       }
+
     }
-      });
+
   }
 
   private validateForm(form: NgForm): boolean {
@@ -277,7 +309,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  private resetErrors(): void {
+  public resetErrors(): void {
 
     // if an item hasn't been selected in the stop dropdown, don't change stopName under submit button.
     if (this.stopDropdown[this.stopDropdown.findIndex(x => x.id === this.log.stop)] !== undefined) {
@@ -316,10 +348,21 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   closeSuccessMessage(): void {
     this.successMessageState = false;
-    this.submitIfConnected(this.log);
+    this.cancelClicked = false;
   }
 
+
   submitIfConnected(log: Log) {
+    const resetTime = timer(10);
+    this.resetForm = resetTime.subscribe(() => {
+      this.advanceStopToNextValue(this.form);
+      this.resetFormControls(this.form);
+             // if an item hasn't been selected in the stop dropdown, don't change stopName under submit button.
+    if (this.stopDropdown[this.stopDropdown.findIndex(x => x.id === this.log.stop)] !== undefined) {
+      this.stopName = this.stopDropdown[this.stopDropdown.findIndex(x => x.id === this.log.stop)].name;
+    }
+      });
+
     if (this.onlineOffline) {
       this.logService.directSubmit(log)
       .subscribe((success) => {
@@ -332,8 +375,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   cancelSuccessMessage(): void {
     this.successMessageState = false;
-    this.successSubscription.unsubscribe();
-    this.submitSubscription.unsubscribe();
+    this.cancelClicked = true;
   }
 
   pad(n: any) { // function for adding leading zeros to dates/times

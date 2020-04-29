@@ -36,6 +36,9 @@ export class PostInspectionComponent implements OnInit {
   public onlineOffline: boolean = navigator.onLine;
   errMessage = 'Oops! There is no internet connection.';
 
+  checkMileage;
+  errorMessageState = false;
+
   constructor(
     private inspecService: InspectionService,
     private router: Router,
@@ -60,6 +63,11 @@ export class PostInspectionComponent implements OnInit {
 
   onKey(event: any) { // without type info
     this.endMileage = event.target.value;
+    if (this.validateMileage()) {
+      this.errorMessageState = true;
+    } else {
+      this.errorMessageState = false;
+     }
   }
 
   submitLog(): void {
@@ -68,27 +76,37 @@ export class PostInspectionComponent implements OnInit {
         this.errMessage = 'Oops! There is no internet connection.';
       } else {
 
-      JSON.parse(localStorage.getItem('inspectionLogs'));
-      this.inspectionService.inspectionLog.endingHours = this.inspectionService.getTimeStamp();
-      this.createString();
-      this.inspectionService.inspectionLog.endingMileage = this.endMileage;
+         if (this.validateMileage()) {
+          this.errorMessageState = true;
+        } else {
 
-      const copy = { ...this.inspectionService.inspectionLog }; // Creating a copy of the member 'log'.
-      this.inspectionService.storeLogsLocally(copy);
-      const aarayLastItem = this.inspectionService.inspectionToSend.length - 1;
-      const inspectionLog = this.inspectionService.inspectionToSend[aarayLastItem];
-      this.inspectionService.store(inspectionLog)
-              .subscribe((success) => {
-              localStorage.setItem('inspectionLogs', JSON.stringify(this.inspectionService.inspectionLog ));
-              });
-      this.inspectionService.inspectionToSend = [];
-      this.inspectionService.allItems = [];
-      this.inspectionService.preItems = [];
-      this.inspectionService.postItems = [];
-      this.router.navigate(['/configure']);
-      // Subscribing to the timer. If undo pressed, we unsubscribe.
+            JSON.parse(localStorage.getItem('inspectionLogs'));
+            this.inspectionService.inspectionLog.endingHours = this.inspectionService.getTimeStamp();
+            this.createString();
+            this.inspectionService.inspectionLog.endingMileage = this.endMileage;
+
+            const copy = { ...this.inspectionService.inspectionLog }; // Creating a copy of the member 'log'.
+            this.inspectionService.storeLogsLocally(copy);
+            const aarayLastItem = this.inspectionService.inspectionToSend.length - 1;
+            const inspectionLog = this.inspectionService.inspectionToSend[aarayLastItem];
+            this.inspectionService.store(inspectionLog)
+                    .subscribe((success) => {
+                    localStorage.setItem('inspectionLogs', JSON.stringify(this.inspectionService.inspectionLog ));
+                    });
+            this.inspectionService.inspectionToSend = [];
+            this.inspectionService.allItems = [];
+            this.inspectionService.preItems = [];
+            this.inspectionService.postItems = [];
+            this.router.navigate(['/configure']);
+            // Subscribing to the timer. If undo pressed, we unsubscribe.
       }
+    }
 
+  }
+
+  validateMileage(): boolean {
+    this.checkMileage = Number(this.endMileage);
+    return isNaN(this.checkMileage);
   }
 
   createString() {

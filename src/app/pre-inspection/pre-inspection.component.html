@@ -17,9 +17,14 @@
     
         <br />
         
-        <div class="form__group">
-            <input type="text"  id="name"  required="true" (keyup)="onKey($event)" >
+        <div class="form-group">
+            <input type="text"  id="name"  required="true" inputmode="numeric" (keyup)="onKey($event)" >
             <label for="name" placeholder="Starting Mileage" ></label>
+        </div>
+        <div class="alert alert-danger text-center" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState">
+            <h4>
+                Please enter a valid number
+            </h4>
         </div>
 
     </form>
@@ -33,11 +38,6 @@
         <div class="col-sm-8">
             <div class="form-group">
                 <div><button class="btn btn-xl btn-block" (click)="submitLog()" [disabled]="buttonState()">Start</button></div>
-                <div class="alert alert-danger text-center" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState">
-                    <h4>
-                        {{errorMessage}}
-                    </h4>
-                </div>
             </div>
         </div>
         <div class="col-sm-2">

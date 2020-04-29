@@ -19,8 +19,13 @@
        <br />
        
        <div class="form__group">
-           <input type="text"  id="name"  required="true" (keyup)="onKey($event)">
+           <input type="text"  id="name"  required="true" inputmode="numeric" (keyup)="onKey($event)">
            <label for="name" placeholder="Ending Mileage" ></label>
+       </div>
+       <div class="alert alert-danger text-center" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState">
+        <h4>
+            Please enter a valid number
+        </h4>
        </div>
 
        <div class="row">

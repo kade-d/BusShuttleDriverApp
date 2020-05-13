@@ -7,6 +7,7 @@ import { Log } from '../Models/log';
 import { Stop } from '../Models/stop';
 import { Loop } from '../Models/loop';
 import { environment } from '../../environments/environment';
+import { ConnectionService } from './../Services/connection.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class LogService {
   stops: Stop[];
   loops: Loop[];
   isSyncing: boolean;
+  public onlineOffline: boolean = navigator.onLine;
 
   private syncMessageSource = new BehaviorSubject<string>('All done! Have a wonderful day!');
   currentSyncMessage = this.syncMessageSource.asObservable();
@@ -24,7 +26,7 @@ export class LogService {
   private syncCountSource = new BehaviorSubject<number>(0);
   currentSyncCount = this.syncCountSource.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private connectionService: ConnectionService) {
     const logs: Log[] = JSON.parse(localStorage.getItem('logs'));
     if (logs !== null) {
       this.logsToSend = logs;
@@ -107,6 +109,10 @@ export class LogService {
       }
     }
 
+  }
+
+  directSubmit(log: Log): Observable<Log> {
+    return this.http.post<Log>(this.baseUrl + '/store.php', { data: log });
   }
 
   store(log: Log): Observable<Log> {

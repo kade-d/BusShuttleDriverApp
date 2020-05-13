@@ -17,14 +17,17 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { ConfigureComponent } from './configure/configure.component';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
-
+import { PostInspectionComponent } from './post-inspection/post-inspection.component';
+import { PreInspectionComponent } from './pre-inspection/pre-inspection.component';
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     LoginComponent,
     ConfigureComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    PostInspectionComponent,
+    PreInspectionComponent
   ],
   imports: [
     BrowserModule,
@@ -33,14 +36,15 @@ import { ConfirmationComponent } from './confirmation/confirmation.component';
     HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     routing,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    FormsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
     // provider used to create fake backend
-    fakeBackendProvider
+    fakeBackendProvider,
   ],
   bootstrap: [AppComponent]
 })

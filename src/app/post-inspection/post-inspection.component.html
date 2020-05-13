@@ -1,0 +1,63 @@
+<br />
+
+
+<form>
+    
+  <div class="text-center">
+    <h1>Post-Trip Inspection</h1>
+  </div>
+
+   <form class="form">
+   
+       <div *ngFor="let item of postItems">
+           <div class="inputGroup">
+               <input id={{item.name}} name="option1" type="checkbox" [(ngModel)]="item.state"/>
+               <label for={{item.name}}>{{item.name}}</label>
+           </div>
+       </div>
+   
+       <br />
+       
+       <div class="form__group">
+           <input type="text"  id="name"  required="true" inputmode="numeric" (keyup)="onKey($event)">
+           <label for="name" placeholder="Ending Mileage" ></label>
+       </div>
+       <div class="alert alert-danger text-center" [@simpleFadeAnimation]="'in'" *ngIf="errorMessageState">
+        <h4>
+            Please enter a valid number
+        </h4>
+       </div>
+
+       <div class="row">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-8">
+            <div class="form-group">
+                <div><button class="btn btn-xl btn-block" (click)="submitLog()" [disabled]="buttonState()">Finish</button></div>
+                <div class="alert alert-danger text-center" [@simpleFadeAnimation]="'in'" *ngIf="!onlineOffline">
+                    <h4>
+                        {{errMessage}}
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+        </div>
+    </div>
+
+   </form>
+ 
+ <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+
+</form>
+
+<!-- Footer -->
+<footer class="footer font-small dark">
+
+    <div class="card">
+
+    
+        
+    </div>
+
+</footer>

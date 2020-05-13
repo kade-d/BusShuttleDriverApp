@@ -12,6 +12,7 @@ import { User } from '../Models/user';
 })
 export class DropdownsService {
   baseUrl: string;
+  stops = [];
 
   // These behavior subjects communicate the data between components.
   // When one is updated, it's reflected in all places it's used.

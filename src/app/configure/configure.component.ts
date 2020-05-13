@@ -9,6 +9,11 @@ import { Loop } from '../Models/loop';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../Services/authentication.service';
 import { SwUpdate } from '@angular/service-worker';
+import { Inspection } from './../Models/inspection-item';
+import { InspectionLogService } from './../Services/inspection-log.service';
+import { InspectionService } from './../Services/inspection.service';
+import { Stop } from '../Models/stop';
+import { ConnectionService } from './../Services/connection.service';
 
 @Component({
   selector: 'app-configure',
@@ -48,12 +53,17 @@ export class ConfigureComponent implements OnInit {
   loopDropdownState = true;
   noInternet = false;
 
+  public onlineOffline: boolean = navigator.onLine;
+  errMessage = 'Oops! There is no internet connection.';
+
   constructor(public logService: LogService, public dropdownsService: DropdownsService,
-    private router: Router, private swUpdate: SwUpdate, private authenticationService: AuthenticationService) {
+    private router: Router, private swUpdate: SwUpdate, private authenticationService: AuthenticationService,
+    private inspecService: InspectionService, public inspectionService: InspectionLogService,
+    private connectionService: ConnectionService) {
   }
 
   ngOnInit() {
-
+    this.connectionService.createOnline$().subscribe(isOnline => this.onlineOffline = isOnline);
         // Prompt reload if Service Worker detects new files.
         if (this.swUpdate.isEnabled) {
           this.swUpdate.available.subscribe(() => {
@@ -84,18 +94,58 @@ export class ConfigureComponent implements OnInit {
 
     this.verifyDropDownsAreNotEmpty();
 
+    this.inspectionService.allItems = [];
+    this.inspectionService.preItems = [];
+    this.inspectionService.postItems = [];
+
+    
+
+    this.inspecService.getDBItems()
+    .subscribe(
+      (jsonData: Inspection) => {
+        // tslint:disable-next-line:forin We know this already works.
+        for (const x in jsonData.data) {
+          this.inspectionService.allItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
+            jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
+
+            if (jsonData.data[x].pre_trip_inspection === '1') {
+              this.inspectionService.preItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
+                jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
+            }
+
+            if (jsonData.data[x].post_trip_inspection === '1') {
+              this.inspectionService.postItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
+                jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
+            }
+        }
+      }
+    );
+
+    this.dropdownsService.currentBusNumber.subscribe(passedValue => this.inspectionService.selectedBus = passedValue);
+    this.dropdownsService.currentDriver.subscribe(passedValue => this.inspectionService.selectedDriver = passedValue);
+    this.dropdownsService.currentLoop.subscribe(passedValue => this.inspectionService.selectedLoop = passedValue);
+
+    //this.getStopsFromDropdownService(this.selectedLoop);
+
   }
 
   validateStartButton() {
-    if ( this.selectedDriver.name === 'Select your Name' || this.selectedBus.name === 'Select a Bus'
-    || this.selectedDriver.name === '' || this.selectedDriver.name === undefined || this.selectedDriver.name === null
-      || this.selectedLoop.name === 'Select a loop' || this.selectedLoop.name === '' || this.selectedLoop.name === undefined
-      || this.selectedBus.name === '' || this.selectedBus.name === undefined) {
-      this.errorMessage = 'Oops! Select all choices above.';
-      this.errorMessageState = true;
+    if (!this.onlineOffline) {
+      this.errMessage = 'Oops! There is no internet connection.';
     } else {
-      this.router.navigate(['/form']);
+
+      if (this.selectedDriver.name === 'Select your Name' || this.selectedBus.name === 'Select a Bus'
+        || this.selectedDriver.name === '' || this.selectedDriver.name === undefined || this.selectedDriver.name === null
+        || this.selectedLoop.name === 'Select a loop' || this.selectedLoop.name === '' || this.selectedLoop.name === undefined
+        || this.selectedBus.name === '' || this.selectedBus.name === undefined) {
+        this.errorMessage = 'Oops! Select all choices above.';
+        this.errorMessageState = true;
+      } else {
+        this.getStopsFromDropdownService();
+        this.router.navigate(['/pre-inspection']);
+      }
     }
+
   }
 
   startSync() {
@@ -228,4 +278,19 @@ export class ConfigureComponent implements OnInit {
   private showErrorMessage(message: string): void {
     this.errorMessage = message;
   }
+
+  private getStopsFromDropdownService() {
+    this.dropdownsService.stops = [];
+    this.dropdownsService.getAllStops(this.selectedLoop.id)
+      .subscribe(
+        (data: Stop) => {
+          // this.stopDropdown.push(new Stop(null, 'Select a Stop'));
+          // tslint:disable-next-line:forin We know this already works.
+          for (const x in data.data) {
+            this.dropdownsService.stops.push(new Stop(data.data[x].id, data.data[x].stops));
+            console.log(this.dropdownsService.stops);
+          }
+       }
+      );
+    }
 }

@@ -14,6 +14,7 @@ import { InspectionLogService } from './../Services/inspection-log.service';
 import { InspectionService } from './../Services/inspection.service';
 import { Stop } from '../Models/stop';
 import { ConnectionService } from './../Services/connection.service';
+import {Driver} from '../Models/driver';
 
 @Component({
   selector: 'app-configure',
@@ -31,6 +32,7 @@ import { ConnectionService } from './../Services/connection.service';
     ])
   ]
 })
+
 export class ConfigureComponent implements OnInit {
   syncingMessage: string;
   syncingCount: number;
@@ -38,13 +40,13 @@ export class ConfigureComponent implements OnInit {
   version: string = versionEnvironment.version;
 
   busDropdown: Bus[];
-  driverDropdown: User[];
+  driverDropdown: Driver[];
   loopsDropdown: Loop[];
 
   errorMessage = '';
 
   selectedBus: Bus;
-  selectedDriver: User;
+  selectedDriver: Driver;
   selectedLoop: Loop;
 
   errorMessageState = false;
@@ -77,11 +79,7 @@ export class ConfigureComponent implements OnInit {
 
     this.logService.currentSyncMessage.subscribe(passedMessage => {
       this.syncingMessage = passedMessage;
-      if (passedMessage === 'There was an error. Please ensure you have a stable WiFi connection and try again.') {
-        this.noInternet = true;
-      } else {
-        this.noInternet = false;
-      }
+      this.noInternet = passedMessage === 'There was an error. Please ensure you have a stable WiFi connection and try again.';
     });
 
     this.logService.currentSyncCount.subscribe(passedCount => this.syncingCount = passedCount);
@@ -98,23 +96,21 @@ export class ConfigureComponent implements OnInit {
     this.inspectionService.preItems = [];
     this.inspectionService.postItems = [];
 
-    
-
     this.inspecService.getDBItems()
     .subscribe(
       (jsonData: Inspection) => {
         // tslint:disable-next-line:forin We know this already works.
         for (const x in jsonData.data) {
-          this.inspectionService.allItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
+          this.inspectionService.allItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].name,
             jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
 
-            if (jsonData.data[x].pre_trip_inspection === '1') {
-              this.inspectionService.preItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
+            if (jsonData.data[x].pre_trip_inspection === 1) {
+              this.inspectionService.preItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].name,
                 jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
             }
 
-            if (jsonData.data[x].post_trip_inspection === '1') {
-              this.inspectionService.postItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].inspection_item_name,
+            if (jsonData.data[x].post_trip_inspection === 1) {
+              this.inspectionService.postItems.push(new Inspection( jsonData.data[x].id, jsonData.data[x].name,
                 jsonData.data[x].pre_trip_inspection, jsonData.data[x].post_trip_inspection));
             }
         }
@@ -124,9 +120,6 @@ export class ConfigureComponent implements OnInit {
     this.dropdownsService.currentBusNumber.subscribe(passedValue => this.inspectionService.selectedBus = passedValue);
     this.dropdownsService.currentDriver.subscribe(passedValue => this.inspectionService.selectedDriver = passedValue);
     this.dropdownsService.currentLoop.subscribe(passedValue => this.inspectionService.selectedLoop = passedValue);
-
-    //this.getStopsFromDropdownService(this.selectedLoop);
-
   }
 
   validateStartButton() {
@@ -134,8 +127,8 @@ export class ConfigureComponent implements OnInit {
       this.errMessage = 'Oops! There is no internet connection.';
     } else {
 
-      if (this.selectedDriver.name === 'Select your Name' || this.selectedBus.name === 'Select a Bus'
-        || this.selectedDriver.name === '' || this.selectedDriver.name === undefined || this.selectedDriver.name === null
+      if (this.selectedDriver.firstname === 'Select your Name' || this.selectedBus.name === 'Select a Bus'
+        || this.selectedDriver.firstname === '' || this.selectedDriver.firstname === undefined || this.selectedDriver.firstname === null
         || this.selectedLoop.name === 'Select a loop' || this.selectedLoop.name === '' || this.selectedLoop.name === undefined
         || this.selectedBus.name === '' || this.selectedBus.name === undefined) {
         this.errorMessage = 'Oops! Select all choices above.';
@@ -181,10 +174,9 @@ export class ConfigureComponent implements OnInit {
     this.dropdownsService.getBusNumbers()
       .subscribe(
         (jsonData: Bus) => {
-          this.busDropdown = [];
           // tslint:disable-next-line:forin We know this already works.
           for (const x in jsonData.data) {
-            this.busDropdown.push(new Bus(jsonData.data[x].id, jsonData.data[x].busIdentifier));
+            this.busDropdown.push(new Bus(jsonData.data[x].id, jsonData.data[x].name));
           }
           this.dropdownsService.changeBusDropdown(this.busDropdown);
           console.log('Populated the Buses Dropdown');
@@ -200,17 +192,17 @@ export class ConfigureComponent implements OnInit {
     this.driverDropdownState = false;
     this.dropdownsService.getDrivers()
       .subscribe(
-        (jsonData: User) => {
+        (jsonData: Driver) => {
           // tslint:disable-next-line:forin We know this already works.
           for (const x in jsonData.data) {
-            this.driverDropdown.push(new User(jsonData.data[x].id, (jsonData.data[x].firstname) + ' ' + (jsonData.data[x].lastname)));
+            this.driverDropdown.push(new Driver(jsonData.data[x].id, jsonData.data[x].first_name, jsonData.data[x].last_name));
           }
-          console.log('Populated the Drivers Dropdown');
           this.dropdownsService.changeDriverDropdown(this.driverDropdown);
+          console.log('Populated the Drivers Dropdown');
           this.driverDropdownState = true;
         },
         (error: any) => {
-          this.showErrorMessage('Could not get driver names. Please try refreshing the page.');
+          this.showErrorMessage('Could not get buses. Please try refreshing the page.');
         }
       );
   }
@@ -220,19 +212,13 @@ export class ConfigureComponent implements OnInit {
     this.dropdownsService.getAllLoops()
       .subscribe(
         (jsonData: Loop) => {
-          // tslint:disable-next-line:forin We know this already works.
+          this.loopsDropdown = [];
           for (const x in jsonData.data) {
-            this.loopsDropdown.push(new Loop( jsonData.data[x].loopName, jsonData.data[x].id));
+            this.loopsDropdown.push(new Loop(jsonData.data[x].name, jsonData.data[x].id));
           }
+          this.dropdownsService.changeLoopDropdown(this.loopsDropdown);
           console.log('Populated the Loops Dropdown');
-          // tslint:disable-next-line:forin
-          for (const loopForCache of this.loopsDropdown) {
-            this.dropdownsService.getAllStops(loopForCache.id)
-              .subscribe((a) => {
-                this.loopDropdownState = true;
-              });
-            console.log('a');
-          }
+          this.loopDropdownState = true;
         },
         (error: any) => {
           this.showErrorMessage('Could not get loops. Please try refreshing the page.');
@@ -242,7 +228,7 @@ export class ConfigureComponent implements OnInit {
 
   logout() {
     this.dropdownsService.changeBus(new Bus('0', 'Select a Bus'));
-    this.dropdownsService.changeDriver(new User('0', 'Select your Name'));
+    this.dropdownsService.changeDriver(new Driver(0, 'Select your Name', ''));
     this.dropdownsService.changeLoop(new Loop('Select a loop', '0'));
     this.authenticationService.logout();
     this.router.navigate(['/login']);
@@ -283,11 +269,9 @@ export class ConfigureComponent implements OnInit {
     this.dropdownsService.stops = [];
     this.dropdownsService.getAllStops(this.selectedLoop.id)
       .subscribe(
-        (data: Stop) => {
-          // this.stopDropdown.push(new Stop(null, 'Select a Stop'));
-          // tslint:disable-next-line:forin We know this already works.
-          for (const x in data.data) {
-            this.dropdownsService.stops.push(new Stop(data.data[x].id, data.data[x].stops));
+        (jsonData: Stop) => {
+          for (const x in jsonData.data) {
+            this.dropdownsService.stops.push(new Stop(jsonData.data[x].id, jsonData.data[x].name));
             console.log(this.dropdownsService.stops);
           }
        }

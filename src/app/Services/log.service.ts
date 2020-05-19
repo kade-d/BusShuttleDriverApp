@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { retryWhen, catchError, retry } from 'rxjs/operators';
 import { Observable, throwError, timer, BehaviorSubject } from 'rxjs';
 import { mergeMap, finalize } from 'rxjs/operators';
@@ -8,12 +8,20 @@ import { Stop } from '../Models/stop';
 import { Loop } from '../Models/loop';
 import { environment } from '../../environments/environment';
 import { ConnectionService } from './../Services/connection.service';
+import {User} from '../Models/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LogService {
   baseUrl = environment.BASE_API_URL;
+
+  currentUser = <User> JSON.parse(localStorage.getItem('currentUser'));
+
+  options = {
+    headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.currentUser.token),
+  };
+
   logsToSend: Log[] = [];
   stops: Stop[];
   loops: Loop[];
@@ -66,7 +74,6 @@ export class LogService {
     }
   }
 
-
   public syncLogs(): void {
     console.log('syncLogs Initiated');
     this.isSyncing = true;
@@ -108,15 +115,38 @@ export class LogService {
         }
       }
     }
-
   }
 
   directSubmit(log: Log): Observable<Log> {
-    return this.http.post<Log>(this.baseUrl + '/store.php', { data: log });
+    const body = {
+      data: {
+        'stop_id' : log.stop,
+        'loop_id' : log.loop,
+        'driver_id' : log.driver,
+        'bus_id' : log.busNumber,
+        'boarded' : log.boarded,
+        'left_behind' : log.leftBehind,
+        't_stamp' : log.timestamp
+      }
+    };
+    return this.http.post<Log>(this.baseUrl + '/api/entries', body, this.options);
   }
 
   store(log: Log): Observable<Log> {
-    return this.http.post<Log>(this.baseUrl + '/store.php', { data: log })
+    const body = {
+      data: {
+        'stop_id' : log.stop,
+        'loop_id' : log.loop,
+        'driver_id' : log.driver,
+        'bus_id' : log.busNumber,
+        'boarded' : log.boarded,
+        'left_behind' : log.leftBehind,
+        't_stamp' : log.timestamp,
+        'date_added': log.timestamp
+      }
+    };
+
+    return this.http.post<Log>(this.baseUrl + '/api/entries', body, this.options)
       .pipe(
         retryWhen(this.generateRetryStrategy(log)({
           scalingDuration: 500,
@@ -152,7 +182,6 @@ export class LogService {
           );
           return timer(retryAttempt * scalingDuration);
         }),
-        // finalize(() => (console.log('Error! something went wrong.')))
       );
     };
     return retryStrategy;

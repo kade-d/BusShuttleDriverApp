@@ -1,5 +1,5 @@
 export class InspectionLog {
-    driver: string;
+    driver: number;
     loop: string;
     busNumber: string;
     timestamp: string;

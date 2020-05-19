@@ -35,7 +35,7 @@
                 </h3>
                 <select [(ngModel)]="selectedDriver" (ngModelChange)="this.dropdownsService.changeDriver($event)" name="driver" [disabled]="!driverDropdownState" class="form-control" required>
                         <option selected>Select your Name</option>
-          <option *ngFor="let driver of driverDropdown" [ngValue]="driver">{{driver.name}}</option>
+          <option *ngFor="let driver of driverDropdown" [ngValue]="driver">{{driver.firstname + " " + driver.lastname}}</option>
         </select>
             </div>
         </div>

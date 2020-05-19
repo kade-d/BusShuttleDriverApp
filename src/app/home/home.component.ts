@@ -14,8 +14,9 @@ import { switchMap, findIndex } from 'rxjs/operators';
 import { Bus } from '../Models/bus';
 import { forEach } from '@angular/router/src/utils/collection';
 import { User } from '../Models/user';
-import { ConnectionService } from './../Services/connection.service';
+import { ConnectionService } from '../Services/connection.service';
 import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
+import {Driver} from '../Models/driver';
 
 @Component({
   templateUrl: 'home.component.html',
@@ -61,7 +62,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   dropdownDisabled: boolean;
 
   selectedBus: Bus;
-  selectedDriver: User;
+  selectedDriver: Driver;
   selectedLoop: Loop;
   successTimer = timer(10000);
   syncTimer = timer(30000);
@@ -132,7 +133,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-
   decreaseBoardedValueClicked(): void {
     if (this.log.boarded === 0 || this.log.boarded === undefined) {
       return;
@@ -150,7 +150,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.log.boarded = this.log.boarded + 1;
     }
   }
-
   decreaseLeftBehindValueClicked(): void {
     if (this.log.leftBehind === 0 || this.log.leftBehind === undefined) {
       return;
@@ -223,13 +222,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     const copy = { ...this.log }; // Creating a copy of the member 'log'.
     this.cancelClicked = false;
     this.showSuccessMessage(this.stopName);
-    
+
     // check for the success message to disapper then try to either submit data directly or put it in the local storage.
     this.timerId = setInterval(() => this.subscribe(copy), 1000);
     setTimeout(() => clearInterval(this.timerId), 12000);
   }
 
-  private subscribe (copy: Log): void{
+  private subscribe (copy: Log): void {
     if (!this.successMessageState) {
       if (!this.cancelClicked) {
 
@@ -241,7 +240,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.logService.directSubmit(copy)
           .subscribe((success) => {
             console.log('object strored in Database');
-            },(error: any) => {
+            }, (error: any) => {
               this.logService.storeLogsLocally(copy);
               console.log(copy);
               console.log('object stored locally');
@@ -273,7 +272,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.form.controls['stop'].setValue(this.stopDropdown[1]);
     }
 
-    if (this.selectedDriver.name === 'Select your Name' || this.selectedDriver.name === '' || this.selectedDriver.name === undefined) {
+    if (this.selectedDriver.firstname === 'Select your Name' || this.selectedDriver.firstname === '' || this.selectedDriver.firstname === undefined) {
       this.showErrorMessage('Oops! Please select your name.');
       return false;
     }
@@ -322,7 +321,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private resetFormControls(form: NgForm) {
-    // This handles the reseting of values
+    // This handles the resetting of values
     this.log.boarded = 0;
     this.log.leftBehind = 0;
   }
@@ -350,7 +349,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.successMessageState = false;
     this.cancelClicked = false;
   }
-
 
   submitIfConnected(log: Log) {
     const resetTime = timer(10);

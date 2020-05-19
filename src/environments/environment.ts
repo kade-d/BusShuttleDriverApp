@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  BASE_API_URL: 'http://localhost/BusShuttleAPI/api'
+  BASE_API_URL: 'http://localhost/BusShuttleAPI/public',
+  CLIENT_ID: 2,
+  CLIENT_SECRET: 'kUltLEB0nM9pEQfIFNd7BSrWycDp0DPM1Fq6kQ2T'
 };
 
 /*

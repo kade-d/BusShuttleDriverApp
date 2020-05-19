@@ -22,8 +22,7 @@ export class PreInspectionComponent implements OnInit {
 
   allItems = [];
   preItems = [];
-  //startMileage: string;
-  strItem = '';
+  strItem = '0';
   startMileage = '';
   checkMileage;
   selectedBus: Bus;
@@ -78,7 +77,6 @@ export class PreInspectionComponent implements OnInit {
           this.inspectionService.inspectionLog.loop = this.inspectionService.selectedLoop.id;
           this.createString();
           this.inspectionService.inspectionLog.startingMileage = this.startMileage;
-
           const copy = { ...this.inspectionService.inspectionLog }; // Creating a copy of the member 'log'.
           this.inspectionService.storeLogsLocally(copy);
 

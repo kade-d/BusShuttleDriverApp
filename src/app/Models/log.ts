@@ -5,10 +5,11 @@ export class Log {
   stop: string;
   timestamp: string;
   loop: string;
-  driver: string;
+  driver: number;
   leftBehind: number;
   busNumber:   string;
   id?:   number;
+
   constructor(
     boarded: number,
     stop: string,

@@ -5,6 +5,8 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 import { User } from '../Models/user';
+import {printLine} from 'tslint/lib/verify/lines';
+import {emit} from 'cluster';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -21,17 +23,27 @@ export class AuthenticationService {
     }
 
     login(email: string, password: string) {
-        // REPLACE THIS URL WITH THE ACTUAL API ENDPOINT
-        return this.http.post<any>(environment.BASE_API_URL+`/login.php`, { email, password })
-            .pipe(map(user => {
-                // login successful if there's a jwt token in the response
-                if (user.token) {
-                    // store user details and jwt token in local storage to keep user logged in between page refreshes
+        const body = {
+            'grant_type': 'password',
+            'client_id': 2,
+            'client_secret': 'kUltLEB0nM9pEQfIFNd7BSrWycDp0DPM1Fq6kQ2T',
+            'username': email,
+            'password': password,
+            'scope': '*'
+        };
+        const url = environment.BASE_API_URL + '/oauth/token';
+        return this.http.post<any>(
+            url,
+            body
+            )
+            .pipe(map(response => {
+                if ('access_token' in response) {
+                    const user = new User(email, password, response['access_token']);
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.currentUserSubject.next(user);
-                    // console.log(user);
+
                 } else {
-                    return user;
+                    return null;
                 }
             }));
     }

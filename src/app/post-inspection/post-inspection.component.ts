@@ -30,7 +30,7 @@ export class PostInspectionComponent implements OnInit {
   allItems = [];
   postItems = [];
   endMileage = '';
-  strItem = '';
+  strItem = '0';
 
   status = '';
   public onlineOffline: boolean = navigator.onLine;
